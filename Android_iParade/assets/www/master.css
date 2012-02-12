@@ -1,0 +1,120 @@
+body {
+	font-size: 150%;
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	background-color: #000000;
+}
+
+#map {
+	
+}
+
+.center {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.button {
+	font-size: 100%;
+}
+
+.disabledButton {
+	color: #333333;
+}
+
+.activeButton {
+	color: #999999;
+}
+
+.buttonCenter {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	width: 40%;
+}
+
+.clearBoth {
+	clear: both;
+	position: static;
+}
+
+.bodyImage {
+	width: 100%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.tabImage {
+	height: 18%;
+	width: auto;
+}
+
+.fullWidth {
+	display: block;
+	width: 100%;
+}
+
+.relative {
+	display: block;
+	position: relative;
+}
+
+.rightFloat {
+	float: right;
+	margin-right: 15%;
+}
+
+.rightAbs {
+	clear: both;
+	position: absolute;
+	display: block;
+	right: 0px;
+	bottom: 0px;
+}
+
+ul#tabs {
+	list-style-type: none;
+	margin: 0 0 0 0;
+	padding: 0 0 0 0;
+	position: fixed;
+	height: auto;
+	top: 0%;
+	bottom: 0px;
+	right: 0;
+	background-color: #000000;
+	display: inline;
+}
+
+ul#tabs li {
+	
+}
+
+ul#tabs li a {
+	color: #aaaaaa;
+	background-color: #111111;
+	border-bottom: none;
+	padding: 0.3em;
+	text-decoration: none;
+}
+
+ul#tabs li a:hover {
+	background-color: #333333;
+}
+
+ul#tabs li a.selected {
+	color: #cccccc;
+	background-color: #222222;
+	font-weight: bold;
+}
+
+div.tabContent {
+	position: static;
+	background-color: #000000;
+	color: #dddddd;
+	border: 0px solid #222222;
+}
+
+div.tabContent.hide {
+	display: none;
+}
