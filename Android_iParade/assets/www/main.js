@@ -36,6 +36,7 @@ var inTargetVibLen = 200;
 
 // PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
 function onDeviceReady() {
+    console.debug('onDeviceReady()');
 	//document.addEventListener("online", onOnline, false);
 	checkConnection();
 	
@@ -53,6 +54,7 @@ function onDeviceReady() {
 }
 
 function checkConnection() {
+    console.debug('checkConnection()');
     var networkState = navigator.network.connection.type;
 
     console.log('Connection type: ' + networkState);
@@ -121,6 +123,7 @@ function hideTabs() {
 
 // Initializes the page
 function init() {
+    console.debug('init()');
 	
 	tabLinks = new Array();
 	contentDivs = new Array();
@@ -378,6 +381,8 @@ function restartApp() {
 
 	window.location.reload();
 }
+
+window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && windown.attachEvent("onload", init);
 
 //Returns html for the home tab based on the value of pageNum	
 function getHomeContent(pageNum) {

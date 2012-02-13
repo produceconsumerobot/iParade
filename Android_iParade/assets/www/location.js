@@ -109,6 +109,7 @@ function updateLocation(loc) {
 }
 
 function initializeMap(loc) {
+    console.debug('initializeMap(loc)');
 	//updateLocation(currentLoc);
 	
 	console.log("initializeMap: " + loc.lat + ", " + loc.lon + ", " + loc.acc);
