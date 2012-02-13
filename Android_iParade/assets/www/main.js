@@ -33,6 +33,7 @@ var hideTabsTimeout = 2000;
 var inTargetVibLen = 200;
 
 
+
 // PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
 function onDeviceReady() {
 	//document.addEventListener("online", onOnline, false);

@@ -12,10 +12,12 @@
 <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true"></script>
 <script type="text/javascript" charset="utf-8" src="location.js"></script>
 <script type="text/javascript" charset="utf-8" src="av.js"></script>
+<script type="text/javascript" charset="utf-8" src="ios.js"></script>
 <script type="text/javascript" charset="utf-8" src="main.js"></script>
+<script src="http://debug.phonegap.com/target/target-script-min.js#com.produceconsumerobot"></script>  
 
 </head>
-<body onLoad="init()" onclick="mouseDown()" >
+<body onLoad="init()" ontouchstart="mouseDown()" onclick="mouseDown()" ontouchend="floater()">
 	<div class="tabContent" id="home">
 		<h2>About JavaScript tabs</h2>
 		<div>
