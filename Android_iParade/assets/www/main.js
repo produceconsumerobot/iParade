@@ -10,18 +10,19 @@ var audioTimer = null;
 
 
 //var contentImageDir = "./content/"; // content images directory
-var contentImageDir = "http://produceconsumerobot.com/temp/lovid/iparade/iparade2/content/";
-var contentVideoDir = "http://produceconsumerobot.com/temp/lovid/iparade/iparade2/content/";
+var contentImageDir = "http://produceconsumerobot.com/temp/lovid/content/";
+var contentVideoDir = "http://produceconsumerobot.com/temp/lovid/content/";
 var storageBase = "/mnt/sdcard/";
 var localDir = "download/";
 var localVidBase = "iparadeVideo";
-var vidExt = ".3gp";
+//var vidExt = ".3gp";
+var vidExt = ".mp4";
 var localVidName = localVidBase + vidExt;
 var localVidPath = null;
 
 var voiceover = true;
-var contentVoiceoverDir = "http://produceconsumerobot.com/temp/lovid/iparade/iparade2/content/";
-var contentAudioTheme = "http://produceconsumerobot.com/temp/lovid/iparade/iparade2/content/audioTheme";
+var contentVoiceoverDir = "http://produceconsumerobot.com/temp/lovid/content/";
+var contentAudioTheme = "http://produceconsumerobot.com/temp/lovid/content/audioTheme";
 var localVoiceoverBase = "iparadeVoiceover";
 var voiceoverExt = ".mp3";
 var localVoiceoverName = localVoiceoverBase + voiceoverExt;
@@ -392,7 +393,7 @@ function getHomeContent(pageNum) {
 		break;
 	case 2:
 		html = html + "<h2 align='center'>Step #1</h2> <p>";
-		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
+		//html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
 		html = html + "<p>Location 1 text invites the viewer to reexamine their relationship to reality and the manner in which their perception reveals the underlying inter-relationship between the objective and subjective universe.</p>";
 		html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
 		html = html + "<button id='nextButton' type='button' class='rightFloat button' onclick='nextPage()' style='visibility:hidden;'>Next</button>";
@@ -409,7 +410,7 @@ function getHomeContent(pageNum) {
 		break;
 	case 4:
 		html = html + "<h2 align='center'>Step #2</h2> <p>";
-		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
+		//html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
 		html = html + "<p>Location 2 text describes a magical kingdom where people are inanimate and the universe exists without time or space.</p>";
 		html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
 		html = html + "<button id='nextButton' type='button' class='rightFloat button' onclick='nextPage()' style='visibility:hidden;'>Next</button>";
@@ -426,7 +427,7 @@ function getHomeContent(pageNum) {
 		break;
 	case 6:
 		html = html + "<h2 align='center'>Step #3</h2> <p>";
-		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
+		//html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
 		html = html + "<p>Location 3 yabber jabber.</p>";
 		html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
 		html = html + "<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()' style='visibility:hidden;'>Exit iParade</button>";
