@@ -1,6 +1,7 @@
 var DEBUG = 0;
 
 var tabLinks = new Array();
+var tabListItems = new Array();
 var contentDivs = new Array();
 var contentPage = 0;
 var locCheckTimerId = null; // timer ID
@@ -142,14 +143,17 @@ function init() {
 	//$("div.tabContent").css(".min-height", getWindowHeight());
 	
 	// Grab the tab links and content divs from the page
-	var tabListItems = document.getElementById('tabs').childNodes;
-	for ( var i = 0; i < tabListItems.length; i++ ) {
-		if ( tabListItems[i].nodeName == "LI" ) {
-			var tabLink = getFirstChildWithTagName( tabListItems[i], 'A' );
-			var id = getHash( tabLink.getAttribute('href') );
-			tabLinks[id] = tabLink;
+	var tabList = document.getElementById('tabs').childNodes;
+	for ( var i = 0; i < tabList.length; i++ ) {
+		if ( tabList[i].nodeName == "LI" ) {
+			//var tabLink = getFirstChildWithTagName( tabList[i], 'A' );
+			//var id = getHash( tabLink.getAttribute('href') );
+			var id = getHash( tabList[i].getAttribute('href') );
+			//tabLinks[id] = tabLink;
+			tabListItems[id] = tabList[i];
 			contentDivs[id] = document.getElementById( id );
 			contentDivs[id].style.height = getWindowHeight() + "px";
+			//if ( i == 0 ) tabListItems[i].className = 'selected';
 		}
 	}
 	
@@ -157,10 +161,13 @@ function init() {
 	// highlight the first tab
 	var i = 0;
 
-	for ( var id in tabLinks ) {
-		tabLinks[id].onclick = showTab;
-		tabLinks[id].onfocus = function() { this.blur(); };
-		if ( i == 0 ) tabLinks[id].className = 'selected';
+	for ( var id in tabListItems ) {
+		//tabLinks[id].onclick = showTab;
+		//tabLinks[id].onfocus = function() { this.blur(); };
+		tabListItems[id].ontouchend = showTab;
+		tabListItems[id].onclick = showTab;
+		//tabListItems[id].onfocus = function() { this.blur(); };
+		if ( i == 0 ) tabListItems[id].className = 'selected';
 		i++;
 	}
 	
@@ -199,12 +206,14 @@ function showTab(options) {
 			}     
 
 
-			tabLinks[id].className = 'selected';
+			//tabLinks[id].className = 'selected';
+			tabListItems[id].className = 'selected';
 			contentDivs[id].className = 'tabContent';
 
 			//document.getElementById('home').style.height = getWindowHeight();
 		} else {
-			tabLinks[id].className = '';
+			//tabLinks[id].className = '';
+			tabListItems[id].className = '';
 			contentDivs[id].className = 'tabContent hide';
 		}
 	}
