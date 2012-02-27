@@ -102,25 +102,46 @@ function stopAudio() {
 
 
 function getVideo(targetNumber) {
-	var filename = contentVideoDir + targetNumber + "_video" + vidExt;
-	var params = new Object;
-	params.overwrite = true;
-	params.dirName = storageBase + localDir;
-	params.fileName = localVidName;
+	var remoteFile = contentVideoDir + targetNumber + "_video" + vidExt;
+	var localPath = storageBase + localDir;
+	var localFile = localPath + "/" + localVidName;
 
 	if (DEBUG > 0) alert("targetNumber=" + targetNumber);
 
+	var fileTransfer = new FileTransfer();
+
+	fileTransfer.download(
+			remoteFile,
+			localFile,
+		    function(entry) {
+		        console.log("download complete: " + entry.fullPath);
+		        document.getElementById("playVideoButton").childNodes[0].nodeValue="Play Video";
+				document.getElementById("playVideoButton").onclick=function(){ playVideo(); };
+				vidPath = localFile;
+		    },
+		    function(error) {
+		        console.log("download error source " + error.source);
+		        console.log("download error target " + error.target);
+		        console.log("upload error code" + error.code);
+		    }
+		);
+	
+//	var params = new Object;
+//	params.overwrite = true;
+//	params.dirName = localPath;
+//	params.fileName = localVidName;
+	
 	//download(filename, {overwrite: true, dirName: "/mnt/sdcard/download", fileName: "test.jpg"}, function(res) { alert(JSON.stringify(result));}, function(error) {alert(error); } );
-	download(filename, params, 
-			function(res) { 
-		if (res.status == 1) {
-			document.getElementById("playVideoButton").childNodes[0].nodeValue="Play Video";
-			document.getElementById("playVideoButton").onclick=function(){ playVideo(); };
-			vidPath = storageBase + localDir + "/" + localVidName;
-			//document.getElementById("playVideoButton").style.backgroundColor="#999999";
-		}
-	}, 
-	function(error) {alert('Video download failed: ' + error); } );	
+//	download(filename, params, 
+//			function(res) { 
+//		if (res.status == 1) {
+//			document.getElementById("playVideoButton").childNodes[0].nodeValue="Play Video";
+//			document.getElementById("playVideoButton").onclick=function(){ playVideo(); };
+//			vidPath = storageBase + localDir + "/" + localVidName;
+//			//document.getElementById("playVideoButton").style.backgroundColor="#999999";
+//		}
+//	}, 
+//	function(error) {alert('Video download failed: ' + error); } );	
 }
 
 function getVoiceover(targetNumber) {

@@ -37,11 +37,14 @@ var inTargetVibLen = 200;
 // PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
 function onDeviceReady() {
     console.debug('onDeviceReady()');
+    console.debug(device.platform);
 	//document.addEventListener("online", onOnline, false);
 	checkConnection();
 	
 	// override the back button on adroid/blackberry
 	document.addEventListener("backbutton", onBackKeyDown, false);
+	
+	window.onscroll = floater;
 	
 	getAudioTheme();
 	//playAudio(contentAudioTheme + voiceoverExt);
@@ -93,9 +96,11 @@ function toggleVoiceover() {
 		}
 		my_audio = null;
 		audioTimer = null;
-		document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn on voiceover";
+		//document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn on voiceover";
+		document.getElementById("toggleVoiceoverButton").src = "design/voice_over_off.jpg";
 	} else {
-		document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn off voiceover";
+		//document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn off voiceover";
+		document.getElementById("toggleVoiceoverButton").src = "design/voice_over_on.jpg";
 	}
 }
 
@@ -393,7 +398,7 @@ function getHomeContent(pageNum) {
 		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
 		html = html + "<p>This text describes how to experience this app, what do do, where to go etc. </p>";
 		//html = html + "<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()'>Exit iParade</button>";
-		html = html + "<button type='button' class='rightFloat button' onclick='nextPage()'>Next</button>";
+		html = html + getNextButton(true); //"<button type='button' class='rightFloat button' onclick='nextPage()'>Next</button>";
 		html = html +  "<div class='clearBoth'>";
 		break;
 	case 1:
@@ -411,7 +416,7 @@ function getHomeContent(pageNum) {
 		//html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
 		html = html + "<p>Location 1 text invites the viewer to reexamine their relationship to reality and the manner in which their perception reveals the underlying inter-relationship between the objective and subjective universe.</p>";
 		html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
-		html = html + "<button id='nextButton' type='button' class='rightFloat button' onclick='nextPage()' style='visibility:hidden;'>Next</button>";
+		html = html + getNextButton(false); //"<button id='nextButton' type='button' class='rightFloat button' onclick='nextPage()' style='visibility:hidden;'>Next</button>";
 		html = html +  "<div class='clearBoth'>";
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
@@ -428,7 +433,7 @@ function getHomeContent(pageNum) {
 		//html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
 		html = html + "<p>Location 2 text describes a magical kingdom where people are inanimate and the universe exists without time or space.</p>";
 		html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
-		html = html + "<button id='nextButton' type='button' class='rightFloat button' onclick='nextPage()' style='visibility:hidden;'>Next</button>";
+		html = html + getNextButton(false); //"<button id='nextButton' type='button' class='rightFloat button' onclick='nextPage()' style='visibility:hidden;'>Next</button>";
 		html = html +  "<div class='clearBoth'>";
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
@@ -457,4 +462,15 @@ function getHomeContent(pageNum) {
 	return html;
 }
 
+function getNextButton(visible) {
+	var nextButton;
+	if (visible) {
+		nextButton = "<img id='nextButton' src='design/next_arrow.jpg' class='rightFloat' ontouchstart='nextPage()'/>";
+	} else {
+		nextButton = "<img id='nextButton' src='design/next_arrow.jpg' class='rightFloat' ontouchstart='nextPage()' style='visibility:hidden;'/>";
+	}
+	//console.log(nextButton);
+	return nextButton;
+	//"<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()' style='visibility:hidden;'>Exit iParade</button>";
+}
 

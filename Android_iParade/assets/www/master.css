@@ -13,6 +13,28 @@ button {
 	
 }
 
+#nextButton
+{
+	height:auto;
+	width:12%;
+}
+
+#restartAppButton
+{
+	float:left;
+	height:auto;
+	width:12%;
+	margin:5%;
+}
+
+#toggleVoiceoverButton
+{
+	float:left;
+	height:auto;
+	width:12%;
+	margin:5%;
+}
+
 .center {
 	display: block;
 	margin-left: auto;
