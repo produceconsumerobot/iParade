@@ -61,6 +61,12 @@ button {
 	width: 40%;
 }
 
+.buttonLeft {
+	display: block;
+	margin-left: 5%;
+	width: 40%;
+}
+
 .clearBoth {
 	clear: both;
 	position: static;

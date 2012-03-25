@@ -458,7 +458,7 @@ function getHomeContent(pageNum) {
 		html = html + "</div>";
 		//html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
 		html = html + getNextButton(false);
-		html = html +  "<div class='clearBoth'>";
+		//html = html +  "<div class='clearBoth'>";
 		document.getElementById('home').innerHTML = html;
 		$("#textContent").load(contentImageDir + targetNum + "_text.html");
 		navigator.notification.vibrate(inTargetVibLen);

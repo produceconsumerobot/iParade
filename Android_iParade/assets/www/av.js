@@ -242,7 +242,7 @@ function checkAudioLoop() {
 			//console.log("checkAudioLoop: my_audio");
 			if ((my_audio._duration > -1) && (my_audio._position > -1)) {
 				//console.log("checkAudioLoop: duration/position");
-				if ((my_audio._duration - my_audio._position) < 2.0){
+				if ((my_audio._duration - my_audio._position) < 1.5){
 					console.log("checkAudioLoop: seekTo");
 					my_audio.seekTo(0);
 				}
