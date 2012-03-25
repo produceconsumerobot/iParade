@@ -11,7 +11,7 @@ function playVideo() {
 	} else {
 		//pauseAudio();
 		stopAudio();
-		if (device.platform == "Android") {
+		if (device.platform.toLowerCase().search("android") >= 0) {
 			showVideo2(localVidPath); // play the locally stored video
 		}
 	}

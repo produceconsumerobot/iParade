@@ -396,6 +396,7 @@ function restartApp() {
 	console.log("restartApp()");
 	// process the confirmation dialog result
     function onConfirm(button) {
+        console.log("onConfirm(" + button + ")");
     	if (button==1) {
 	    	if (my_audio) {
 	    		console.log("stopping audio");
@@ -408,9 +409,12 @@ function restartApp() {
 	    	my_audio = null;
 	    	audioTimer = null;
 	    	
-	    	navigator.app.loadUrl("file:///android_asset/www/index.html"); 
-	    	//window.location = "index.html";
-	    	//window.location.reload(true);
+            if (navigator.app) {
+                navigator.app.loadUrl("file:///android_asset/www/index.html"); 
+            } else {
+                //window.location = "index.html";
+                window.location.reload(true);
+            }
     	}
     }
 

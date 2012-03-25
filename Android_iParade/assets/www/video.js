@@ -25,7 +25,9 @@ VideoPlayer.prototype.play = function(url) {
  * Load VideoPlayer
  */
 PhoneGap.addConstructor(function() {
-    PhoneGap.addPlugin("videoPlayer", new VideoPlayer());
+    if (device.platform.toLowerCase().search("android") >= 0) {
+        PhoneGap.addPlugin("videoPlayer", new VideoPlayer());
+    }
 });
 
 
