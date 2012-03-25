@@ -3,7 +3,7 @@ var faceGPSdelay = 7000; // delay to achieve location
 
 var currentLoc; // where the device is currently
 var targetNum; // which target is currently being sought after
-var nTargets; // number of targets
+//var nTargets; // number of targets
 var targetLocations; // array of TargetLocations for this parade
 var gMap;
 var currentMarker;
@@ -16,9 +16,10 @@ var updateLocationTimerId; // timer ID
 var testLocChangeTimerId; // timer ID
 
 function initLocation() {
+	console.log("initLocation()");
 	currentLoc = new Location(40.777422, -74.071198, 500.0);
 	targetNum = 0;
-	nTargets = 4;
+	//nTargets = 4;
 	targetLocations = new Array();
 	gMap = null;
 	currentMarker = null;
@@ -53,7 +54,7 @@ function startGpsTracking() {
 // geolocation callbacks
 function geolocationCallbackSuccess(position) {
 	gpsGood = true;
-	updateLocation({"lat":position.coords.latitude, "lon":position.coords.longitude, "acc":position.coords.accuracy});
+	updateLocation({"latitude":position.coords.latitude, "longitude":position.coords.longitude, "accuracy":position.coords.accuracy});
 }
 function geolocationCallbackError(error) {
 	gpsGood = false;
@@ -70,7 +71,7 @@ function checkGPS() {
 	if (fakeGPS) {
 		return true;
 	}
-	if ((gpsGood) && (currentLoc.acc < minAccuracy)){
+	if ((gpsGood) && (currentLoc.accuracy < minAccuracy)){
 		return true;
 	} else {
 		return false;
@@ -79,10 +80,10 @@ function checkGPS() {
 
 //Updates the current GPS location and performs checks
 function updateLocation(loc) {
-	console.log("updateLocation: " + loc.lat + ", " + loc.lon + ", " + loc.acc);
-	currentLoc.lat = loc.lat;
-	currentLoc.lon = loc.lon;
-	currentLoc.acc = loc.acc;
+	console.log("updateLocation: " + loc.latitude + ", " + loc.longitude + ", " + loc.accuracy);
+	currentLoc.latitude = loc.latitude;
+	currentLoc.longitude = loc.longitude;
+	currentLoc.accuracy = loc.accuracy;
 	
 	// TODO: make conditional on whether map is showing
 	updateMarkerPosition(currentLoc);
@@ -96,7 +97,7 @@ function updateLocation(loc) {
 //
 	console.log("updateLocation: checkingForTargetLocation = " + checkingForTargetLocation);
 	if (checkingForTargetLocation) {
-		//alert("loc=" + currentLoc.lat + "," + currentLoc.lon + "," + currentLoc.acc + " target=" + targetLocations[targetNum].lat + "," + targetLocations[targetNum].lon + "," + targetLocations[targetNum].acc);
+		//alert("loc=" + currentLoc.latitude + "," + currentLoc.longitude + "," + currentLoc.accuracy + " target=" + targetLocations[targetNum].latitude + "," + targetLocations[targetNum].longitude + "," + targetLocations[targetNum].accuracy);
 		//alert("checkingForTargetLocation");
 		if (inTargetLocation(currentLoc, targetLocations[targetNum])) {
 			//alert("locationCheck true");
@@ -112,10 +113,10 @@ function initializeMap(loc) {
     console.debug('initializeMap(loc)');
 	//updateLocation(currentLoc);
 	
-	console.log("initializeMap: " + loc.lat + ", " + loc.lon + ", " + loc.acc);
-	var latlng = new google.maps.LatLng(loc.lat, loc.lon);
+	console.log("initializeMap: " + loc.latitude + ", " + loc.longitude + ", " + loc.accuracy);
+	var latlng = new google.maps.LatLng(loc.latitude, loc.longitude);
 	
-	getTargetLocations(currentLoc);
+	//getTargetLocations(currentLoc);
 	
 	//var latlng = new google.maps.LatLng(0.506185, 0.553519);
 	var myOptions = {
@@ -142,9 +143,9 @@ function initializeMap(loc) {
 
 	for (var i=0; i<targetLocations.length; i++ ) {
 		var tLoc = targetLocations[i];
-		//console.log("initializeMap: " + tLoc.lat + ", " + tLoc.lon + ", " + tLoc.acc);
+		console.log("Marker: " + tLoc.latitude + ", " + tLoc.longitude + ", " + tLoc.accuracy);
 		var marker = new google.maps.Marker({
-			position: new google.maps.LatLng(tLoc.lat, tLoc.lon),
+			position: new google.maps.LatLng(tLoc.latitude, tLoc.longitude),
 			map: gMap,
 			icon: "./design/01_targetLocation.png",
 			title:""
@@ -164,7 +165,7 @@ function initializeMap(loc) {
 	      fillColor: "#FF0000",
 	      fillOpacity: 0.35,
 	      map: gMap,
-	      radius: currentLoc.acc
+	      radius: currentLoc.accuracy
 	    });
     currentCircle.bindTo('center', currentMarker, 'position');
 	
@@ -172,8 +173,8 @@ function initializeMap(loc) {
 }
 
 function updateMarkerPosition(loc) {
-	console.log("updateMap: " + loc.lat + ", " + loc.lon + ", " + loc.acc);
-	var latlng = new google.maps.LatLng(loc.lat, loc.lon);
+	console.log("updateMap: " + loc.latitude + ", " + loc.longitude + ", " + loc.accuracy);
+	var latlng = new google.maps.LatLng(loc.latitude, loc.longitude);
 	
 	if (currentMarker) {
 		currentMarker.setPosition(latlng);
@@ -182,7 +183,7 @@ function updateMarkerPosition(loc) {
 	}
 
 	if (currentCircle) {
-		currentCircle.setRadius(loc.acc);
+		currentCircle.setRadius(loc.accuracy);
 	} else {
 		console.log("currentRadius == null");
 	}
@@ -190,7 +191,7 @@ function updateMarkerPosition(loc) {
 
 function recenterMap() {
 	if (gMap) {
-		var latlng = new google.maps.LatLng(currentLoc.lat, currentLoc.lon);
+		var latlng = new google.maps.LatLng(currentLoc.latitude, currentLoc.longitude);
 		 gMap.panTo(latlng);
 		//gMap.setCenter(latlng);
 	} else {
@@ -208,39 +209,39 @@ function resizeMap() {
 // Check if the current GPS location is within the passed target location
 function inTargetLocation(currentLocation, targetLocation) {
 	console.log("inTargetLocation: targetNum = " + targetNum);
-	console.log("inTargetLocation: " + currentLocation.lat + ", " + currentLocation.lon +
-			"; " + targetLocation.lat + ", " + targetLocation.lon);
-	//alert("currentLoc=" + currentLocation.lat + ", " + currentLocation.lon);
+	console.log("inTargetLocation: " + currentLocation.latitude + ", " + currentLocation.longitude +
+			"; " + targetLocation.latitude + ", " + targetLocation.longitude);
+	//alert("currentLoc=" + currentLocation.latitude + ", " + currentLocation.longitude);
 	//return false;
 
-	var currlatlng = new google.maps.LatLng(currentLocation.lat, currentLocation.lon);
-	var targetlatlng = new google.maps.LatLng(targetLocation.lat, targetLocation.lon);
+	var currlatlng = new google.maps.LatLng(currentLocation.latitude, currentLocation.longitude);
+	var targetlatlng = new google.maps.LatLng(targetLocation.latitude, targetLocation.longitude);
 	var distance = google.maps.geometry.spherical.computeDistanceBetween(currlatlng, targetlatlng);
 	
 	console.log("inTargetLocation: distance = " + distance);
-	console.log("inTargetLocation: currentLocation.acc = " + currentLocation.acc);
-	console.log("inTargetLocation: targetLocation.acc = " + targetLocation.acc);
+	console.log("inTargetLocation: currentLocation.accuracy = " + currentLocation.accuracy);
+	console.log("inTargetLocation: targetLocation.accuracy = " + targetLocation.accuracy);
 	
-	if ((distance!=null) && ((distance - currentLocation.acc - targetLocation.acc) <= 0)) {
+	if ((distance!=null) && ((distance - currentLocation.accuracy - targetLocation.accuracy) <= 0)) {
 		return true;
 	} else {
 		return false;
 	}
 	
-//	if ((targetLocation.lat > (currentLocation.lat - currentLocation.acc)) &&
-//			(targetLocation.lat < (currentLocation.lat + currentLocation.acc)) &&
-//			(targetLocation.lon > (currentLocation.lon - currentLocation.acc)) &&
-//			(targetLocation.lon < (currentLocation.lon + currentLocation.acc))) {
+//	if ((targetLocation.latitude > (currentLocation.latitude - currentLocation.accuracy)) &&
+//			(targetLocation.latitude < (currentLocation.latitude + currentLocation.accuracy)) &&
+//			(targetLocation.longitude > (currentLocation.longitude - currentLocation.accuracy)) &&
+//			(targetLocation.longitude < (currentLocation.longitude + currentLocation.accuracy))) {
 //		return true;
 //	} else {
 //		return false;
 //	}
 
 	
-//	if ((currentLocation.lat > (targetLocation.loc.lat - targetLocation.dev)) &&
-//			(currentLocation.lat < (targetLocation.loc.lat + targetLocation.dev)) &&
-//			(currentLocation.lon > (targetLocation.loc.lon - targetLocation.dev)) &&
-//			(currentLocation.lon < (targetLocation.loc.lon + targetLocation.dev))) {
+//	if ((currentLocation.latitude > (targetLocation.loc.latitude - targetLocation.dev)) &&
+//			(currentLocation.latitude < (targetLocation.loc.latitude + targetLocation.dev)) &&
+//			(currentLocation.longitude > (targetLocation.loc.longitude - targetLocation.dev)) &&
+//			(currentLocation.longitude < (targetLocation.loc.longitude + targetLocation.dev))) {
 //		return true;
 //	} else {
 //		return false;
@@ -250,7 +251,8 @@ function inTargetLocation(currentLocation, targetLocation) {
 
 //increment to the next TargetLocation
 function incrementTarget() {
-	if ((targetNum + 1) < nTargets) {
+	//if ((targetNum + 1) < nTargets) {
+	if ((targetNum + 1) < targetLocations.length) {
 		targetNum++;
 	}
 	if (DEBUG > 0) alert("targetNum=" + targetNum);
@@ -274,23 +276,54 @@ function testLocChange() {
 
 //Location constructor
 function Location(latitude, longitude, accuracy) {
-	this.lat = latitude;
-	this.lon = longitude;
-	this.acc = accuracy;
+	this.latitude = latitude;
+	this.longitude = longitude;
+	this.accuracy = accuracy;
 }
 
 //Lookup the targetLocations
 //Currently all locations are hard-coded
 //In the future locations may be acquired via remote lookup
 function getTargetLocations(currentLocation) {
-	// This would ideally read from a remote server
+	console.log("getTargetLocations(" + currentLocation + ")");
+	fileName = "targetLocations.json";
+	filePath = contentImageDir + fileName;
+	
+	$.getJSON( filePath )
+	.success(function(data) {parseTargetLocations(data);})
+	.error(function(err) { 
+		console.erorr("ERROR with $.getJSON(" + filePath + ")");
+	})
+	.complete(function() { console.log("getJSON complete"); });
+	
+	function parseTargetLocations(data) {
+		console.log("TargetLocations acquired: " + data);
 
-	var accuracy = 1.0;
-	targetLocations[0] = new Location(0.0,0.0, accuracy);
-	targetLocations[1] = new Location(40.763495,-73.981381, accuracy);
-	targetLocations[2] = new Location(40.762471,-73.978935, accuracy);
-	targetLocations[3] = new Location(40.761476,-73.978173, accuracy);
-	//alert("getTargetLocations: " + targetLocations[0].loc.lat);
+		// The first location is a dummy location 
+		targetLocations[0] = new Location(0.0, 0.0, 1.0);
+		
+		for (var i=0; i<data.length; i++) {
+			console.log("TargetLocation" + i);
+			if ((data[i].latitude) && (data[i].longitude) && (data[i].accuracy)) {
+				console.log(data[i].latitude + ", " + data[i].longitude + ", " + data[i].accuracy);
+				targetLocations[i+1] = new Location(data[i].latitude, data[i].longitude, data[i].accuracy);
+			} else {
+				console.error("TargetLocation " + i + "is missing data");
+			}
+		}	
+		
+		initializeMap(currentLocation);
+	}
+	
+//	function onSuccess(data) {
+//	}
+
+//	var accuracy = 1.0;
+//	targetLocations[0] = new Location(0.0,0.0, accuracy);
+//	targetLocations[1] = new Location(40.763495,-73.981381, accuracy);
+//	targetLocations[2] = new Location(40.762471,-73.978935, accuracy);
+//	targetLocations[3] = new Location(40.761476,-73.978173, accuracy);
+	//alert("getTargetLocations: " + targetLocations[0].loc.latitude);
 }
 
 

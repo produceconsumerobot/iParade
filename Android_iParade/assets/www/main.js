@@ -41,7 +41,7 @@ function onDeviceReady() {
 	//document.addEventListener("online", onOnline, false);
 	checkConnection();
 	
-	// override the back button on adroid/blackberry
+	// override the back button on android/blackberry
 	document.addEventListener("backbutton", onBackKeyDown, false);
 	
 	window.onscroll = floater;
@@ -53,7 +53,8 @@ function onDeviceReady() {
 	startGpsTracking();
 	//startUpdateLocationTimer();
 	
-	initializeMap(currentLoc);
+	getTargetLocations(currentLoc);
+	//initializeMap(currentLoc);
 }
 
 function checkConnection() {
@@ -73,6 +74,7 @@ function checkConnection() {
 
     if ((!networkState) || (networkState == Connection.UNKNOWN) ||  (networkState == Connection.NONE)) {
     	//offlineAlert();
+    	setTimeout(function() { checkConnection(); }, 1000);
     	return false;
     } else {
     	//alert('Connection type: ' + networkState);
@@ -88,8 +90,10 @@ function offlineAlert() {
 }
 
 function toggleVoiceover() {
+	console.log("toggleVoiceover()");
 	voiceover = !voiceover;
 	if (!voiceover) {
+		console.log("voiceover off");
 		if (my_audio) {
 			my_audio.stop();
 			my_audio.release();
@@ -99,6 +103,7 @@ function toggleVoiceover() {
 		//document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn on voiceover";
 		document.getElementById("toggleVoiceoverButton").src = "design/voice_over_off.jpg";
 	} else {
+		console.log("voiceover on");
 		//document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn off voiceover";
 		document.getElementById("toggleVoiceoverButton").src = "design/voice_over_on.jpg";
 	}
@@ -110,8 +115,16 @@ function mouseDown() {
 }
 
 function onBackKeyDown() {
+	// Handle the back button
+	console.log("onBackKeyDown()");
 	navigator.app.exitApp();
-    // Handle the back button
+}
+
+function onMenuKeyDown() {
+    // Handle the menu button
+	console.log("onMenuKeyDown()");
+	document.getElementById("tabs").style.display="inline";
+	startTabsTimer();
 }
 
 // Shows the tabs for the brief period and then hides them
@@ -122,6 +135,7 @@ function startTabsTimer() {
 	startTabsTimerId = setTimeout("hideTabs()", hideTabsTimeout);		
 }
 function hideTabs() {
+	console.log("hideTabs()");
 	document.getElementById("tabs").style.display="none";
 }
 
@@ -144,10 +158,14 @@ function init() {
 	hideTabs();
 	
 	// Start listener for PhoneGap loaded
+	console.log("Adding deviceready listener");
 	document.addEventListener("deviceready", onDeviceReady, false);
+	
+	// Start the menubutton listener
+	document.addEventListener("menubutton", onMenuKeyDown, false);
 
 	// Get the home content
-	document.getElementById('home').innerHTML = getHomeContent(contentPage);
+	getHomeContent(contentPage);
 
 	//$("div.tabContent").css(".min-height", getWindowHeight());
 	
@@ -209,7 +227,6 @@ function showTab(options) {
 		if ( id == selectedId ) {
 			switch (selectedId) {
 			case 'notes':
-				//document.getElementById('home').innerHTML = getHomeContent(contentPage);
 				break;
 			default:
 			}     
@@ -326,7 +343,6 @@ function nextPage() {
 		return;
 	}
 	
-	vidPath = null;
 	if (my_audio) {
 		my_audio.stop();
 		my_audio.release();
@@ -339,7 +355,7 @@ function nextPage() {
 	if ((contentPage % 2) > 0) {
 		incrementTarget();
 	}
-	document.getElementById('home').innerHTML = getHomeContent(contentPage);
+	getHomeContent(contentPage);
 	showTab({"id" : 'home'});
 	hideTabs();
 }
@@ -377,92 +393,82 @@ function getText() {
 } 
 
 function restartApp() {
-	if (my_audio) {
-		my_audio.stop();
-		my_audio.release();
-	}
-	my_audio = null;
-	audioTimer = null;
+	console.log("restartApp()");
+	// process the confirmation dialog result
+    function onConfirm(button) {
+    	if (button==1) {
+	    	if (my_audio) {
+	    		console.log("stopping audio");
+	    		my_audio.stop();
+	    		my_audio.release();
+	    	} else {
+	    		console.log("audio not open: my_audio=" + my_audio);
+	    	}
+	    		
+	    	my_audio = null;
+	    	audioTimer = null;
+	    	
+	    	navigator.app.loadUrl("file:///android_asset/www/index.html"); 
+	    	//window.location = "index.html";
+	    	//window.location.reload(true);
+    	}
+    }
 
-	window.location.reload();
+    // Show a custom confirmation dialog
+    navigator.notification.confirm(
+        'Do you want to restart iParade?',  // message
+        onConfirm,              // callback to invoke with index of button pressed
+        'Restart iParade?',            // title
+        'Restart,Cancel'          // buttonLabels
+    );
 }
 
-window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && windown.attachEvent("onload", init);
+window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && window.attachEvent("onload", init);
 
 //Returns html for the home tab based on the value of pageNum	
 function getHomeContent(pageNum) {
+	console.log("getHomeContent(" + pageNum + ")");
 	var html = "";
-	switch (pageNum) {
-	case 0:
-		html = html + "<h2 align='center'>iParade#2: Unchanged When Exhumed</h2> <p>";
-		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
-		html = html + "<p>This text describes how to experience this app, what do do, where to go etc. </p>";
-		//html = html + "<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()'>Exit iParade</button>";
-		html = html + getNextButton(true); //"<button type='button' class='rightFloat button' onclick='nextPage()'>Next</button>";
+	
+	if (pageNum == 0) {
+		// First page is special
+		html = html + "<div id='textContent'></div>";
+		html = html + getNextButton(true); 
 		html = html +  "<div class='clearBoth'>";
-		break;
-	case 1:
-		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_btwImage" + ".jpg'>";
-		//html = html + "<p>" + getText() + "</p>";
-		//html = html + "<iframe src=\"http://produceconsumerobot.com/temp/lovid/iparade/01.html\"><iframe>";s
-		//html = html + "<div src=\"http://produceconsumerobot.com/temp/lovid/iparade/01.html\"><div>";
-		//html = html + "<iframe src=\"http://produceconsumerobot.com/temp/lovid/iparade/01.html\" width=\"100%\" height=\"100%\" scrolling=\"no\" frameborder=\"0\" vspace=\"0\" hspace=\"0\" marginwidth=\"0\" marginheight=\"0\" ></iframe>";
-		html = html +  "<div class='clearBoth'>";
-		checkingForTargetLocation = true;
-		if (fakeGPS) testLocChangeTimer();
-		break;
-	case 2:
-		html = html + "<h2 align='center'>Step #1</h2> <p>";
-		//html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
-		html = html + "<p>Location 1 text invites the viewer to reexamine their relationship to reality and the manner in which their perception reveals the underlying inter-relationship between the objective and subjective universe.</p>";
-		html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
-		html = html + getNextButton(false); //"<button id='nextButton' type='button' class='rightFloat button' onclick='nextPage()' style='visibility:hidden;'>Next</button>";
-		html = html +  "<div class='clearBoth'>";
-		navigator.notification.vibrate(inTargetVibLen);
-		getVoiceover(targetNum);
-		getVideo(targetNum);
-		break;
-	case 3:
+		document.getElementById('home').innerHTML = html;
+		$("#textContent").load(contentImageDir + targetNum + "_text.html");
+	} else if ((pageNum % 2) == 1) {
+		// Between page
 		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_btwImage" + ".jpg'>";
 		html = html +  "<div class='clearBoth'>";
+		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
+		localVidPath = null;
+		getVideo(targetNum);
 		if (fakeGPS) testLocChangeTimer();
-		break;
-	case 4:
-		html = html + "<h2 align='center'>Step #2</h2> <p>";
-		//html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
-		html = html + "<p>Location 2 text describes a magical kingdom where people are inanimate and the universe exists without time or space.</p>";
-		html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
-		html = html + getNextButton(false); //"<button id='nextButton' type='button' class='rightFloat button' onclick='nextPage()' style='visibility:hidden;'>Next</button>";
+	} else {
+		// Main content page
+		
+		html = html + "<div id='textContent'></div>";
+		html = html + "<div id='playVideoButton' class='buttonCenter'>";
+		html = html + "<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>";
+		html = html + "<img id='playImg' style='display:none' src='./design/play.jpg'/>";
+		html = html + "<video id='playVid' style='display:none' controls='controls'>";
+		html = html + "<source src='' type='video/mp4' /></video>";
+		html = html + "</div>";
+		//html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
+		html = html + getNextButton(false);
 		html = html +  "<div class='clearBoth'>";
+		document.getElementById('home').innerHTML = html;
+		$("#textContent").load(contentImageDir + targetNum + "_text.html");
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
-		getVideo(targetNum);
-		break;
-	case 5:
-		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_btwImage" + ".jpg'>";
-		html = html +  "<div class='clearBoth'>";
-		checkingForTargetLocation = true;
-		if (fakeGPS) testLocChangeTimer();
-		break;
-	case 6:
-		html = html + "<h2 align='center'>Step #3</h2> <p>";
-		//html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_mainImage" + ".jpg'>";
-		html = html + "<p>Location 3 yabber jabber.</p>";
-		html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
-		html = html + "<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()' style='visibility:hidden;'>Exit iParade</button>";
-		html = html +  "<div class='clearBoth'>";
-		navigator.notification.vibrate(inTargetVibLen);
-		getVoiceover(targetNum);
-		getVideo(targetNum);
-		break;
-	default:
-		break;
+		displayVidElement();		
 	}
-	return html;
 }
 
 function getNextButton(visible) {
+	console.log("getNextButton(" + visible + ")");
 	var nextButton;
 	if (visible) {
 		nextButton = "<img id='nextButton' src='design/next_arrow.jpg' class='rightFloat' ontouchstart='nextPage()'/>";

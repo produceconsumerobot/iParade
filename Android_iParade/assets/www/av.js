@@ -1,18 +1,22 @@
 var loopingAudio = false;
 var _position = -1;
 var _duration = -1;
-
+var vidDownloadComplete = false;
 
 // Plays a video
 function playVideo() {
-	if (vidPath == null) {
+	console.log("playVideo()");
+	if (localVidPath == null) {
 		alert('Video Not Found.');
 	} else {
-		pauseAudio();
-		showVideo2(vidPath);
+		//pauseAudio();
+		stopAudio();
+		if (device.platform == "Android") {
+			showVideo2(localVidPath); // play the locally stored video
+		}
 	}
-	document.getElementById("nextButton").style.visibility="visible";
-	// play the locally stored video
+	setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, 500);
+	//document.getElementById("nextButton").style.visibility="visible";
 }
 
 // Audio player
@@ -27,7 +31,7 @@ function playAudio(src) {
 	// Play audio
 	my_audio.play();
 
-	// Update my_audio position every second
+	// Update my_audio position
 	if (audioTimer == null) {
 		audioTimer = setInterval(function() {
 			if (my_audio) {
@@ -38,9 +42,9 @@ function playAudio(src) {
 							console.log("getCurrentPosition: success");
 							if (position > -1) {
 								//setAudioPosition((position) + " sec");
-								console.log("AudioPosition: " + my_audio._position);
-								console.log("AudioDuration: " + my_audio._duration);
-								
+								if ((position % 5) < 1) { // Write to the console infrequently
+									console.log("AudioPosition: " + my_audio._position + " / " + my_audio._duration);
+								}
 								checkAudioLoop();
 							}
 						},
@@ -65,7 +69,7 @@ function onSuccess() {
 // onError Callback 
 //
 function onError(error) {
-	alert( 'Audio Error:\n' +
+	console.error( 'Audio Error:\n' +
 			'code: '    + error.code    + '\n' + 
 			'message: ' + error.message + '\n');
 	if (my_audio) {
@@ -85,6 +89,7 @@ function setAudioPosition(position) {
 // Pause audio
 // 
 function pauseAudio() {
+	console.log("pauseAudio()");
 	if (my_audio) {
 		my_audio.pause();
 	}
@@ -93,6 +98,7 @@ function pauseAudio() {
 // Stop audio
 // 
 function stopAudio() {
+	console.log("stopAudio()");
 	if (my_audio) {
 		my_audio.stop();
 	}
@@ -100,11 +106,34 @@ function stopAudio() {
 	audioTimer = null;
 }
 
+function displayVidElement() {
+	console.log("displayVidElement()");
+	if (vidDownloadComplete && !checkingForTargetLocation) {
+		console.log("displaying Video element");
+
+		$("#playVideoButton #downloadingImg").css("display", "none");
+	    
+	    // Check if the device supports video
+	    var vidTest = $("#playVid");
+	    if (vidTest.canPlayType && vidTest.canPlayType('video/mp4').replace(/no/, '')) {
+	    	// Video supported!!
+	    	setTimeout(function() { $("#playVideoButton #playVid").css("display", "block"); }, 1000);	
+	    	vidTest.children("source").attr("src", localVidPath);
+	    } else {
+	    	// Video not supported :(
+	    	setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
+	    	document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
+	    }
+	}
+}
 
 function getVideo(targetNumber) {
+	console.log("getVideo(" + targetNumber + ")");
 	var remoteFile = contentVideoDir + targetNumber + "_video" + vidExt;
 	var localPath = storageBase + localDir;
 	var localFile = localPath + "/" + localVidName;
+	
+	vidDownloadComplete = false;
 
 	if (DEBUG > 0) alert("targetNumber=" + targetNumber);
 
@@ -114,37 +143,26 @@ function getVideo(targetNumber) {
 			remoteFile,
 			localFile,
 		    function(entry) {
-		        console.log("download complete: " + entry.fullPath);
-		        document.getElementById("playVideoButton").childNodes[0].nodeValue="Play Video";
-				document.getElementById("playVideoButton").onclick=function(){ playVideo(); };
-				vidPath = localFile;
+				console.log("download complete: " + entry.fullPath);
+
+				localVidPath = localFile;
+				vidDownloadComplete = true;
+				displayVidElement();
+
 		    },
 		    function(error) {
 		        console.log("download error source " + error.source);
 		        console.log("download error target " + error.target);
 		        console.log("upload error code" + error.code);
+		        // Try try again...
+		        setTimeout(function() { getVideo(targetNumber);}, 1000);	
+		        //getVideo(targetNumber);
 		    }
 		);
-	
-//	var params = new Object;
-//	params.overwrite = true;
-//	params.dirName = localPath;
-//	params.fileName = localVidName;
-	
-	//download(filename, {overwrite: true, dirName: "/mnt/sdcard/download", fileName: "test.jpg"}, function(res) { alert(JSON.stringify(result));}, function(error) {alert(error); } );
-//	download(filename, params, 
-//			function(res) { 
-//		if (res.status == 1) {
-//			document.getElementById("playVideoButton").childNodes[0].nodeValue="Play Video";
-//			document.getElementById("playVideoButton").onclick=function(){ playVideo(); };
-//			vidPath = storageBase + localDir + "/" + localVidName;
-//			//document.getElementById("playVideoButton").style.backgroundColor="#999999";
-//		}
-//	}, 
-//	function(error) {alert('Video download failed: ' + error); } );	
 }
 
 function getVoiceover(targetNumber) {
+	console.log("getVoiceover(" + targetNumber + ")");
 	var filename = contentVoiceoverDir + targetNumber + "_voiceover" + voiceoverExt;
 
 	var playRemoteAudio = true;
@@ -156,42 +174,44 @@ function getVoiceover(targetNumber) {
 				playAudio(voiceoverPath);
 			}
 		}
-	} else {
-		var params = new Object;
-		params.overwrite = true;
-		params.dirName = storageBase + localDir;
-		params.fileName = localVoiceoverName;
-
-		if (DEBUG > 0) alert("targetNumber=" + targetNumber);
-
-		//download(filename, {overwrite: true, dirName: "/mnt/sdcard/download", fileName: "test.jpg"}, function(res) { alert(JSON.stringify(result));}, function(error) {alert(error); } );
-		download(filename, params, 
-				function(res) { 
-			if (res.status == 1) {
-				document.getElementById("playVideoButton").childNodes[0].nodeValue="Play Video";
-				document.getElementById("playVideoButton").onclick=function(){ playVideo(); };
-				voiceoverPath = localDir + localVoiceoverName;
-				//playAudio("/android_asset/www/" + localVoiceoverName);
-				playAudio(storageBase + localVoiceoverName);
-
-				//playAudio(voiceoverPath);
-				//playAudio(filename);
-				//document.getElementById("playVideoButton").style.backgroundColor="#999999";
-			}
-		}, 
-		function(error) {
-			if (DEBUG > 0) {
-				alert(error + ": " + filename); 
-			} else {
-				alert("Error: " + error);
-			}
-		}
-		);	
-	}
+	} 
+//	else {
+//		var params = new Object;
+//		params.overwrite = true;
+//		params.dirName = storageBase + localDir;
+//		params.fileName = localVoiceoverName;
+//
+//		if (DEBUG > 0) alert("targetNumber=" + targetNumber);
+//
+//		//download(filename, {overwrite: true, dirName: "/mnt/sdcard/download", fileName: "test.jpg"}, function(res) { alert(JSON.stringify(result));}, function(error) {alert(error); } );
+//		download(filename, params, 
+//			function(res) { 
+//				if (res.status == 1) {
+//					document.getElementById("playVideoButton").childNodes[0].nodeValue="Play Video";
+//					document.getElementById("playVideoButton").onclick=function(){ playVideo(); };
+//					voiceoverPath = localDir + localVoiceoverName;
+//					//playAudio("/android_asset/www/" + localVoiceoverName);
+//					playAudio(storageBase + localVoiceoverName);
+//	
+//					//playAudio(voiceoverPath);
+//					//playAudio(filename);
+//					//document.getElementById("playVideoButton").style.backgroundColor="#999999";
+//				}
+//			}, 
+//			function(error) {
+//				if (DEBUG > 0) {
+//					alert(error + ": " + filename); 
+//				} else {
+//					console.error("Error getting " + filename + ": " + error);
+//				}
+//			}
+//		);	
+//	}
 }
 
 
 function getAudioTheme() {
+	console.log("getAudioTheme()");
 	var filename = contentAudioTheme + voiceoverExt;
 
 	var playRemoteAudio = true;
@@ -207,6 +227,7 @@ function getAudioTheme() {
 }
 
 function startAudioLooper() {
+	console.log("startAudioLooper()");
 	if (audioLooperTimerId == null) {
 		audioLooperTimerId = setInterval(
 				"updateLocation(targetLocations[targetNum])", 500);
@@ -214,14 +235,14 @@ function startAudioLooper() {
 }
 
 function checkAudioLoop() {
-	console.log("checkAudioLoop:");
+	//console.log("checkAudioLoop:");
 	if (loopingAudio) {
 		//console.log("checkAudioLoop: loopingAudio");
 		if (my_audio){
 			//console.log("checkAudioLoop: my_audio");
 			if ((my_audio._duration > -1) && (my_audio._position > -1)) {
 				//console.log("checkAudioLoop: duration/position");
-				if ((my_audio._duration - my_audio._position) < 1.0){
+				if ((my_audio._duration - my_audio._position) < 2.0){
 					console.log("checkAudioLoop: seekTo");
 					my_audio.seekTo(0);
 				}

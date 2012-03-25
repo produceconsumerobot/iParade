@@ -8,6 +8,7 @@ public class IParade03Activity extends DroidGap {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        super.init();
         super.loadUrl("file:///android_asset/www/index.html");
     }
 }

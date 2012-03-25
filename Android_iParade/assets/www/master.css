@@ -73,6 +73,10 @@ button {
 	margin-right: auto;
 }
 
+.pageTitle {
+	text-align:center;
+}
+
 .tabImage {
 	height: 90%;
 	width: auto;
@@ -100,6 +104,23 @@ button {
 	display: block;
 	right: 0px;
 	bottom: 0px;
+}
+
+img#downloadingImg {
+	width:100%;
+	height: auto;
+}
+
+img#playImg {
+	width: 30%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+video#playVid {
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 ul#tabs {
