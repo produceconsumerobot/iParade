@@ -44,6 +44,9 @@ function onDeviceReady() {
 	// override the back button on android/blackberry
 	document.addEventListener("backbutton", onBackKeyDown, false);
 	
+	// Start the menubutton listener
+	document.addEventListener("menubutton", onMenuKeyDown, false);
+	
 	window.onscroll = floater;
 	
 	getAudioTheme();
@@ -161,9 +164,6 @@ function init() {
 	console.log("Adding deviceready listener");
 	document.addEventListener("deviceready", onDeviceReady, false);
 	
-	// Start the menubutton listener
-	document.addEventListener("menubutton", onMenuKeyDown, false);
-
 	// Get the home content
 	getHomeContent(contentPage);
 
@@ -331,6 +331,7 @@ function getWindowWidth() {
 
 // Moves to the next page in the sequence
 function nextPage() {
+	console.log("nextPage()");
 	// If the device isn't online, don't move to the next page
 	if (!checkConnection()) {
 		offlineAlert();
@@ -438,13 +439,13 @@ function getHomeContent(pageNum) {
 		// First page is special
 		html = html + "<div id='textContent'></div>";
 		html = html + getNextButton(true); 
-		html = html +  "<div class='clearBoth'>";
+		html = html +  "<div class='clearBoth'></div>";
 		document.getElementById('home').innerHTML = html;
 		$("#textContent").load(contentImageDir + targetNum + "_text.html");
 	} else if ((pageNum % 2) == 1) {
 		// Between page
 		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_btwImage" + ".jpg'>";
-		html = html +  "<div class='clearBoth'>";
+		html = html +  "<div class='clearBoth'></div>";
 		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
 		localVidPath = null;
@@ -469,6 +470,7 @@ function getHomeContent(pageNum) {
 		getVoiceover(targetNum);
 		displayVidElement();		
 	}
+	console.log("finishing getHomeContent");
 }
 
 function getNextButton(visible) {
@@ -479,7 +481,7 @@ function getNextButton(visible) {
 	} else {
 		nextButton = "<img id='nextButton' src='design/next_arrow.jpg' class='rightFloat' ontouchstart='nextPage()' style='visibility:hidden;'/>";
 	}
-	//console.log(nextButton);
+	console.log("returning nextButton");
 	return nextButton;
 	//"<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()' style='visibility:hidden;'>Exit iParade</button>";
 }
