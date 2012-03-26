@@ -88,7 +88,8 @@ function checkConnection() {
 
 // Alert to notify user that they are offline
 function offlineAlert() {
-	alert('You are currently offline.\nPlease connect to the network to continue.');
+	console.log("offlineAlert()");
+	navigator.notification.alert('You are currently offline.\nPlease connect to the network to continue.');
 	//confirm();
 }
 

@@ -64,10 +64,12 @@ function geolocationCallbackError(error) {
 }
 
 function badGpsAlert() {
-	alert('Location not found or innacurate.\nPlease enable GPS location services and obtain a GPS fix to continue.');
+	console.log("badGpsAlert()");
+	navigator.notification.alert('Location not found or innacurate.\nPlease enable GPS location services and obtain a GPS fix to continue.');
 }
 
 function checkGPS() {
+	console.log("checkGPS()");
 	if (fakeGPS) {
 		return true;
 	}
