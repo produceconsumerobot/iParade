@@ -253,8 +253,10 @@ function inTargetLocation(currentLocation, targetLocation) {
 
 //increment to the next TargetLocation
 function incrementTarget() {
+	console.log("incrementTarget()");
 	//if ((targetNum + 1) < nTargets) {
 	if ((targetNum + 1) < targetLocations.length) {
+		console.log("targetNum++");
 		targetNum++;
 	}
 	if (DEBUG > 0) alert("targetNum=" + targetNum);

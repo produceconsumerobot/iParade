@@ -47,6 +47,9 @@ function onDeviceReady() {
 	// Start the menubutton listener
 	document.addEventListener("menubutton", onMenuKeyDown, false);
 	
+	// Request the root file system for writing audio/video
+	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
+	
 	window.onscroll = floater;
 	
 	getAudioTheme();
@@ -58,6 +61,17 @@ function onDeviceReady() {
 	
 	getTargetLocations(currentLoc);
 	//initializeMap(currentLoc);
+}
+
+function onFileSystemSuccess(fileSystem) {
+    console.log(fileSystem.name);
+    console.log(fileSystem.root.name);
+    storageBase = fileSystem.root.name;
+}
+
+function onFileSystemFail(evt) {
+    console.log(evt.target.error.code);
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
 }
 
 function checkConnection() {
