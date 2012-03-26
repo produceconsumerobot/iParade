@@ -14,7 +14,7 @@ var audioTimer = null;
 var contentImageDir = "http://produceconsumerobot.com/temp/lovid/content/";
 var contentVideoDir = "http://produceconsumerobot.com/temp/lovid/content/";
 var storageBase = "/mnt/sdcard/";
-var localDir = "download/";
+var localDir = "iParade/";
 var localVidBase = "iparadeVideo";
 //var vidExt = ".3gp";
 var vidExt = ".mp4";
@@ -37,7 +37,7 @@ var inTargetVibLen = 200;
 // PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
 function onDeviceReady() {
     console.debug('onDeviceReady()');
-    console.debug(device.platform);
+    console.debug("device=" + device.platform);
 	//document.addEventListener("online", onOnline, false);
 	checkConnection();
 	
@@ -61,17 +61,27 @@ function onDeviceReady() {
 	
 	getTargetLocations(currentLoc);
 	//initializeMap(currentLoc);
-}
+	
+	function getDirSuccess(dir) {
+		console.log("getDirSuccess: " + dir.fullpath);
+		storageBase = fileSystem.root.fullpath;
+	}
+	
+	function onFileSystemSuccess(fileSystem) {
+		console.log("onFileSystemSuccess()");
+	    console.log(fileSystem.name);
+	    console.log(fileSystem.root.name);
+	    console.log(fileSystem.root.fullpath);
+	    fileSystem.getDirectory(".", null, getDirSuccess, console
+	    	    .log("getDir fail"));
+	    
+	}
 
-function onFileSystemSuccess(fileSystem) {
-    console.log(fileSystem.name);
-    console.log(fileSystem.root.name);
-    storageBase = fileSystem.root.name;
-}
+	function onFileSystemFail(evt) {
+	    console.log(evt.target.error.code);
+	    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
+	}
 
-function onFileSystemFail(evt) {
-    console.log(evt.target.error.code);
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
 }
 
 function checkConnection() {
