@@ -18,7 +18,6 @@ function playVideo() {
 			showVideo2(localVidPath); // play the locally stored video
 		}
 	}
-	setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, 500);
 	//document.getElementById("nextButton").style.visibility="visible";
 }
 
@@ -108,42 +107,6 @@ function releaseAudio() {
 	my_audio = null;
 }
 
-function displayVidElement() {
-	console.log("displayVidElement()");
-	if (vidDownloadComplete && !checkingForTargetLocation) {
-		console.log("displaying Video element");
-
-		$("#playVideoButton #downloadingImg").css("display", "none");
-	    
-	    // Check if the device supports video
-	    var vidTest = $("#playVid");
-	    if (device.platform.toLowerCase().search("android") >= 0) {
-	    	// Video not supported :(
-	    	setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
-	    	document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
-        } else {
-        // Video supported!!
-	    	setTimeout(function() { $("#playVideoButton #playVid").css("display", "block"); }, 1000);	
-            
-            var html = "";
-            html = html + "<video id='playVid' style='display:block' controls='controls'>";
-            html = html + "<source src='" + localVidPath + "' type='video/mp4' /></video>"; 
-            
-            vidTest.html(html);
-            
-	    	//vidTest.children("source").attr("src", localVidPath);
-	    } 
-//	    if (vidTest.canPlayType && vidTest.canPlayType('video/mp4').replace(/no/, '')) {
-//	    	// Video supported!!
-//	    	setTimeout(function() { $("#playVideoButton #playVid").css("display", "block"); }, 1000);	
-//	    	vidTest.children("source").attr("src", localVidPath);
-//	    } else {
-//	    	// Video not supported :(
-//	    	setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
-//	    	document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
-//	    }
-	}
-}
 
 function getVideo(targetNumber, nthTry) {
 	console.log("getVideo(" + targetNumber + ")");

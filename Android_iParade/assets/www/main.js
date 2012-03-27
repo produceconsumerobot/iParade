@@ -445,9 +445,9 @@ function getHomeContent(pageNum) {
 		html = html + "<div id='textContent'></div>";
 		html = html + "<div id='playVideoButton' class='buttonCenter'>";
 		html = html + "<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>";
-		html = html + "<img id='playImg' style='display:none' src='./design/play.jpg'/>";
-		html = html + "<video id='playVid' style='display:none' controls='controls'>";
-		html = html + "<source src='' type='video/mp4' /></video>";
+		//html = html + "<img id='playImg' style='display:none' src='./design/play.jpg'/>";
+		//html = html + "<video id='playVid' style='display:none' controls='controls'>";
+		//html = html + "<source src='' type='video/mp4' /></video>";
 		html = html + "</div>";
 		//html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
 		html = html + getNextButton(false);
@@ -472,5 +472,40 @@ function getNextButton(visible) {
 	console.log("returning nextButton");
 	return nextButton;
 	//"<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()' style='visibility:hidden;'>Exit iParade</button>";
+}
+
+function showNextButton() {
+    setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, 500);
+}
+
+function displayVidElement() {
+	console.log("displayVidElement()");
+	if (vidDownloadComplete && !checkingForTargetLocation) {
+		console.log("displaying Video element");
+        
+		$("#playVideoButton #downloadingImg").css("display", "none");
+	    
+	    // Check if the device supports video
+	    //var vidTest = $("#playVid");
+	    if (device.platform.toLowerCase().search("android") >= 0) {
+	    	// Video not supported :(
+            console.log("Creating img element");
+            
+            var html = "";
+            html = html + "<img id='playImg' src='./design/play.jpg' ontouchstart='playVideo();'  ontouchstart='showNextButton();'/>";
+	    	//setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
+	    	//document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
+        } else {
+            // Video supported!!
+            console.log("Creating video element: " + localVidPath);
+            
+            var html = "";
+            html = html + "<video id='playVid' style='display:block' controls='controls' ontouchstart='showNextButton();'>";
+            html = html + "<source src='" + localVidPath + "' type='video/mp4' /></video>"; 
+            
+ 	    } 
+        $("#playVideoButton").html(html);
+        
+	}
 }
 
