@@ -116,7 +116,7 @@ function displayVidElement() {
 		$("#playVideoButton #downloadingImg").css("display", "none");
 	    
 	    // Check if the device supports video
-	    //var vidTest = $("#playVid");
+	    var vidTest = $("#playVid");
 	    if (device.platform.toLowerCase().search("android") >= 0) {
 	    	// Video not supported :(
 	    	setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
@@ -124,7 +124,14 @@ function displayVidElement() {
         } else {
         // Video supported!!
 	    	setTimeout(function() { $("#playVideoButton #playVid").css("display", "block"); }, 1000);	
-	    	vidTest.children("source").attr("src", localVidPath);
+            
+            var html = "";
+            html = html + "<video id='playVid' style='display:block' controls='controls'>";
+            html = html + "<source src='" + localVidPath + "' type='video/mp4' /></video>"; 
+            
+            vidTest.html(html);
+            
+	    	//vidTest.children("source").attr("src", localVidPath);
 	    } 
 //	    if (vidTest.canPlayType && vidTest.canPlayType('video/mp4').replace(/no/, '')) {
 //	    	// Video supported!!
