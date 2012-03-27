@@ -9,26 +9,32 @@ var startTabsTimerId = null; // timer ID
 var my_audio = null;
 var audioTimer = null;
 
+// deprecated variables
+//var contentImageDir = "http://produceconsumerobot.com/temp/lovid/content/";
+//var contentVideoDir = "http://produceconsumerobot.com/temp/lovid/content/";
+//var contentVoiceoverDir = "http://produceconsumerobot.com/temp/lovid/content/";
+//var contentAudioTheme = "http://produceconsumerobot.com/temp/lovid/content/audioTheme";
+//var localVoiceoverName = localVoiceoverBase + voiceoverExt;
+//var localVoiceoverBase = "iparadeVoiceover";
+//var storageBase = "/youlose/";
+//var localVidName = localVidBase + vidExt;
+//var localVidPath = null;
+//var voiceoverPath = null;
+//var storageBase = "/mnt/sdcard/";
 
 //var contentImageDir = "./content/"; // content images directory
-var contentImageDir = "http://produceconsumerobot.com/temp/lovid/content/";
-var contentVideoDir = "http://produceconsumerobot.com/temp/lovid/content/";
-//var storageBase = "/mnt/sdcard/";
-var storageBase = "/youlose/";
+var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/content/";
+var remoteVidBase = "_video";
+var remoteVoiceOverBase = "_voiceover";
+var remoteAudioThemeBase = "audioTheme";
+
 var localDir = "iParade";
 var localVidBase = "iparadeVideo";
-//var vidExt = ".3gp";
+var localContentDir = null;
 var vidExt = ".mp4";
-var localVidName = localVidBase + vidExt;
-var localVidPath = null;
-
-var voiceover = true;
-var contentVoiceoverDir = "http://produceconsumerobot.com/temp/lovid/content/";
-var contentAudioTheme = "http://produceconsumerobot.com/temp/lovid/content/audioTheme";
-var localVoiceoverBase = "iparadeVoiceover";
 var voiceoverExt = ".mp3";
-var localVoiceoverName = localVoiceoverBase + voiceoverExt;
-var voiceoverPath = null;
+var audioThemeExt = ".mp3";
+var voiceover = true;
 
 var hideTabsTimeout = 2000;
 var inTargetVibLen = 200;
@@ -67,7 +73,7 @@ function onDeviceReady() {
 function getDirSuccess(dir) {
 	console.log("getDirSuccess: " + dir.toURI());
 	console.log("getDirSuccess: " + dir.toURI().replace("file://",""));
-	storageBase = dir.toURI().replace("file://","");
+	localContentDir = dir.toURI().replace("file://","");
 }
 
 function onFileSystemSuccess(fileSystem) {
@@ -122,12 +128,7 @@ function toggleVoiceover() {
 	voiceover = !voiceover;
 	if (!voiceover) {
 		console.log("voiceover off");
-		if (my_audio) {
-			my_audio.stop();
-			my_audio.release();
-		}
-		my_audio = null;
-		audioTimer = null;
+		releaseAudio();
 		//document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn on voiceover";
 		document.getElementById("toggleVoiceoverButton").src = "design/voice_over_off.jpg";
 	} else {
@@ -369,14 +370,9 @@ function nextPage() {
 		return;
 	}
 	
-	if (my_audio) {
-		my_audio.stop();
-		my_audio.release();
-		loopingAudio = false;
-	}
-	my_audio = null;
-	audioTimer = null;
-	
+	releaseAudio();
+	loopingAudio = false;
+
 	contentPage++;
 	if ((contentPage % 2) > 0) {
 		incrementTarget();
@@ -386,54 +382,13 @@ function nextPage() {
 	hideTabs();
 }
 
-// Broken function to read text from a text file	
-function getText() {
-	var allText = null;
-	var txtFile = new XMLHttpRequest();
-	txtFile.open("GET", "http://produceconsumerobot.com/temp/lovid/iparade/01.txt");
-	/*txtFile.onreadystatechange = function() {
-		  if (txtFile.readyState === 4) {  // Makes sure the document is ready to parse.
-			if (txtFile.status === 200) {  // Makes sure it's found the file.
-			  allText = txtFile.responseText; 
-			  lines = txtFile.responseText.split("\n"); // Will separate each line into an array
-			} else {
-				alltext = "status failure";
-			}
-		  } else {
-		  	alltext = "readyState failed";
-		  }
-		}
-	 */
-	txtFile.send(false);
-
-	allText = txtFile.responseText;
-	//file = fopen("C:\\Pub\\dropbox\\iParade\\android\\iParade01\\assets\\www\\01.txt", 0);
-	//var file_length = flength(file);
-	//var content = fread(file, file_length);
-
-	if (allText != null) {
-		return allText;
-	} else {
-		return "This is a failed test to read text from a file using javascript";
-	}
-} 
-
 function restartApp() {
 	console.log("restartApp()");
 	// process the confirmation dialog result
     function onConfirm(button) {
         console.log("onConfirm(" + button + ")");
     	if (button==1) {
-	    	if (my_audio) {
-	    		console.log("stopping audio");
-	    		my_audio.stop();
-	    		my_audio.release();
-	    	} else {
-	    		console.log("audio not open: my_audio=" + my_audio);
-	    	}
-	    		
-	    	my_audio = null;
-	    	audioTimer = null;
+    		releaseAudio();
 	    	
             if (navigator.app) {
                 navigator.app.loadUrl("file:///android_asset/www/index.html"); 
@@ -466,10 +421,10 @@ function getHomeContent(pageNum) {
 		html = html + getNextButton(true); 
 		html = html +  "<div class='clearBoth'></div>";
 		document.getElementById('home').innerHTML = html;
-		$("#textContent").load(contentImageDir + targetNum + "_text.html");
+		$("#textContent").load(remoteContentDir + targetNum + "_text.html");
 	} else if ((pageNum % 2) == 1) {
 		// Between page
-		html = html + "<img class='bodyImage' src='" + contentImageDir + targetNum + "_btwImage" + ".jpg'>";
+		html = html + "<img class='bodyImage' src='" + remoteContentDir + targetNum + "_btwImage" + ".jpg'>";
 		html = html +  "<div class='clearBoth'></div>";
 		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
@@ -490,7 +445,7 @@ function getHomeContent(pageNum) {
 		html = html + getNextButton(false);
 		//html = html +  "<div class='clearBoth'>";
 		document.getElementById('home').innerHTML = html;
-		$("#textContent").load(contentImageDir + targetNum + "_text.html");
+		$("#textContent").load(remoteContentDir + targetNum + "_text.html");
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
 		displayVidElement();		

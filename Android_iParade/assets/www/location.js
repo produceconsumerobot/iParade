@@ -294,13 +294,13 @@ function Location(latitude, longitude, accuracy) {
 function getTargetLocations(currentLocation) {
 	console.log("getTargetLocations(" + currentLocation + ")");
 	fileName = "targetLocations.json";
-	filePath = contentImageDir + fileName;
+	filePath = remoteContentDir + fileName;
 	
 	console.log("$.getJSON(" + filePath + ")");
 	$.getJSON( filePath )
 	.success(function(data) {parseTargetLocations(data);})
 	.error(function(err) { 
-		console.erorr("ERROR with $.getJSON(" + filePath + ")");
+		console.error("ERROR with $.getJSON(" + filePath + "): " + err);
 	})
 	.complete(function() { console.log("getJSON complete"); });
 	

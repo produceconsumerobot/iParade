@@ -2,11 +2,14 @@ var loopingAudio = false;
 var _position = -1;
 var _duration = -1;
 var vidDownloadComplete = false;
+var maxTries = 10;
+var tryDelay = 1000;
+var localVidPath = null;
 
 // Plays a video
 function playVideo() {
 	console.log("playVideo()");
-	if (localVidPath == null) {
+	if ((localVidPath == null) || (!vidDownloadComplete)) {
 		alert('Video Not Found.');
 	} else {
 		//pauseAudio();
@@ -24,8 +27,31 @@ function playVideo() {
 // Play audio
 //
 function playAudio(src) {
-	// Create Media object from src
 	console.log("playAudio: " + src);
+	
+	// onSuccess Callback
+	function onSuccess() {
+		console.log("playAudio():Audio Success");
+		//_duration = 
+	}
+
+	// onError Callback 
+	function onError(error) {
+		console.error( 'Audio Error:\n' +
+				'code: '    + error.code    + '\n' + 
+				'message: ' + error.message + '\n');
+		if (my_audio) {
+			my_audio.stop();
+			my_audio.release();
+		}
+		my_audio = null;
+		if (audioTimer) {
+			clearInterval(audioTimer);
+		}
+		audioTimer = null;
+	}
+	
+	// Create Media object from src
 	my_audio = new Media(src, onSuccess, onError);
 
 	// Play audio
@@ -51,39 +77,11 @@ function playAudio(src) {
 						// error callback
 						function(e) {
 							console.log("Error getting pos=" + e);
-							setAudioPosition("Error: " + e);
 						}
 				);
 			}
 		}, 500);
 	}
-}
-
-// onSuccess Callback
-//
-function onSuccess() {
-	console.log("playAudio():Audio Success");
-	//_duration = 
-}
-
-// onError Callback 
-//
-function onError(error) {
-	console.error( 'Audio Error:\n' +
-			'code: '    + error.code    + '\n' + 
-			'message: ' + error.message + '\n');
-	if (my_audio) {
-		my_audio.stop();
-		my_audio.release();
-	}
-	my_audio = null;
-	audioTimer = null;
-}
-
-// Set audio position
-// 
-function setAudioPosition(position) {
-	document.getElementById('audio_position').innerHTML = position;
 }
 
 // Pause audio
@@ -102,8 +100,19 @@ function stopAudio() {
 	if (my_audio) {
 		my_audio.stop();
 	}
-	clearInterval(audioTimer);
+	if (audioTimer) {
+		clearInterval(audioTimer);
+	}
 	audioTimer = null;
+}
+
+function releaseAudio() {
+	console.log("releaseAudio()");
+	stopAudio();
+	if (my_audio) {
+		my_audio.release();
+	}
+	my_audio = null;
 }
 
 function displayVidElement() {
@@ -127,112 +136,87 @@ function displayVidElement() {
 	}
 }
 
-function getVideo(targetNumber) {
+function getVideo(targetNumber, nthTry) {
 	console.log("getVideo(" + targetNumber + ")");
-	var remoteFile = contentVideoDir + targetNumber + "_video" + vidExt;
-	//var localPath = storageBase + localDir;
-	var localFile = storageBase + "/" + localVidName;
+
+	// function to try to get video again
+	function tryAgain(tnum, ntry) {
+		if (ntry < maxTries) {
+			// Wait and try try again...
+	        setTimeout(function() { getVideo(tnum, ntry);}, ntry*tryDelay);
+		}
+	}
 	
-	vidDownloadComplete = false;
-
-	if (DEBUG > 0) alert("targetNumber=" + targetNumber);
-
-	var fileTransfer = new FileTransfer();
-
-	fileTransfer.download(
-			remoteFile,
-			localFile,
-		    function(entry) {
-				console.log("download complete: " + entry.fullPath);
-
-				localVidPath = localFile;
-				vidDownloadComplete = true;
-				displayVidElement();
-
-		    },
-		    function(error) {
-		        console.log("download error source " + error.source);
-		        console.log("download error target " + error.target);
-		        console.log("upload error code" + error.code);
-		        // Try try again...
-		        setTimeout(function() { getVideo(targetNumber);}, 1000);	
-		        //getVideo(targetNumber);
-		    }
-		);
+	// nthTry keeps track of number of attempts
+	if (!nthTry) {
+		nthTry = 1;
+	} else {
+		nthTry++;
+	}
+	
+	// If localContentDir isn't set yet, try again
+	if (!localContentDir) {
+		tryAgain(targetNumber, nthTry);
+	} else {
+		var remoteFile = remoteContentDir + targetNumber + "_video" + vidExt;
+		localVidPath = localContentDir + "/" + localVidBase + vidExt;
+		//var localPath = storageBase + localDir;
+		
+		vidDownloadComplete = false;
+	
+		var fileTransfer = new FileTransfer();
+		fileTransfer.download(
+				remoteFile,
+				localVidPath,
+			    function(entry) {
+					console.log("download complete: " + entry.fullPath);
+	
+					//localVidPath = localFile;
+					vidDownloadComplete = true;
+					displayVidElement();
+	
+			    },
+			    function(error) {
+			        console.log("download error source " + error.source);
+			        console.log("download error target " + error.target);
+			        console.log("upload error code" + error.code);
+			        // Try try again...
+			        tryAgain(targetNumber, nthTry);	
+			    }
+			);
+	}
 }
 
 function getVoiceover(targetNumber) {
 	console.log("getVoiceover(" + targetNumber + ")");
-	var filename = contentVoiceoverDir + targetNumber + "_voiceover" + voiceoverExt;
+	var filename = remoteContentDir + targetNumber + "_voiceover" + voiceoverExt;
 
 	var playRemoteAudio = true;
 
 	if (playRemoteAudio) {
 		if (voiceover) {
-			voiceoverPath = filename;
-			if (voiceoverPath) {
-				playAudio(voiceoverPath);
-			}
+			playAudio(filename);
 		}
 	} 
-//	else {
-//		var params = new Object;
-//		params.overwrite = true;
-//		params.dirName = storageBase + localDir;
-//		params.fileName = localVoiceoverName;
-//
-//		if (DEBUG > 0) alert("targetNumber=" + targetNumber);
-//
-//		//download(filename, {overwrite: true, dirName: "/mnt/sdcard/download", fileName: "test.jpg"}, function(res) { alert(JSON.stringify(result));}, function(error) {alert(error); } );
-//		download(filename, params, 
-//			function(res) { 
-//				if (res.status == 1) {
-//					document.getElementById("playVideoButton").childNodes[0].nodeValue="Play Video";
-//					document.getElementById("playVideoButton").onclick=function(){ playVideo(); };
-//					voiceoverPath = localDir + localVoiceoverName;
-//					//playAudio("/android_asset/www/" + localVoiceoverName);
-//					playAudio(storageBase + localVoiceoverName);
-//	
-//					//playAudio(voiceoverPath);
-//					//playAudio(filename);
-//					//document.getElementById("playVideoButton").style.backgroundColor="#999999";
-//				}
-//			}, 
-//			function(error) {
-//				if (DEBUG > 0) {
-//					alert(error + ": " + filename); 
-//				} else {
-//					console.error("Error getting " + filename + ": " + error);
-//				}
-//			}
-//		);	
-//	}
 }
 
 
 function getAudioTheme() {
 	console.log("getAudioTheme()");
-	var filename = contentAudioTheme + voiceoverExt;
+	var filename = remoteContentDir + remoteAudioThemeBase + audioThemeExt;
 
-	var playRemoteAudio = true;
-	
 	loopingAudio = true;
-
-	if (playRemoteAudio) {
-		audioThemePath = filename;
-		if (audioThemePath) {
-			playAudio(audioThemePath);
-		}
-	} 
+	
+	playAudio(filename);
 }
 
-function startAudioLooper() {
-	console.log("startAudioLooper()");
-	if (audioLooperTimerId == null) {
-		audioLooperTimerId = setInterval(
-				"updateLocation(targetLocations[targetNum])", 500);
-	}
-}
+//function startAudioLooper() {
+//	console.log("startAudioLooper()");
+//	if (audioLooperTimerId == null) {
+//		audioLooperTimerId = setInterval(
+//				"updateLocation(targetLocations[targetNum])", 500);
+//	}
+//}
 
 function checkAudioLoop() {
 	//console.log("checkAudioLoop:");
