@@ -70,10 +70,18 @@ function onDeviceReady() {
 	//initializeMap(currentLoc);
 }
 
+function getFileSuccess(fileEntry) {
+    console.log("getFileSuccess: " + fileEntry.toURI());
+}
+
 function getDirSuccess(dir) {
 	console.log("getDirSuccess: " + dir.toURI());
 	console.log("getDirSuccess: " + dir.toURI().replace("file://",""));
+    console.log("getDirSuccess: " + dir.fullpath);
 	localContentDir = dir.toURI().replace("file://","");
+    //localContentDir = dir.toURI();
+    //localContentDir = dir.fullpath;
+    dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
 }
 
 function onFileSystemSuccess(fileSystem) {
@@ -91,7 +99,7 @@ function onFileSystemFail(evt) {
 
 
 function checkConnection() {
-    console.debug('checkConnection()');
+    console.log('checkConnection()');
     var networkState = navigator.network.connection.type;
 
     console.log('Connection type: ' + networkState);
