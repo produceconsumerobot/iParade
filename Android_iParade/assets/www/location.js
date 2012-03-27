@@ -47,16 +47,19 @@ function clearUpdateLocationTimer() {
 }
 
 function startGpsTracking() {
+	console.log("startGpsTracking()");
 	var options = { "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
 	gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
 }
 
 // geolocation callbacks
 function geolocationCallbackSuccess(position) {
+	console.log("geolocationCallbackSuccess(): " + position.coords.latitude + ", " + position.coords.longitude + ", " + position.coords.accuracy + ", ");
 	gpsGood = true;
 	updateLocation({"latitude":position.coords.latitude, "longitude":position.coords.longitude, "accuracy":position.coords.accuracy});
 }
 function geolocationCallbackError(error) {
+	console.log("geolocationCallbackError()");
 	gpsGood = false;
 	badGpsAlert();
 //    alert('code: '    + error.code    + '\n' +
@@ -293,6 +296,7 @@ function getTargetLocations(currentLocation) {
 	fileName = "targetLocations.json";
 	filePath = contentImageDir + fileName;
 	
+	console.log("$.getJSON(" + filePath + ")");
 	$.getJSON( filePath )
 	.success(function(data) {parseTargetLocations(data);})
 	.error(function(err) { 

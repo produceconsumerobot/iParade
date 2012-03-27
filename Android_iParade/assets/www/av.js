@@ -130,8 +130,8 @@ function displayVidElement() {
 function getVideo(targetNumber) {
 	console.log("getVideo(" + targetNumber + ")");
 	var remoteFile = contentVideoDir + targetNumber + "_video" + vidExt;
-	var localPath = storageBase + localDir;
-	var localFile = localPath + "/" + localVidName;
+	//var localPath = storageBase + localDir;
+	var localFile = storageBase + "/" + localVidName;
 	
 	vidDownloadComplete = false;
 

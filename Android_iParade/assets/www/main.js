@@ -13,8 +13,9 @@ var audioTimer = null;
 //var contentImageDir = "./content/"; // content images directory
 var contentImageDir = "http://produceconsumerobot.com/temp/lovid/content/";
 var contentVideoDir = "http://produceconsumerobot.com/temp/lovid/content/";
-var storageBase = "/mnt/sdcard/";
-var localDir = "iParade/";
+//var storageBase = "/mnt/sdcard/";
+var storageBase = "/youlose/";
+var localDir = "iParade";
 var localVidBase = "iparadeVideo";
 //var vidExt = ".3gp";
 var vidExt = ".mp4";
@@ -61,28 +62,27 @@ function onDeviceReady() {
 	
 	getTargetLocations(currentLoc);
 	//initializeMap(currentLoc);
-	
-	function getDirSuccess(dir) {
-		console.log("getDirSuccess: " + dir.fullpath);
-		storageBase = fileSystem.root.fullpath;
-	}
-	
-	function onFileSystemSuccess(fileSystem) {
-		console.log("onFileSystemSuccess()");
-	    console.log(fileSystem.name);
-	    console.log(fileSystem.root.name);
-	    console.log(fileSystem.root.fullpath);
-	    fileSystem.getDirectory(".", null, getDirSuccess, console
-	    	    .log("getDir fail"));
-	    
-	}
-
-	function onFileSystemFail(evt) {
-	    console.log(evt.target.error.code);
-	    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
-	}
-
 }
+
+function getDirSuccess(dir) {
+	console.log("getDirSuccess: " + dir.toURI());
+	console.log("getDirSuccess: " + dir.toURI().replace("file://",""));
+	storageBase = dir.toURI().replace("file://","");
+}
+
+function onFileSystemSuccess(fileSystem) {
+	console.log("onFileSystemSuccess()");
+    console.log(fileSystem.name);
+    console.log(fileSystem.root.name);
+    var entry=fileSystem.root; 
+    entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
+}
+
+function onFileSystemFail(evt) {
+    console.log(evt.target.error.code);
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
+}
+
 
 function checkConnection() {
     console.debug('checkConnection()');
