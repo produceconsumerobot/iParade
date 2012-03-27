@@ -32,6 +32,7 @@ function playAudio(src) {
 	// onSuccess Callback
 	function onSuccess() {
 		console.log("playAudio():Audio Success");
+		releaseAudio();
 		//_duration = 
 	}
 
@@ -40,15 +41,7 @@ function playAudio(src) {
 		console.error( 'Audio Error:\n' +
 				'code: '    + error.code    + '\n' + 
 				'message: ' + error.message + '\n');
-		if (my_audio) {
-			my_audio.stop();
-			my_audio.release();
-		}
-		my_audio = null;
-		if (audioTimer) {
-			clearInterval(audioTimer);
-		}
-		audioTimer = null;
+		releaseAudio();
 	}
 	
 	// Create Media object from src
