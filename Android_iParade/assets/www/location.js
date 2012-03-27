@@ -261,6 +261,8 @@ function incrementTarget() {
 	if ((targetNum + 1) < targetLocations.length) {
 		console.log("targetNum++");
 		targetNum++;
+	} else {
+		console.log("targetNum=" + targetNum + ", targetLocations.length=" + targetLocations.length);
 	}
 	if (DEBUG > 0) alert("targetNum=" + targetNum);
 }	
