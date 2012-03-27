@@ -71,14 +71,14 @@ function onDeviceReady() {
 }
 
 function getFileSuccess(fileEntry) {
-    console.log("getFileSuccess: " + fileEntry.toURI());
+    console.log("getFileSuccess: " + fileEntry.fullPath);
 }
 
 function getDirSuccess(dir) {
-	console.log("getDirSuccess: " + dir.toURI());
-	console.log("getDirSuccess: " + dir.toURI().replace("file://",""));
+	//console.log("getDirSuccess: " + dir.toURI());
+	//console.log("getDirSuccess: " + dir.toURI().replace("file://",""));
     console.log("getDirSuccess: " + dir.fullPath);
-	localContentDir = dir.toURI().replace("file://","");
+	//localContentDir = dir.toURI().replace("file://","");
     //localContentDir = dir.toURI();
     localContentDir = dir.fullPath;
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
