@@ -443,7 +443,7 @@ function getHomeContent(pageNum) {
 		// Main content page
 		
 		html = html + "<div id='textContent'></div>";
-		html = html + "<div id='playVideoButton' class='buttonCenter'>";
+		html = html + "<div id='playVideoButton'";
 		html = html + "<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>";
 		//html = html + "<img id='playImg' style='display:none' src='./design/play.jpg'/>";
 		//html = html + "<video id='playVid' style='display:none' controls='controls'>";
@@ -465,9 +465,9 @@ function getNextButton(visible) {
 	console.log("getNextButton(" + visible + ")");
 	var nextButton;
 	if (visible) {
-		nextButton = "<img id='nextButton' src='design/next_arrow.jpg' class='rightFloat' ontouchstart='nextPage()'/>";
+		nextButton = "<img id='nextButton' src='design/next_arrow.jpg' ontouchstart='nextPage()'/>";
 	} else {
-		nextButton = "<img id='nextButton' src='design/next_arrow.jpg' class='rightFloat' ontouchstart='nextPage()' style='visibility:hidden;'/>";
+		nextButton = "<img id='nextButton' src='design/next_arrow.jpg' ontouchstart='nextPage()' style='visibility:hidden;'/>";
 	}
 	console.log("returning nextButton");
 	return nextButton;
@@ -492,7 +492,7 @@ function displayVidElement() {
             console.log("Creating img element");
             
             var html = "";
-            html = html + "<img id='playImg' src='./design/play.jpg' ontouchstart='playVideo();'  ontouchstart='showNextButton();'/>";
+            html = html + "<img id='playImg' src='./design/play.jpg' ontouchstart='playVideo(); showNextButton();'/>";
 	    	//setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
 	    	//document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
         } else {
@@ -500,7 +500,7 @@ function displayVidElement() {
             console.log("Creating video element: " + localVidPath);
             
             var html = "";
-            html = html + "<video id='playVid' style='display:block' controls='controls' ontouchstart='showNextButton();'>";
+            html = html + "<video id='playVid' controls='controls' ontouchstart='showNextButton();'>";
             html = html + "<source src='" + localVidPath + "' type='video/mp4' /></video>"; 
             
  	    } 
