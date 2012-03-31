@@ -9,20 +9,6 @@ var startTabsTimerId = null; // timer ID
 var my_audio = null;
 var audioTimer = null;
 
-// deprecated variables
-//var contentImageDir = "http://produceconsumerobot.com/temp/lovid/content/";
-//var contentVideoDir = "http://produceconsumerobot.com/temp/lovid/content/";
-//var contentVoiceoverDir = "http://produceconsumerobot.com/temp/lovid/content/";
-//var contentAudioTheme = "http://produceconsumerobot.com/temp/lovid/content/audioTheme";
-//var localVoiceoverName = localVoiceoverBase + voiceoverExt;
-//var localVoiceoverBase = "iparadeVoiceover";
-//var storageBase = "/youlose/";
-//var localVidName = localVidBase + vidExt;
-//var localVidPath = null;
-//var voiceoverPath = null;
-//var storageBase = "/mnt/sdcard/";
-
-//var contentImageDir = "./content/"; // content images directory
 var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/content/";
 var remoteVidBase = "_video";
 var remoteVoiceOverBase = "_voiceover";
@@ -39,15 +25,15 @@ var voiceover = true;
 var hideTabsTimeout = 2000;
 var inTargetVibLen = 200;
 
-
+//window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && window.attachEvent("onload", init);
 
 // PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
 function onDeviceReady() {
-    console.debug('onDeviceReady()');
-    console.debug("device=" + device.platform);
-	//document.addEventListener("online", onOnline, false);
-	checkConnection();
-	
+    console.log('onDeviceReady()');
+    console.log("device=" + device.platform);
+    
+    checkConnection();
+    
 	// override the back button on android/blackberry
 	document.addEventListener("backbutton", onBackKeyDown, false);
 	
@@ -67,7 +53,8 @@ function onDeviceReady() {
 	//startUpdateLocationTimer();
 	
 	getTargetLocations(currentLoc);
-	//initializeMap(currentLoc);
+
+    console.log('onDeviceReady() finished');
 }
 
 function getFileSuccess(fileEntry) {
@@ -97,11 +84,10 @@ function onFileSystemFail(evt) {
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
 }
 
-
 function checkConnection() {
     console.log('checkConnection()');
     var networkState = navigator.network.connection.type;
-
+    
     console.log('Connection type: ' + networkState);
     
     var states = {};
@@ -112,7 +98,7 @@ function checkConnection() {
     states[Connection.CELL_3G]  = 'Cell 3G connection';
     states[Connection.CELL_4G]  = 'Cell 4G connection';
     states[Connection.NONE]     = 'No network connection';
-
+    
     if ((!networkState) || (networkState == Connection.UNKNOWN) ||  (networkState == Connection.NONE)) {
     	//offlineAlert();
     	setTimeout(function() { checkConnection(); }, 1000);
@@ -122,13 +108,14 @@ function checkConnection() {
     	//alert('Connection type: ' + states[networkState]);
     	return true;
     }
+    console.log('checkConnection() finished');
 }
+
 
 // Alert to notify user that they are offline
 function offlineAlert() {
 	console.log("offlineAlert()");
 	navigator.notification.alert('You are currently offline.\nPlease connect to the network to continue.');
-	//confirm();
 }
 
 function toggleVoiceover() {
@@ -144,9 +131,11 @@ function toggleVoiceover() {
 		//document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn off voiceover";
 		document.getElementById("toggleVoiceoverButton").src = "design/voice_over_on.jpg";
 	}
+    console.log("toggleVoiceover finished");
 }
 
 function mouseDown() {
+    console.log("mouseDown()");
 	document.getElementById("tabs").style.display="inline";
 	startTabsTimer();
 }
@@ -166,20 +155,21 @@ function onMenuKeyDown() {
 
 // Shows the tabs for the brief period and then hides them
 function startTabsTimer() {
+    console.log("startTabsTimer()");
 	if (startTabsTimerId != null) {
 		clearTimeout(startTabsTimerId);
 	}
-	startTabsTimerId = setTimeout("hideTabs()", hideTabsTimeout);		
+	startTabsTimerId = setTimeout("hideTabs()", hideTabsTimeout);	
+	console.log("startTabsTimer() finished");
 }
 function hideTabs() {
 	console.log("hideTabs()");
 	document.getElementById("tabs").style.display="none";
 }
 
-
 // Initializes the page
 function init() {
-    console.debug('init()');
+    console.log('init()');
 	
 	tabLinks = new Array();
 	contentDivs = new Array();
@@ -191,7 +181,6 @@ function init() {
 
 	initLocation();
 	
-	//startTabsTimer();
 	hideTabs();
 	
 	// Start listener for PhoneGap loaded
@@ -200,21 +189,15 @@ function init() {
 	
 	// Get the home content
 	getHomeContent(contentPage);
-
-	//$("div.tabContent").css(".min-height", getWindowHeight());
 	
 	// Grab the tab links and content divs from the page
 	var tabList = document.getElementById('tabs').childNodes;
 	for ( var i = 0; i < tabList.length; i++ ) {
 		if ( tabList[i].nodeName == "LI" ) {
-			//var tabLink = getFirstChildWithTagName( tabList[i], 'A' );
-			//var id = getHash( tabLink.getAttribute('href') );
 			var id = getHash( tabList[i].getAttribute('href') );
-			//tabLinks[id] = tabLink;
 			tabListItems[id] = tabList[i];
 			contentDivs[id] = document.getElementById( id );
 			contentDivs[id].style.height = getWindowHeight() + "px";
-			//if ( i == 0 ) tabListItems[i].className = 'selected';
 		}
 	}
 	
@@ -223,11 +206,8 @@ function init() {
 	var i = 0;
 
 	for ( var id in tabListItems ) {
-		//tabLinks[id].onclick = showTab;
-		//tabLinks[id].onfocus = function() { this.blur(); };
 		tabListItems[id].ontouchend = showTab;
 		tabListItems[id].onclick = showTab;
-		//tabListItems[id].onfocus = function() { this.blur(); };
 		if ( i == 0 ) tabListItems[id].className = 'selected';
 		i++;
 	}
@@ -239,10 +219,12 @@ function init() {
 		if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
 		i++;
 	}
+    console.log('init() finished');
 }
 
 // Show a tab
 function showTab(options) {
+    console.log('showTab()');
 	var selectedId;
 		
     if ((typeof options !== "undefined") && (typeof options.id !== "undefined")) {
@@ -251,28 +233,14 @@ function showTab(options) {
 		selectedId = getHash( this.getAttribute('href') );
 	}
 
-	//console.log("showTab: ID=" + selectedId);
-	//document.getElementById('about').style.height = getWindowHeight();
-
 	// Highlight the selected tab, and dim all others.
 	// Also show the selected content div, and hide all others.
 	for ( var id in contentDivs ) {
 		//console.log("showTab: IDs: " + id);
 		if ( id == selectedId ) {
-			switch (selectedId) {
-			case 'notes':
-				break;
-			default:
-			}     
-
-
-			//tabLinks[id].className = 'selected';
 			tabListItems[id].className = 'selected';
 			contentDivs[id].className = 'tabContent';
-
-			//document.getElementById('home').style.height = getWindowHeight();
 		} else {
-			//tabLinks[id].className = '';
 			tabListItems[id].className = '';
 			contentDivs[id].className = 'tabContent hide';
 		}
@@ -285,6 +253,7 @@ function showTab(options) {
 	}
 
 	// Stop the browser following the link
+    console.log('showTab() finished');
 	return false;
 }
 
@@ -328,6 +297,8 @@ function getWindowHeight() {
 	if (DEBUG > 1)  {
 		alert ("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h=" + w);
 	}
+    
+    console.log("getWindowHeight()=" + w);
 	return w + "";
 }
 
@@ -360,7 +331,13 @@ function getWindowWidth() {
 	if (DEBUG > 1)  {
 		alert ("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w=" + w);
 	}
+    
+    console.log("getWindowWidth()=" + w);
 	return w + "";
+}
+
+function getHomeContent(pageNum) {
+    console.log("getHomeContent(" + pageNum + ")");
 }
 
 // Moves to the next page in the sequence
@@ -380,7 +357,7 @@ function nextPage() {
 	
 	releaseAudio();
 	loopingAudio = false;
-
+    
 	contentPage++;
 	if ((contentPage % 2) > 0) {
 		incrementTarget();
@@ -388,6 +365,7 @@ function nextPage() {
 	getHomeContent(contentPage);
 	showTab({"id" : 'home'});
 	hideTabs();
+    console.log("nextPage finished");
 }
 
 function restartApp() {
@@ -406,17 +384,15 @@ function restartApp() {
             }
     	}
     }
-
+    
     // Show a custom confirmation dialog
     navigator.notification.confirm(
-        'Do you want to restart iParade?',  // message
-        onConfirm,              // callback to invoke with index of button pressed
-        'Restart iParade?',            // title
-        'Restart,Cancel'          // buttonLabels
-    );
+                                   'Do you want to restart iParade?',  // message
+                                   onConfirm,              // callback to invoke with index of button pressed
+                                   'Restart iParade?',            // title
+                                   'Restart,Cancel'          // buttonLabels
+                                   );
 }
-
-window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && window.attachEvent("onload", init);
 
 //Returns html for the home tab based on the value of pageNum	
 function getHomeContent(pageNum) {
@@ -475,7 +451,7 @@ function getNextButton(visible) {
 }
 
 function showNextButton() {
-    setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, 500);
+    setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, 2000);
 }
 
 function displayVidElement() {
@@ -487,7 +463,8 @@ function displayVidElement() {
 	    
 	    // Check if the device supports video
 	    //var vidTest = $("#playVid");
-	    if (device.platform.toLowerCase().search("android") >= 0) {
+        
+	    //if (device.platform.toLowerCase().search("android") >= 0) {
 	    	// Video not supported :(
             console.log("Creating img element");
             
@@ -495,17 +472,21 @@ function displayVidElement() {
             html = html + "<img id='playImg' src='./design/play.jpg' ontouchstart='playVideo(); showNextButton();'/>";
 	    	//setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
 	    	//document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
-        } else {
+        /*} else {
             // Video supported!!
             console.log("Creating video element: " + localVidPath);
             
             var html = "";
-            html = html + "<video id='playVid' controls='controls' ontouchstart='showNextButton();'>";
+            html = html + "<div ontouchstart='showNextButton();'>";
+            html = html + "<video id='playVid' controls='controls' autoplay='autoplay' ontouchstart='showNextButton();' >";
             html = html + "<source src='" + localVidPath + "' type='video/mp4' /></video>"; 
+            html = html + "</div>";
             
  	    } 
+         */
         $("#playVideoButton").html(html);
         
 	}
+    console.log("displayVidElement finished");
 }
 

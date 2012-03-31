@@ -10,15 +10,28 @@ var localVidPath = null;
 function playVideo() {
 	console.log("playVideo()");
 	if ((localVidPath == null) || (!vidDownloadComplete)) {
-		alert('Video Not Found.');
+		navigator.notification.alert('Video Not Found.');
 	} else {
 		//pauseAudio();
 		stopAudio();
 		if (device.platform.toLowerCase().search("android") >= 0) {
 			showVideo2(localVidPath); // play the locally stored video
-		}
-	}
+		} else {
+            // Video supported!!
+            console.log("Creating video element: " + localVidPath);
+            
+            var html = "";
+            html = html + "<div ontouchstart='showNextButton();'>";
+            html = html + "<video id='playVid' controls='controls' autoplay='autoplay' ontouchstart='showNextButton();' >";
+            html = html + "<source src='" + localVidPath + "' type='video/mp4' /></video>"; 
+            html = html + "</div>";
+            
+            $("#playVideoButton").html(html);
+            
+        } 
+	} 
 	//document.getElementById("nextButton").style.visibility="visible";
+    console.log("playVideo finished");
 }
 
 // Audio player
@@ -32,7 +45,6 @@ function playAudio(src) {
 	function onSuccess() {
 		console.log("playAudio():Audio Success");
 		releaseAudio();
-		//_duration = 
 	}
 
 	// onError Callback 
@@ -74,6 +86,7 @@ function playAudio(src) {
 			}
 		}, 500);
 	}
+    console.log("playAudio finished");
 }
 
 // Pause audio
@@ -157,6 +170,7 @@ function getVideo(targetNumber, nthTry) {
 			    }
 			);
 	}
+    console.log("getVideo finished");
 }
 
 function getVoiceover(targetNumber) {
@@ -170,6 +184,7 @@ function getVoiceover(targetNumber) {
 			playAudio(filename);
 		}
 	} 
+    console.log("getVoiceover finished");
 }
 
 
@@ -180,6 +195,7 @@ function getAudioTheme() {
 	loopingAudio = true;
 	
 	playAudio(filename);
+    console.log("getAudioTheme finished");
 }
 
 //function startAudioLooper() {
@@ -199,8 +215,8 @@ function checkAudioLoop() {
 			if ((my_audio._duration > -1) && (my_audio._position > -1)) {
 				//console.log("checkAudioLoop: duration/position");
 				if ((my_audio._duration - my_audio._position) < 1.5){
-					console.log("checkAudioLoop: seekTo");
-					my_audio.seekTo(0);
+					console.log("checkAudioLoop: seekTo 1");
+					my_audio.seekTo(1);
 				}
 			}
 		}
