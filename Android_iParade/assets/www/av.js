@@ -248,8 +248,11 @@ function playAudioTheme() {
 	
 	if ((audioThemeDownloadComplete) && (localAudioThemePath)) {
 		loopingAudio = true;
-		playAudio(localDir + "/" + localAudioThemeBase + audioThemeExt);
-		//playAudio(localAudioThemePath);
+        if (device.platform.toLowerCase().search("android") >= 0) {
+            playAudio(localDir + "/" + localAudioThemeBase + audioThemeExt);
+        } else {
+            playAudio(localAudioThemePath);
+        }
 	}
 	
 //	var filename = remoteContentDir + remoteAudioThemeBase + audioThemeExt;
