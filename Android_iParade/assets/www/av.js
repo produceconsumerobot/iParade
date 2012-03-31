@@ -2,9 +2,11 @@ var loopingAudio = false;
 var _position = -1;
 var _duration = -1;
 var vidDownloadComplete = false;
+var audioThemeDownloadComplete = false;
 var maxTries = 10;
 var tryDelay = 1000;
 var localVidPath = null;
+var localAudioThemePath = null;
 
 // Plays a video
 function playVideo() {
@@ -13,7 +15,8 @@ function playVideo() {
 		navigator.notification.alert('Video Not Found.');
 	} else {
 		//pauseAudio();
-		stopAudio();
+		releaseAudio();
+		//stopAudio();
 		if (device.platform.toLowerCase().search("android") >= 0) {
 			showVideo2(localVidPath); // play the locally stored video
 		} else {
@@ -21,10 +24,10 @@ function playVideo() {
             console.log("Creating video element: " + localVidPath);
             
             var html = "";
-            html = html + "<div ontouchstart='showNextButton();'>";
-            html = html + "<video id='playVid' controls='controls' autoplay='autoplay' ontouchstart='showNextButton();' >";
+            //html = html + "<div ontouchstart='showNextButton();'>";
+            html = html + "<video id='playVid' controls='controls' autoplay='autoplay' >";
             html = html + "<source src='" + localVidPath + "' type='video/mp4' /></video>"; 
-            html = html + "</div>";
+            //html = html + "</div>";
             
             $("#playVideoButton").html(html);
             
@@ -44,7 +47,7 @@ function playAudio(src) {
 	// onSuccess Callback
 	function onSuccess() {
 		console.log("playAudio():Audio Success");
-		releaseAudio();
+		//releaseAudio();
 	}
 
 	// onError Callback 
@@ -59,6 +62,7 @@ function playAudio(src) {
 	my_audio = new Media(src, onSuccess, onError);
 
 	// Play audio
+	console.log("my_audio.play()");
 	my_audio.play();
 
 	// Update my_audio position
@@ -187,15 +191,72 @@ function getVoiceover(targetNumber) {
     console.log("getVoiceover finished");
 }
 
-
-function getAudioTheme() {
+function getAudioTheme(nthTry) {
 	console.log("getAudioTheme()");
-	var filename = remoteContentDir + remoteAudioThemeBase + audioThemeExt;
 
-	loopingAudio = true;
+	// function to try to get audio theme again
+	function tryAgain(ntry) {
+		if (ntry < maxTries) {
+			// Wait and try try again...
+	        setTimeout(function() { getAudioTheme(ntry);}, ntry*tryDelay/2);
+		}
+	}
 	
-	playAudio(filename);
-    console.log("getAudioTheme finished");
+	// nthTry keeps track of number of attempts
+	if (!nthTry) {
+		nthTry = 1;
+	} else {
+		nthTry++;
+	}
+	
+	// If localContentDir isn't set yet, try again
+	if (!localContentDir) {
+		tryAgain(nthTry);
+	} else {
+		var remoteFile = remoteContentDir + remoteAudioThemeBase + audioThemeExt;
+		localAudioThemePath = localContentDir + "/" + localAudioThemeBase + audioThemeExt;
+		//var localPath = storageBase + localDir;
+		
+		audioThemeDownloadComplete = false;
+	
+		var fileTransfer = new FileTransfer();
+		fileTransfer.download(
+				remoteFile,
+				localAudioThemePath,
+			    function(entry) {
+					console.log("download complete: " + entry.fullPath);
+	
+					//localVidPath = localFile;
+					audioThemeDownloadComplete = true;
+					playAudioTheme();
+					showNextButton(0);
+			    },
+			    function(error) {
+			        console.log("download error source " + error.source);
+			        console.log("download error target " + error.target);
+			        console.log("upload error code" + error.code);
+			        // Try try again...
+			        tryAgain(nthTry);	
+			    }
+			);
+	}
+    console.log("getVideo finished");
+}
+
+function playAudioTheme() {
+	console.log("playAudioTheme()");
+	
+	if ((audioThemeDownloadComplete) && (localAudioThemePath)) {
+		loopingAudio = true;
+		playAudio(localDir + "/" + localAudioThemeBase + audioThemeExt);
+		//playAudio(localAudioThemePath);
+	}
+	
+//	var filename = remoteContentDir + remoteAudioThemeBase + audioThemeExt;
+//	loopingAudio = true;
+//	playAudio(filename);
+	
+    console.log("playAudioTheme finished");
 }
 
 //function startAudioLooper() {

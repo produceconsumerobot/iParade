@@ -16,6 +16,7 @@ var remoteAudioThemeBase = "audioTheme";
 
 var localDir = "iParade";
 var localVidBase = "iparadeVideo";
+var localAudioThemeBase = "iparadeTheme";
 var localContentDir = null;
 var vidExt = ".mp4";
 var voiceoverExt = ".mp3";
@@ -45,6 +46,7 @@ function onDeviceReady() {
 	
 	window.onscroll = floater;
 	
+	//playAudioTheme();
 	getAudioTheme();
 	//playAudio(contentAudioTheme + voiceoverExt);
 	
@@ -402,7 +404,7 @@ function getHomeContent(pageNum) {
 	if (pageNum == 0) {
 		// First page is special
 		html = html + "<div id='textContent'></div>";
-		html = html + getNextButton(true); 
+		html = html + getNextButton(false); 
 		html = html +  "<div class='clearBoth'></div>";
 		document.getElementById('home').innerHTML = html;
 		$("#textContent").load(remoteContentDir + targetNum + "_text.html");
@@ -413,6 +415,7 @@ function getHomeContent(pageNum) {
 		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
 		localVidPath = null;
+		playAudioTheme();
 		getVideo(targetNum);
 		if (fakeGPS) testLocChangeTimer();
 	} else {
@@ -420,7 +423,7 @@ function getHomeContent(pageNum) {
 		
 		html = html + "<div id='textContent'></div>";
 		html = html + "<div id='playVideoButton'";
-		html = html + "<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>";
+		//html = html + "<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>";
 		//html = html + "<img id='playImg' style='display:none' src='./design/play.jpg'/>";
 		//html = html + "<video id='playVid' style='display:none' controls='controls'>";
 		//html = html + "<source src='' type='video/mp4' /></video>";
@@ -429,7 +432,10 @@ function getHomeContent(pageNum) {
 		html = html + getNextButton(false);
 		//html = html +  "<div class='clearBoth'>";
 		document.getElementById('home').innerHTML = html;
-		$("#textContent").load(remoteContentDir + targetNum + "_text.html");
+		$("#textContent").load(remoteContentDir + targetNum + "_text.html", 
+				function () {
+			$("#playVideoButton").html("<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>");
+		});
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
 		displayVidElement();		
@@ -450,8 +456,8 @@ function getNextButton(visible) {
 	//"<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()' style='visibility:hidden;'>Exit iParade</button>";
 }
 
-function showNextButton() {
-    setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, 2000);
+function showNextButton(delay) {
+    setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, delay);
 }
 
 function displayVidElement() {
@@ -469,7 +475,7 @@ function displayVidElement() {
             console.log("Creating img element");
             
             var html = "";
-            html = html + "<img id='playImg' src='./design/play.jpg' ontouchstart='playVideo(); showNextButton();'/>";
+            html = html + "<img id='playImg' src='./design/play.jpg' ontouchstart='playVideo(); showNextButton(2000);'/>";
 	    	//setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
 	    	//document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
         /*} else {

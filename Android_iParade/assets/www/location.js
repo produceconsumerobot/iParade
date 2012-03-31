@@ -8,6 +8,7 @@ var targetLocations; // array of TargetLocations for this parade
 var gMap;
 var currentMarker;
 var currentCircle;
+var targetMarkers;
 var gpsWatch;
 var gpsGood;
 var minAccuracy;
@@ -33,6 +34,7 @@ function initLocation() {
 	gMap = null;
 	currentMarker = null;
 	currentCircle = null;
+	targetMarkers = new Array();
 	gpsWatch = null;
 	gpsGood = false;
 	minAccuracy = 50;
@@ -77,13 +79,14 @@ function initializeMap(loc) {
 	for (var i=0; i<targetLocations.length; i++ ) {
 		var tLoc = targetLocations[i];
 		console.log("Marker: " + tLoc.latitude + ", " + tLoc.longitude + ", " + tLoc.accuracy);
-		var marker = new google.maps.Marker({
+		targetMarkers[i] = new google.maps.Marker({
                                             position: new google.maps.LatLng(tLoc.latitude, tLoc.longitude),
                                             map: gMap,
-                                            icon: "./design/01_targetLocation.png",
+                                            icon: "./design/targetLocation.png",
                                             title:""
                                             });		
 	}
+	setTargetMarkerIcons();
 	
 	currentMarker = new google.maps.Marker({
                                            position: latlng,
@@ -103,6 +106,20 @@ function initializeMap(loc) {
     currentCircle.bindTo('center', currentMarker, 'position');
 	
     console.log("initializeMap() finished");
+}
+
+function setTargetMarkerIcons() {
+	console.log("setTargetMarkerIcons()");
+	for (var i=0; i<targetMarkers.length; i++ ) {
+		if (i == targetNum) {
+			targetMarkers[i].setIcon("./design/targetLocation_next.png");
+		} else if (i < targetNum) {
+			targetMarkers[i].setIcon("./design/targetLocation_visited.png");
+		} else {
+			targetMarkers[i].setIcon("./design/targetLocation.png");
+		}
+	}
+	console.log("setTargetMarkerIcons finished");
 }
 
 
@@ -284,6 +301,7 @@ function incrementTarget() {
 	if ((targetNum + 1) < targetLocations.length) {
 		console.log("targetNum++");
 		targetNum++;
+		setTargetMarkerIcons();
 	} else {
 		console.log("targetNum=" + targetNum + ", targetLocations.length=" + targetLocations.length);
 	}

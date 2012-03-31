@@ -119,15 +119,20 @@ button {
 	bottom: 0px;
 }
 
+#home{
+}
+
 #nextButton {
 	float: right;
-	margin-right: 15%;
+	margin-right: 20%;
+	margin-top: 20px;
 	width: 10%;
 }
 
 #playVideoButton {
 	float: left;
-	margin-left: 20%;
+	margin-left: 15%;
+	padding-bottom: 20px;
 	width: 55%;
 }
 
