@@ -157,8 +157,8 @@ video#playVid {
 	margin-right: auto;
 }
 
-div#textContent {
-	padding: 2%;
+div.paddedContent {
+	padding: 0% 2%;
 }
 
 ul#tabs {

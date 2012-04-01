@@ -420,14 +420,14 @@ function getHomeContent(pageNum) {
 		document.getElementById('home').innerHTML = html;
 	} else if (pageNum == 1) {
 		// First page is special
-		html = html + "<div id='textContent'></div>";
+		html = html + "<div id='textContent' class='paddedContent'></div>";
 		html = html + getNextButton(false); 
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
 		//$("#textContent").load(remoteContentDir + targetNum + "_text.html");
 	} else if (targetNum == (targetLocations.length - 1)) {
 		// Last page is special
-		html = html + "<div id='textContent'></div>";
+		html = html + "<div id='textContent' class='paddedContent'></div>";
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
 		//$("#textContent").load(remoteContentDir + targetNum + "_text.html");	
@@ -443,7 +443,7 @@ function getHomeContent(pageNum) {
 		if (fakeGPS) testLocChangeTimer();
 	} else {
 		// Main content page
-		html = html + "<div id='textContent'></div>";
+		html = html + "<div id='textContent' class='paddedContent'></div>";
 		html = html + "<div id='playVideoButton'";
 		//html = html + "<img id='downloadingImg' style='display:block' src='design/downloading.gif'/>";
 		//html = html + "<img id='playImg' style='display:none' src='design/play.jpg'/>";
