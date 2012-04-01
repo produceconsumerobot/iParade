@@ -29,6 +29,8 @@ var voiceover = true;
 
 var hideTabsTimeout = 2000;
 var inTargetVibLen = 200;
+var maxTries = 10;
+var tryDelay = 1000;
 
 //window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && window.attachEvent("onload", init);
 
@@ -417,12 +419,14 @@ function getHomeContent(pageNum) {
 		html = html + "<div id='textContent'></div>";
 		html = html + getNextButton(false); 
 		document.getElementById('home').innerHTML = html;
-		$("#textContent").load(remoteContentDir + targetNum + "_text.html");
+		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
+		//$("#textContent").load(remoteContentDir + targetNum + "_text.html");
 	} else if (targetNum == (targetLocations.length - 1)) {
 		// Last page is special
 		html = html + "<div id='textContent'></div>";
 		document.getElementById('home').innerHTML = html;
-		$("#textContent").load(remoteContentDir + targetNum + "_text.html");	
+		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
+		//$("#textContent").load(remoteContentDir + targetNum + "_text.html");	
 		playAudioTheme();
 	} else if ((pageNum % 2) == 0) {
 		// Between page
@@ -446,15 +450,47 @@ function getHomeContent(pageNum) {
 		html = html + getNextButton(false);
 		//html = html +  "<div class='clearBoth'>";
 		document.getElementById('home').innerHTML = html;
-		$("#textContent").load(remoteContentDir + targetNum + "_text.html", 
-				function () {
-			$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");
-		});
+		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
+		//$("#textContent").load(remoteContentDir + targetNum + "_text.html", 
+		//		function () {
+		//	$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");
+		//});
+		setTimeout(function() {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");},
+				2000);
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
 		displayVidElement();		
 	}
 	console.log("finishing getHomeContent");
+}
+
+function loadHtml(element, url, nthTry) {
+	console.log("loadHtml(" + url + ")");
+	
+	function tryAgain(elem, address, ntry) {
+		console.log("tryAgain(" + ntry + ")");
+		if (ntry < maxTries) {
+			// Wait and try try again...
+	        setTimeout(function() { loadHtml(elem, address, ntry);}, ntry*tryDelay/2);
+		}
+	}
+	
+	// nthTry keeps track of number of attempts
+	if (!nthTry) {
+		nthTry = 1;
+	} else {
+		nthTry++;
+	}
+	
+	element.load(url, function(response, status, xhr) {
+		console.log("load response");
+		if (status == "error") {
+			console.log("load error: " + url);
+			tryAgain(element, url, nthTry);	
+		}
+	});
+	
+	console.log("loadHtml finished");
 }
 
 function getNextButton(visible) {
@@ -520,8 +556,23 @@ function loadCssFile(filename) {
 	}
 }
 
-function getIparades(loc) {
+function getIparades(loc, nthTry) {
 	console.log("getIparades(" + loc.latitude + "," + loc.longitude + ")");
+	
+	function tryAgain(location, ntry) {
+		console.log("tryAgain(" + ntry + ")");
+		if (ntry < maxTries) {
+			// Wait and try try again...
+	        setTimeout(function() { getIparades(location, ntry);}, ntry*tryDelay/2);
+		}
+	}
+	
+	// nthTry keeps track of number of attempts
+	if (!nthTry) {
+		nthTry = 1;
+	} else {
+		nthTry++;
+	}
 	
 	$.ajax({
         type : 'POST',
@@ -539,7 +590,8 @@ function getIparades(loc) {
         },
         error : function(data) {
           console.error("error in getIparades(" + loc.latitude + "," + loc.longitude + ")");
-          setTimeout(function() { getIparades(loc); }, 1000);
+          tryAgain(loc, nthTry);
+          //setTimeout(function() { getIparades(loc); }, 1000);
         }
       });
 	
@@ -592,7 +644,7 @@ function showIparades() {
 	console.log("showIparades()");
 	
 	var html = "";
-	html = html + "<div id='iParadeSelectDiv'>";
+	//html = html + "<div id='iParadeSelectDiv'>";
 	html = html + "<img class='fullSplashImage' src='design/splash.gif'/>";
 	html = html + "<div class='iparadeSelectOverlay'>";
 	html = html + "<span>Choose an iParade:</span>";
@@ -604,7 +656,7 @@ function showIparades() {
 	html = html + "</select>";
 	html = html + "<img id='splashNextButton' src='design/next_arrow.jpg' ontouchstart='initIparade()'/>";
 	html = html + "</div>";
-	html = html + "</div>";
+	//html = html + "</div>";
 	document.getElementById('startScreen').innerHTML = html;
 
 	console.log("showIparades finished");

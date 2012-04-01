@@ -3,8 +3,6 @@ var _position = -1;
 var _duration = -1;
 var vidDownloadComplete = false;
 var audioThemeDownloadComplete = false;
-var maxTries = 10;
-var tryDelay = 1000;
 var localVidPath = null;
 var localAudioThemePath = null;
 
