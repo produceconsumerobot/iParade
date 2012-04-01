@@ -242,6 +242,10 @@ function showTab(options) {
 	} else {
 		selectedId = getHash( this.getAttribute('href') );
 	}
+    
+//    if (selectedId == 'home') {
+//    	getHomeContent(contentPage);
+//    }
 
 	// Highlight the selected tab, and dim all others.
 	// Also show the selected content div, and hide all others.
@@ -455,8 +459,11 @@ function getHomeContent(pageNum) {
 		//		function () {
 		//	$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");
 		//});
-		setTimeout(function() {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");},
-				2000);
+		
+		// Delay showing the downloading gif to let loadHtml complete
+		// If the video has already downloaded we don't need to show the downloading gif
+		setTimeout(function() {if (!vidDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
+			2000);
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
 		displayVidElement();		
