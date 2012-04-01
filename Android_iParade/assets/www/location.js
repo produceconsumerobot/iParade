@@ -83,7 +83,7 @@ function initializeMap(loc) {
 		targetMarkers[i] = new google.maps.Marker({
                                             position: new google.maps.LatLng(tLoc.latitude, tLoc.longitude),
                                             map: gMap,
-                                            icon: "./design/targetLocation.png",
+                                            icon: "design/targetLocation.png",
                                             title:""
                                             });		
 	}
@@ -113,11 +113,11 @@ function setTargetMarkerIcons() {
 	console.log("setTargetMarkerIcons()");
 	for (var i=1; i<targetMarkers.length-1; i++ ) {
 		if (i == targetNum) {
-			targetMarkers[i].setIcon("./design/targetLocation_next.png");
+			targetMarkers[i].setIcon("design/targetLocation_next.png");
 		} else if (i < targetNum) {
-			targetMarkers[i].setIcon("./design/targetLocation_visited.png");
+			targetMarkers[i].setIcon("design/targetLocation_visited.png");
 		} else {
-			targetMarkers[i].setIcon("./design/targetLocation.png");
+			targetMarkers[i].setIcon("design/targetLocation.png");
 		}
 	}
 	console.log("setTargetMarkerIcons finished");

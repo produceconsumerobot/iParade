@@ -403,7 +403,7 @@ function getHomeContent(pageNum) {
 		//html = html + "<div id='iParadeSearching'>";
 		html = html + "<p id='iParadeSearching'>Searching for iParades...</p>";
 		//html = html + "</div>";
-		html = html + "<img class='fullSplashImage' src='./design/splash.gif'/>";
+		html = html + "<img class='fullSplashImage' src='design/splash.gif'/>";
 		html = html + "</div>";
 		document.getElementById('home').innerHTML = html;
 	} else if (pageNum == 1) {
@@ -431,8 +431,8 @@ function getHomeContent(pageNum) {
 		// Main content page
 		html = html + "<div id='textContent'></div>";
 		html = html + "<div id='playVideoButton'";
-		//html = html + "<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>";
-		//html = html + "<img id='playImg' style='display:none' src='./design/play.jpg'/>";
+		//html = html + "<img id='downloadingImg' style='display:block' src='design/downloading.gif'/>";
+		//html = html + "<img id='playImg' style='display:none' src='design/play.jpg'/>";
 		//html = html + "<video id='playVid' style='display:none' controls='controls'>";
 		//html = html + "<source src='' type='video/mp4' /></video>";
 		html = html + "</div>";
@@ -442,7 +442,7 @@ function getHomeContent(pageNum) {
 		document.getElementById('home').innerHTML = html;
 		$("#textContent").load(remoteContentDir + targetNum + "_text.html", 
 				function () {
-			$("#playVideoButton").html("<img id='downloadingImg' src='./design/downloading.gif'/>");
+			$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");
 		});
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
@@ -483,7 +483,7 @@ function displayVidElement() {
             console.log("Creating img element");
             
             var html = "";
-            html = html + "<img id='playImg' src='./design/play.jpg' ontouchstart='playVideo(); showNextButton(2000);'/>";
+            html = html + "<img id='playImg' src='design/play.jpg' ontouchstart='playVideo(); showNextButton(2000);'/>";
 	    	//setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
 	    	//document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
         /*} else {
@@ -564,7 +564,7 @@ function showIparades() {
 	
 	var html = "";
 	html = html + "<div id='iParadeSelectDiv'>";
-	html = html + "<img class='splashImage' src='./design/splash.gif'/>";
+	html = html + "<img class='splashImage' src='design/splash.gif'/>";
 	html = html + "<div>";
 	html = html + "<p>Choose an iParade:</p>";
 	html = html + "<select id=iParadeSelect>";
@@ -586,7 +586,7 @@ function showIparades() {
 	
 	var html = "";
 	html = html + "<div id='iParadeSelectDiv'>";
-	html = html + "<img class='fullSplashImage' src='./design/splash.gif'/>";
+	html = html + "<img class='fullSplashImage' src='design/splash.gif'/>";
 	html = html + "<div class='iparadeSelectOverlay'>";
 	html = html + "<span>Choose an iParade:</span>";
 	html = html + "<select id=iParadeSelect>";
