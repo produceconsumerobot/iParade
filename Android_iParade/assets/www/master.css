@@ -157,6 +157,10 @@ video#playVid {
 	margin-right: auto;
 }
 
+div#textContent {
+	padding: 1%;
+}
+
 ul#tabs {
 	position: fixed;
 	top: 0px;
