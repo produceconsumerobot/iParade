@@ -47,6 +47,9 @@ function playAudio(src) {
 	// onSuccess Callback
 	function onSuccess() {
 		console.log("playAudio():Audio Success");
+//		if (loopingAudio) {
+//			playAudio(src);
+//		}
 		//releaseAudio();
 	}
 

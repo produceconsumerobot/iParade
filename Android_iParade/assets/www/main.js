@@ -52,6 +52,9 @@ function onDeviceReady() {
 	
 	startGpsTracking();
 	
+	loopingAudio = true;
+	playAudio(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
+	
 	//showIparadeOptions();
 
     console.log('onDeviceReady() finished');
