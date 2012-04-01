@@ -515,7 +515,7 @@ function loadCssFile(filename) {
 }
 
 function getIparades(loc) {
-	console.log("getIparadeOptions(" + loc.latitude + "," + loc.longitude + ")");
+	console.log("getIparade(" + loc.latitude + "," + loc.longitude + ")");
 	
 	$.ajax({
         type : 'POST',
@@ -532,7 +532,8 @@ function getIparades(loc) {
           //postSuccess(data);
         },
         error : function(data) {
-          console.log("error");
+          console.error("error in getIparades(" + loc.latitude + "," + loc.longitude + ")");
+          setTimeout(function() { getIparades(loc); }, 1000);
         }
       });
 	
