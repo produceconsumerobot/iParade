@@ -35,48 +35,60 @@ button {
 	margin:5%;
 }
 
-.center {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+select {
+	padding: 5px;
 }
 
-
-.button {
-	font-size: 100%;
-}
-
-.disabledButton {
-	color: #333333;
-}
-
-.activeButton {
-	color: #999999;
-}
-
-.buttonCenter {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
+.iparadeSelectOverlay {
+	position: absolute;
+	background-color: black;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-o-border-radius: 8px;
+	-ms-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	border-radius: 8px;
+	top: 25%;
+	left: 30%;
 	width: 40%;
+	padding: 2% 4%;
 }
 
-.buttonPanel {
+#iParadeSearching {
+	position: absolute;
+	width: 100%;
+	text-align:center;
+}
+
+#iParadeSelectDiv {
+/* 	margin-top: 10%; */
+}
+
+#iParadeSelect {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+	margin-top: 10px;
 	width: 100%;
 }
 
-.buttonLeft {
+.splashImage {
+	width: 50%;
+	float: left;
+	margin-left: 3%;
+	margin-right: 3%;
+}
+.fullSplashImage {
+	width: 100%;
 	display: block;
-	margin-left: 5%;
-	width: 40%;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.clearBoth {
-	clear: both;
-	position: static;
+#splashNextButton {
+	float: right;
+	margin-right: 0%;
+	width: 25%;
 }
 
 .bodyImage {
@@ -84,6 +96,10 @@ button {
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.block {
+		display: block;
 }
 
 .pageTitle {
@@ -96,29 +112,6 @@ button {
 	max-width: 100%;
 }
 
-.fullWidth {
-	display: block;
-	width: 100%;
-}
-
-.relative {
-	display: block;
-	position: relative;
-}
-
-.rightFloat {
-	float: right;
-	margin-right: 15%;
-}
-
-.rightAbs {
-	clear: both;
-	position: absolute;
-	display: block;
-	right: 0px;
-	bottom: 0px;
-}
-
 #home{
 }
 
@@ -127,6 +120,7 @@ button {
 	margin-right: 20%;
 	margin-top: 20px;
 	width: 10%;
+	height: auto;
 }
 
 #playVideoButton {
@@ -134,11 +128,12 @@ button {
 	margin-left: 15%;
 	padding-bottom: 20px;
 	width: 55%;
+	height: auto;
 }
 
 img#downloadingImg {
 	display: block;
-	width:100%;
+	width:60%;
 	height: auto;
 }
 
@@ -168,7 +163,6 @@ ul#tabs {
 	padding-botton: 1%;
 	margin-top: 0;
 	margin-bottom: 0;
-	
 }
 
 ul#tabs li {

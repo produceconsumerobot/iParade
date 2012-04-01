@@ -3,16 +3,20 @@ var DEBUG = 0;
 var tabLinks = new Array();
 var tabListItems = new Array();
 var contentDivs = new Array();
-var contentPage = 0;
+var contentPage;
 var locCheckTimerId = null; // timer ID
 var startTabsTimerId = null; // timer ID
 var my_audio = null;
 var audioTimer = null;
+var iParades = null;
 
-var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/content/";
+var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/";
+var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/iparade2/";
 var remoteVidBase = "_video";
 var remoteVoiceOverBase = "_voiceover";
 var remoteAudioThemeBase = "audioTheme";
+var remoteCssFilename = "stylesheet.css";
+var iParadesFile = "iParades.php";
 
 var localDir = "iParade";
 var localVidBase = "iparadeVideo";
@@ -46,15 +50,9 @@ function onDeviceReady() {
 	
 	window.onscroll = floater;
 	
-	//playAudioTheme();
-	getAudioTheme();
-	//playAudio(contentAudioTheme + voiceoverExt);
-	
-	contentPage = 0;
 	startGpsTracking();
-	//startUpdateLocationTimer();
 	
-	getTargetLocations(currentLoc);
+	//showIparadeOptions();
 
     console.log('onDeviceReady() finished');
 }
@@ -172,6 +170,8 @@ function hideTabs() {
 // Initializes the page
 function init() {
     console.log('init()');
+    
+	loadCssFile(remoteContentHub + remoteCssFilename);
 	
 	tabLinks = new Array();
 	contentDivs = new Array();
@@ -338,10 +338,6 @@ function getWindowWidth() {
 	return w + "";
 }
 
-function getHomeContent(pageNum) {
-    console.log("getHomeContent(" + pageNum + ")");
-}
-
 // Moves to the next page in the sequence
 function nextPage() {
 	console.log("nextPage()");
@@ -361,7 +357,7 @@ function nextPage() {
 	loopingAudio = false;
     
 	contentPage++;
-	if ((contentPage % 2) > 0) {
+	if ((contentPage > 0) && (contentPage % 2) == 0) {
 		incrementTarget();
 	}
 	getHomeContent(contentPage);
@@ -402,16 +398,29 @@ function getHomeContent(pageNum) {
 	var html = "";
 	
 	if (pageNum == 0) {
+		// startup screen is special
+		html = html + "<div id='startScreen'>";
+		//html = html + "<div id='iParadeSearching'>";
+		html = html + "<p id='iParadeSearching'>Searching for iParades...</p>";
+		//html = html + "</div>";
+		html = html + "<img class='fullSplashImage' src='./design/splash.gif'/>";
+		html = html + "</div>";
+		document.getElementById('home').innerHTML = html;
+	} else if (pageNum == 1) {
 		// First page is special
 		html = html + "<div id='textContent'></div>";
 		html = html + getNextButton(false); 
-		html = html +  "<div class='clearBoth'></div>";
 		document.getElementById('home').innerHTML = html;
 		$("#textContent").load(remoteContentDir + targetNum + "_text.html");
-	} else if ((pageNum % 2) == 1) {
+	} else if (targetNum == (targetLocations.length - 1)) {
+		// Last page is special
+		html = html + "<div id='textContent'></div>";
+		document.getElementById('home').innerHTML = html;
+		$("#textContent").load(remoteContentDir + targetNum + "_text.html");	
+		playAudioTheme();
+	} else if ((pageNum % 2) == 0) {
 		// Between page
-		html = html + "<img class='bodyImage' src='" + remoteContentDir + targetNum + "_btwImage" + ".jpg'>";
-		html = html +  "<div class='clearBoth'></div>";
+		html = html + "<img class='bodyImage' src='" + remoteContentDir + targetNum + "_btwImage" + ".jpg'/>";
 		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
 		localVidPath = null;
@@ -420,7 +429,6 @@ function getHomeContent(pageNum) {
 		if (fakeGPS) testLocChangeTimer();
 	} else {
 		// Main content page
-		
 		html = html + "<div id='textContent'></div>";
 		html = html + "<div id='playVideoButton'";
 		//html = html + "<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>";
@@ -434,7 +442,7 @@ function getHomeContent(pageNum) {
 		document.getElementById('home').innerHTML = html;
 		$("#textContent").load(remoteContentDir + targetNum + "_text.html", 
 				function () {
-			$("#playVideoButton").html("<img id='downloadingImg' style='display:block' src='./design/downloading.gif'/>");
+			$("#playVideoButton").html("<img id='downloadingImg' src='./design/downloading.gif'/>");
 		});
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
@@ -496,3 +504,101 @@ function displayVidElement() {
     console.log("displayVidElement finished");
 }
 
+function loadCssFile(filename) {
+	var fileref=document.createElement("link");
+	fileref.setAttribute("rel", "stylesheet");
+	fileref.setAttribute("type", "text/css");
+	fileref.setAttribute("href", filename);
+	if (typeof fileref!="undefined") {
+		document.getElementsByTagName("head")[0].appendChild(fileref);
+	}
+}
+
+function getIparades(loc) {
+	console.log("getIparadeOptions(" + loc.latitude + "," + loc.longitude + ")");
+	
+	$.ajax({
+        type : 'POST',
+        url : remoteContentHub + iParadesFile,
+        dataType : 'json',
+        data : {
+          latitude : loc.latitude,
+          longitude : loc.longitude
+        },
+        success : function(data) {
+          // sweet! we win!
+        	iParades = data;
+        	showIparades();
+          //postSuccess(data);
+        },
+        error : function(data) {
+          console.log("error");
+        }
+      });
+	
+	console.log("getIparadeOptions finished");
+}
+
+function initIparade() {
+	console.log("initIparade()");
+	
+	var listNum = $("#iParadeSelect option:selected").attr("value");
+	
+	remoteContentDir = iParades[listNum].dir;
+	
+	loadCssFile(remoteContentDir + remoteCssFilename);
+	
+	//playAudioTheme();
+	getAudioTheme();
+	//playAudio(contentAudioTheme + voiceoverExt);
+	
+	getTargetLocations(currentLoc);
+	
+	nextPage();
+	
+	console.log("initIparade finished");
+}
+/*
+function showIparades() {
+	console.log("showIparades()");
+	
+	var html = "";
+	html = html + "<div id='iParadeSelectDiv'>";
+	html = html + "<img class='splashImage' src='./design/splash.gif'/>";
+	html = html + "<div>";
+	html = html + "<p>Choose an iParade:</p>";
+	html = html + "<select id=iParadeSelect>";
+	for (var i=0; i<iParades.length; i++) {
+		//html = html + "<option id='select" + i +"' onmousedown='alert()'>select" + i + "</option>";
+		html = html + "<option value='" + i + "' id='select" + i + "' >" + iParades[i].name + "</option>";
+	}
+	html = html + "</select>";
+	html = html + "<img id='nextButton' src='design/next_arrow.jpg' ontouchstart='initIparade()'/>";
+	html = html + "</div>";
+	html = html + "</div>";
+	document.getElementById('startScreen').innerHTML = html;
+
+	console.log("showIparades finished");
+}
+*/
+function showIparades() {
+	console.log("showIparades()");
+	
+	var html = "";
+	html = html + "<div id='iParadeSelectDiv'>";
+	html = html + "<img class='fullSplashImage' src='./design/splash.gif'/>";
+	html = html + "<div class='iparadeSelectOverlay'>";
+	html = html + "<span>Choose an iParade:</span>";
+	html = html + "<select id=iParadeSelect>";
+	for (var i=0; i<iParades.length; i++) {
+		//html = html + "<option id='select" + i +"' onmousedown='alert()'>select" + i + "</option>";
+		html = html + "<option value='" + i + "' id='select" + i + "' >" + iParades[i].name + "</option>";
+	}
+	html = html + "</select>";
+	html = html + "<img id='splashNextButton' src='design/next_arrow.jpg' ontouchstart='initIparade()'/>";
+	html = html + "</div>";
+	html = html + "</div>";
+	document.getElementById('startScreen').innerHTML = html;
+
+	console.log("showIparades finished");
+}

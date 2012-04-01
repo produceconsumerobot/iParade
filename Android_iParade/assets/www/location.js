@@ -27,7 +27,8 @@ function Location(lat, long, acc) {
 
 function initLocation() {
 	console.log("initLocation()");
-	currentLoc = new Location(40.777422, -74.071198, 500.0);
+	//currentLoc = new Location(40.777422, -74.071198, 500.0);
+	currentLoc = null;
 	targetNum = 0;
 	//nTargets = 4;
 	targetLocations = new Array();
@@ -76,7 +77,7 @@ function initializeMap(loc) {
 	gMap = new google.maps.Map(m, myOptions);
 	
     
-	for (var i=0; i<targetLocations.length; i++ ) {
+	for (var i=1; i<targetLocations.length-1; i++ ) {
 		var tLoc = targetLocations[i];
 		console.log("Marker: " + tLoc.latitude + ", " + tLoc.longitude + ", " + tLoc.accuracy);
 		targetMarkers[i] = new google.maps.Marker({
@@ -110,7 +111,7 @@ function initializeMap(loc) {
 
 function setTargetMarkerIcons() {
 	console.log("setTargetMarkerIcons()");
-	for (var i=0; i<targetMarkers.length; i++ ) {
+	for (var i=1; i<targetMarkers.length-1; i++ ) {
 		if (i == targetNum) {
 			targetMarkers[i].setIcon("./design/targetLocation_next.png");
 		} else if (i < targetNum) {
@@ -153,7 +154,9 @@ function getTargetLocations(currentLocation) {
 			} else {
 				console.error("TargetLocation " + i + "is missing data");
 			}
-		}	
+		}
+		
+		targetLocations[targetLocations.length] = new Location(0.0, 0.0, 1.0);
 		
 		initializeMap(currentLocation);
 	}
@@ -163,9 +166,17 @@ function getTargetLocations(currentLocation) {
 //Updates the current GPS location and performs checks
 function updateLocation(loc) {
 	console.log("updateLocation: " + loc.latitude + ", " + loc.longitude + ", " + loc.accuracy);
-	currentLoc.latitude = loc.latitude;
-	currentLoc.longitude = loc.longitude;
-	currentLoc.accuracy = loc.accuracy;
+	
+	if (!currentLoc) {
+		// This is the first location update
+		// call back to start processes
+		getIparades(loc);
+		currentLoc = new Location(loc.latitude, loc.latitude, loc.accuracy);
+	} else {
+		currentLoc.latitude = loc.latitude;
+		currentLoc.longitude = loc.longitude;
+		currentLoc.accuracy = loc.accuracy;
+	}
 	
 	// TODO: make conditional on whether map is showing?
 	updateMarkerPosition(currentLoc);
