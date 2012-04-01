@@ -207,7 +207,12 @@ function init() {
 			var id = getHash( tabList[i].getAttribute('href') );
 			tabListItems[id] = tabList[i];
 			contentDivs[id] = document.getElementById( id );
-			contentDivs[id].style.height = getWindowHeight() + "px";
+			var h = getWindowHeight();
+			if (id == 'map') {
+				contentDivs[id].style.height = (h - (h*0.06)) + "px";
+			} else {
+				contentDivs[id].style.height = (h - (h*0.13)) + "px";
+			}
 		}
 	}
 	
@@ -259,7 +264,7 @@ function showTab(options) {
 			contentDivs[id].className = 'tabContent hide';
 		}
 	}
-	contentDivs[selectedId].style.height = getWindowHeight() + "px";
+	//contentDivs[selectedId].style.height = getWindowHeight() + "px";
 	
 	if (selectedId == 'map') {
 		resizeMap();
@@ -289,6 +294,7 @@ function getWindowHeight() {
 	var w1 = 0;
 	var w2 = 0;
 	var w3 = 0;
+	var w4 = 0;
 
 	if (document.body.clientHeight != null) {
 		w1 = document.body.clientHeight;
@@ -301,9 +307,11 @@ function getWindowHeight() {
 	if (window.innerHeight != null) {
 		w3 = window.innerHeight;
 	}
+	
+	w4 = $(window).height();
 
 	//w = Math.max(w, w1, w2, w3);
-	w = w2;				
+	w = w4;				
 
 	if ((w == null) || (w == 0)) {
 		w = "auto";
@@ -311,7 +319,7 @@ function getWindowHeight() {
 	if (DEBUG > 1)  {
 		alert ("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h=" + w);
 	}
-    
+    console.log("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h4=" + w4 + ", h=" + w);
     console.log("getWindowHeight()=" + w);
 	return w + "";
 }
@@ -323,7 +331,8 @@ function getWindowWidth() {
 	var w1 = 0;
 	var w2 = 0;
 	var w3 = 0;
-
+	var w4 = 0;
+	
 	if (document.body.clientWidth != null) {
 		w1 = document.body.clientWidth;
 	}
@@ -335,9 +344,11 @@ function getWindowWidth() {
 	if (window.innerWidth != null) {
 		w3 = window.innerWidth;
 	}
+	
+	w4 = $(window).width();
 
 	//w = Math.max(w, w1, w2, w3);	
-	w = w2;			
+	w = w4;			
 
 	if ((w == null) || (w == 0)) {
 		w = "auto";
@@ -345,7 +356,7 @@ function getWindowWidth() {
 	if (DEBUG > 1)  {
 		alert ("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w=" + w);
 	}
-    
+    console.log("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w4=" + w4 + ", w=" + w);
     console.log("getWindowWidth()=" + w);
 	return w + "";
 }

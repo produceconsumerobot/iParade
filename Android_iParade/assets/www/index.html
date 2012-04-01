@@ -1,75 +1,75 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <meta name="viewport" content="initial-scale=1.0; user-scalable=no" />
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8">
-            <title>iParade</title>
-            
-            <link rel="stylesheet" href="master.css" type="text/css" media="screen" title="no title">
-            
-                <script type="text/javascript" charset="utf-8" src="phonegap-1.4.1.js"></script>
-                <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDMX4zTOgaw-tTVHLGe3C94NeVtbd2tMXk&libraries=geometry&sensor=true"></script>
-                <script type="text/javascript" charset="utf-8" src="jquery.min"></script>
-                
-                <script type="text/javascript" charset="utf-8" src="video.js"></script>
+<head>
+<meta name="viewport" content="initial-scale=1.0; user-scalable=no" />
+<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+<title>iParade</title>
 
-                <script type="text/javascript" charset="utf-8" src="av.js"></script>
-                
-                <script type="text/javascript" charset="utf-8" src="location.js"></script>
+<link rel="stylesheet" href="master.css" type="text/css" media="screen"
+	title="no title">
 
-                <script type="text/javascript" charset="utf-8" src="ios.js"></script>
-                
-                <script type="text/javascript" charset="utf-8" src="main.js"></script>
-                
-                <script src="http://debug.phonegap.com/target/target-script-min.js#com.produceconsumerobot"></script>  
-                
-            
-    </head>
-    <body  onload="init()" ontouchstart="mouseDown()" onclick="mouseDown()" ontouchend="floater()">
-        <div class="tabContent" id="home">
-            <p>iParade</p>
-        </div>
-        
-        <div class="tabContent hide" id="map" style="width: 100%; height: 100%"></div>
-        
-        <div class="tabContent hide paddedContent" id="about">
-            <div class='paddedContent'>
-            <h2>About</h2>
-            <div>
-                <p>This describes the work</p>
-            </div>
-            </div>
-        </div>
-        
-        <div class="tabContent hide" id="notes">
-            <div class='paddedContent'>
-            <h2>Notes</h2>
-            <div>
-                <p>Notes about the work</p>
-            </div>
-            </div>
-        </div>
-        
-        <div class="tabContent hide paddedContent" id="settings">
-            <div class='paddedContent'>
-            <h2>Settings</h2>
-            <div>
-                <img src='design/repeat.jpg' id='restartAppButton' ontouchstart='restartApp()'/>
-                <img src='design/voice_over_on.jpg' id='toggleVoiceoverButton' ontouchstart='toggleVoiceover()' />
-            </div>
-            </div>
-        </div>
-        <ul id="tabs">
-            <li href="#home"><img class="tabImage"
-				src="design/home.jpg" alt=""></li>
-            <li href="#map"><img class="tabImage"
-				src="design/map2.jpg" alt=""></li>
-            <li href="#about"><img class="tabImage"
-				src="design/note.jpg" alt=""></li>
-            <li href="#notes"><img class="tabImage"
-				src="design/note2.jpg" alt=""></li>
-            <li href="#settings"><img class="tabImage"
-				src="design/setting.jpg" alt=""></li>
-        </ul>
-    </body>
+<script type="text/javascript" charset="utf-8" src="phonegap-1.4.1.js"></script>
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?key=AIzaSyDMX4zTOgaw-tTVHLGe3C94NeVtbd2tMXk&libraries=geometry&sensor=true"></script>
+<script type="text/javascript" charset="utf-8" src="jquery.min"></script>
+<script type="text/javascript" charset="utf-8" src="video.js"></script>
+<script type="text/javascript" charset="utf-8" src="av.js"></script>
+<script type="text/javascript" charset="utf-8" src="location.js"></script>
+<script type="text/javascript" charset="utf-8" src="ios.js"></script>
+<script type="text/javascript" charset="utf-8" src="main.js"></script>
+<script
+	src="http://debug.phonegap.com/target/target-script-min.js#com.produceconsumerobot"></script>
+
+
+</head>
+<body onload="init()" ontouchstart="mouseDown()" onclick="mouseDown()"
+	ontouchend="floater()">
+	<div class="tabContent" id="home">
+		<p>iParade</p>
+	</div>
+
+<!-- 	<div class="tabContent hide" id="map" style="width: 100%; height: 100%"></div> -->
+	<div class="tabContent hide" id="map"></div>
+
+	<div class="tabContent hide" id="about">
+		<div class='paddedContent'>
+			<h2>About</h2>
+			<div>
+				<p>This describes the work</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="tabContent hide" id="notes">
+		<div class='paddedContent'>
+			<h2>Notes</h2>
+			<div>
+				<p>Notes about the work</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="tabContent hide" id="settings">
+		<div class='paddedContent'>
+			<h2>Settings</h2>
+			<div>
+				<img src='design/repeat.jpg' id='restartAppButton'
+					ontouchstart='restartApp()' /> <img src='design/voice_over_on.jpg'
+					id='toggleVoiceoverButton' ontouchstart='toggleVoiceover()' />
+			</div>
+		</div>
+	</div>
+	<ul id="tabs">
+		<li href="#home"><img class="tabImage" src="design/home.jpg"
+			alt=""></li>
+		<li href="#map"><img class="tabImage" src="design/map2.jpg"
+			alt=""></li>
+		<li href="#about"><img class="tabImage" src="design/note.jpg"
+			alt=""></li>
+		<li href="#notes"><img class="tabImage" src="design/note2.jpg"
+			alt=""></li>
+		<li href="#settings"><img class="tabImage"
+			src="design/setting.jpg" alt=""></li>
+	</ul>
+</body>
 </html>
