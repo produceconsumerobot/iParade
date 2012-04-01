@@ -54,6 +54,10 @@ select {
 	padding: 2% 4%;
 }
 
+#startScreen {
+    position: relative;
+}
+
 #iParadeSearching {
 	position: absolute;
 	width: 100%;

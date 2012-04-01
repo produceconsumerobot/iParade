@@ -31,6 +31,9 @@ function playVideo() {
             
             $("#playVideoButton").html(html);
             
+            //setTimeout(function() { console.log("full screen"); document.getElementById("playVideoButton").webkitRequestFullScreen(); }, 5000);
+            
+            //$("#playVid")[0].webkitEnterFullScreen();
         } 
 	} 
 	//document.getElementById("nextButton").style.visibility="visible";

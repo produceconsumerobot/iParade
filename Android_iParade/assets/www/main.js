@@ -405,7 +405,7 @@ function getHomeContent(pageNum) {
 	
 	if (pageNum == 0) {
 		// startup screen is special
-		html = html + "<div id='startScreen'>";
+		html = html + "<div id='startScreen' style='margin-top:" + getMarginTop() + "px' >";
 		//html = html + "<div id='iParadeSearching'>";
 		html = html + "<p id='iParadeSearching'>Searching for iParades...</p>";
 		//html = html + "</div>";
@@ -426,7 +426,7 @@ function getHomeContent(pageNum) {
 		playAudioTheme();
 	} else if ((pageNum % 2) == 0) {
 		// Between page
-		html = html + "<img class='bodyImage' src='" + remoteContentDir + targetNum + "_btwImage" + ".jpg'/>";
+		html = html + "<img class='bodyImage' src='" + remoteContentDir + targetNum + "_btwImage" + ".jpg' style='margin-top:" + getMarginTop() + "px' />";
 		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
 		localVidPath = null;
@@ -608,4 +608,16 @@ function showIparades() {
 	document.getElementById('startScreen').innerHTML = html;
 
 	console.log("showIparades finished");
+}
+
+function getMarginTop() {
+    console.log("getMarginTop()");
+    w = getWindowWidth();
+    h = getWindowHeight();
+    
+    var mt = (h-(w/480*270))/2 + "";
+        
+    console.log("getMarginTop finished: " + mt);
+    
+    return mt;
 }
