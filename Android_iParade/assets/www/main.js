@@ -143,7 +143,10 @@ function mouseDown() {
 function onBackKeyDown() {
 	// Handle the back button
 	console.log("onBackKeyDown()");
-	navigator.app.exitApp();
+    if (!contentPage) {
+        console.log("navigator.app.exitApp()");
+        navigator.app.exitApp();
+    }
 }
 
 function onMenuKeyDown() {
@@ -515,7 +518,7 @@ function loadCssFile(filename) {
 }
 
 function getIparades(loc) {
-	console.log("getIparade(" + loc.latitude + "," + loc.longitude + ")");
+	console.log("getIparades(" + loc.latitude + "," + loc.longitude + ")");
 	
 	$.ajax({
         type : 'POST',
@@ -537,7 +540,7 @@ function getIparades(loc) {
         }
       });
 	
-	console.log("getIparadeOptions finished");
+	console.log("getIparades finished");
 }
 
 function initIparade() {
