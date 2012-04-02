@@ -83,7 +83,12 @@ function playAudio(src) {
 								if ((position % 5) < 1) { // Write to the console infrequently
 									console.log("AudioPosition: " + my_audio._position + " / " + my_audio._duration);
 								}
-								checkAudioLoop();
+								//if (my_audio._duration < 0) {
+								//	stopAudio();
+								//	playAudio(src);
+								//} else {
+									checkAudioLoop();
+								//}
 							}
 						},
 						// error callback
@@ -233,7 +238,8 @@ function getAudioTheme(nthTry) {
 					//localVidPath = localFile;
 					audioThemeDownloadComplete = true;
 					playAudioTheme();
-					showNextButton(0);
+					hideDownloadingImg(0);
+					showNextButton(500);
 			    },
 			    function(error) {
 			        console.log("download error source " + error.source);

@@ -432,6 +432,10 @@ function getHomeContent(pageNum) {
 	} else if (pageNum == 1) {
 		// First page is special
 		html = html + "<div id='textContent' class='paddedContent'></div>";
+		html = html + "<div id='playVideoButton'";
+		html = html + "</div>";
+		setTimeout(function() {if (!audioThemeDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
+				1000);
 		html = html + getNextButton(false); 
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
@@ -528,12 +532,16 @@ function showNextButton(delay) {
     setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, delay);
 }
 
+function hideDownloadingImg(delay) {
+	setTimeout(function() { $("#downloadingImg").css("display", "none"); }, delay);
+}
+
 function displayVidElement() {
 	console.log("displayVidElement()");
 	if (vidDownloadComplete && !checkingForTargetLocation) {
 		console.log("displaying Video element");
         
-		$("#playVideoButton #downloadingImg").css("display", "none");
+		hideDownloadingImg(0);
 	    
 	    // Check if the device supports video
 	    //var vidTest = $("#playVid");
