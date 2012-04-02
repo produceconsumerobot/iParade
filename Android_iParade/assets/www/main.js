@@ -435,7 +435,7 @@ function getHomeContent(pageNum) {
 		html = html + "<div id='playVideoButton'";
 		html = html + "</div>";
 		setTimeout(function() {if (!audioThemeDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
-				1000);
+				500);
 		html = html + getNextButton(false); 
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
@@ -478,7 +478,7 @@ function getHomeContent(pageNum) {
 		// Delay showing the downloading gif to let loadHtml complete
 		// If the video has already downloaded we don't need to show the downloading gif
 		setTimeout(function() {if (!vidDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
-			2000);
+			1000);
 		navigator.notification.vibrate(inTargetVibLen);
 		getVoiceover(targetNum);
 		displayVidElement();		
