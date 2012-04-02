@@ -585,33 +585,40 @@ function getIparades(loc, nthTry) {
 		}
 	}
 	
-	// nthTry keeps track of number of attempts
-	if (!nthTry) {
-		nthTry = 1;
+	// If the device isn't online, don't try ajax
+	if (!checkConnection()) {
+		offlineAlert();
+		setTimeout(function() { getIparades(loc, nthTry);}, 5000);
 	} else {
-		nthTry++;
-	}
 	
-	$.ajax({
-        type : 'POST',
-        url : remoteContentHub + iParadesFile,
-        dataType : 'json',
-        data : {
-          latitude : loc.latitude,
-          longitude : loc.longitude
-        },
-        success : function(data) {
-          // sweet! we win!
-        	iParades = data;
-        	showIparades();
-          //postSuccess(data);
-        },
-        error : function(data) {
-          console.error("error in getIparades(" + loc.latitude + "," + loc.longitude + ")");
-          tryAgain(loc, nthTry);
-          //setTimeout(function() { getIparades(loc); }, 1000);
-        }
-      });
+		// nthTry keeps track of number of attempts
+		if (!nthTry) {
+			nthTry = 1;
+		} else {
+			nthTry++;
+		}
+		
+		$.ajax({
+	        type : 'POST',
+	        url : remoteContentHub + iParadesFile,
+	        dataType : 'json',
+	        data : {
+	          latitude : loc.latitude,
+	          longitude : loc.longitude
+	        },
+	        success : function(data) {
+	          // sweet! we win!
+	        	iParades = data;
+	        	showIparades();
+	          //postSuccess(data);
+	        },
+	        error : function(data) {
+	          console.error("error in getIparades(" + loc.latitude + "," + loc.longitude + ")");
+	          tryAgain(loc, nthTry);
+	          //setTimeout(function() { getIparades(loc); }, 1000);
+	        }
+	      });
+	}
 	
 	console.log("getIparades finished");
 }
