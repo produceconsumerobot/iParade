@@ -27,20 +27,20 @@ function playVideo() {
             html = html + "<source src='" + localContentDir + "/" + localVidBase + vidExt + "' type='video/mp4' /></video>"; 
             
             $("#playVideoButton").html(html);
-            vidAddEventListener("loadedmetadata");
+            setTimeout(function() {vidPrepFullScreen();}, 750);
         } 
 	} 
     console.log("playVideo finished");
 }
 
-function vidAddEventListener(event, nthTry) {
-	console.log("vidAddEventListener(" + event + ")");
+function vidPrepFullScreen(nthTry) {
+	console.log("vidPrepFullScreen()");
 	
 	// function to try to add again
-	function tryAgain(evnt, ntry) {
+	function tryAgain(ntry) {
 		if (ntry < maxTries) {
 			// Wait and try try again...
-	        setTimeout(function() { vidAddEventListener(evnt, ntry);}, ntry*tryDelay/4);
+	        setTimeout(function() { vidPrepFullScreen(ntry);}, ntry*tryDelay/4);
 		}
 	}
 	
@@ -54,21 +54,22 @@ function vidAddEventListener(event, nthTry) {
     var vid = $("#playVid");
     if (vid) {
     	console.log("vid.addEventListener: loadedmetadata");
-    	vid.addEventListener(event, vidFullscreen, false);
+    	vid.addEventListener("loadedmetadata", vidFullscreen, false);
     } else {
     	console.log("#playVid not found, tries=" + nthTry);
-    	tryAgain(event, nthTry);
+    	tryAgain(nthTry);
     }
-
+    console.log("vidPrepFullScreen() finished");
 }
 
 function vidFullscreen(){
-	console.log("goFullscreen()");
+	console.log("vidFullscreen()");
 	var vid = $("#playVid");
     if (vid && vid.webkitSupportsFullscreen) {
     	console.log("vid.webkitEnterFullscreen()");
     	vid.webkitEnterFullscreen();
     }
+    console.log("vidFullscreen() finished");
 }
 
 function getVideo(targetNumber, nthTry) {
