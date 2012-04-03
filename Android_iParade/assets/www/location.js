@@ -1,5 +1,5 @@
 var fakeGPS = true; // for debugging
-var faceGPSdelay = 7000; // delay to achieve location
+var fakeGPSdelay = 7000; // delay to achieve location
 
 var currentLoc; // where the device is currently
 var targetNum; // which target is currently being sought after
@@ -352,7 +352,7 @@ function testLocChangeTimer() {
 	if (testLocChangeTimerId != null) {
 		clearTimeout(testLocChangeTimerId);
 	}
-	testLocChangeTimerId = setTimeout("testLocChange()", faceGPSdelay);	
+	testLocChangeTimerId = setTimeout("testLocChange()", fakeGPSdelay);	
 }
 function testLocChange() {
 	console.log("testLocChange");
