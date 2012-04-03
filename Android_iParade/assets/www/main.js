@@ -53,9 +53,9 @@ function onDeviceReady() {
 	window.onscroll = floater;
 	
 	startGpsTracking();
-	
-	//loopingAudio = true;
-	//playAudio(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
+
+	loopingAudio = true;
+	playAudio(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
 	
 	//showIparadeOptions();
 
@@ -269,6 +269,9 @@ function showTab(options) {
 	if (selectedId == 'map') {
 		resizeMap();
 		recenterMap();
+		if ((contentPage == 0) || (contentPage == 1)) {
+			AutoBounds(targetMarkers);
+		}
 	}
 
 	// Stop the browser following the link
@@ -380,7 +383,7 @@ function nextPage() {
 	loopingAudio = false;
     
 	contentPage++;
-	if ((contentPage > 0) && (contentPage % 2) == 0) {
+	if ((contentPage > 2) && (contentPage % 2) == 0) {
 		incrementTarget();
 	}
 	getHomeContent(contentPage);
@@ -438,23 +441,23 @@ function getHomeContent(pageNum) {
 				500);
 		html = html + getNextButton(false); 
 		document.getElementById('home').innerHTML = html;
-		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
+		loadHtml($("#textContent"), remoteContentDir + "0_text.html");
 		//$("#textContent").load(remoteContentDir + targetNum + "_text.html");
-	} else if (targetNum == (targetLocations.length - 1)) {
+	} else if (targetNum == (targetLocations.length)) {
 		// Last page is special
 		html = html + "<div id='textContent' class='paddedContent'></div>";
 		document.getElementById('home').innerHTML = html;
-		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
+		loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
 		//$("#textContent").load(remoteContentDir + targetNum + "_text.html");	
 		playAudioTheme();
 	} else if ((pageNum % 2) == 0) {
 		// Between page
-		html = html + "<img class='bodyImage' src='" + remoteContentDir + targetNum + "_btwImage" + ".jpg' style='margin-top:" + getMarginTop() + "px' />";
+		html = html + "<img class='bodyImage' src='" + remoteContentDir + (targetNum + 1) + "_btwImage" + ".jpg' style='margin-top:" + getMarginTop() + "px' />";
 		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
 		localVidPath = null;
 		playAudioTheme();
-		getVideo(targetNum);
+		getVideo((targetNum + 1));
 		if (fakeGPS) testLocChangeTimer();
 	} else {
 		// Main content page
@@ -469,7 +472,7 @@ function getHomeContent(pageNum) {
 		html = html + getNextButton(false);
 		//html = html +  "<div class='clearBoth'>";
 		document.getElementById('home').innerHTML = html;
-		loadHtml($("#textContent"), remoteContentDir + targetNum + "_text.html");
+		loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
 		//$("#textContent").load(remoteContentDir + targetNum + "_text.html", 
 		//		function () {
 		//	$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");
@@ -480,7 +483,7 @@ function getHomeContent(pageNum) {
 		setTimeout(function() {if (!vidDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
 			1000);
 		navigator.notification.vibrate(inTargetVibLen);
-		getVoiceover(targetNum);
+		getVoiceover((targetNum + 1));
 		displayVidElement();		
 	}
 	console.log("finishing getHomeContent");
@@ -617,7 +620,19 @@ function getIparades(loc, nthTry) {
 	        success : function(data) {
 	          // sweet! we win!
 	        	iParades = data;
+	        	var targets = new Array();
+	        	var titles = new Array();
+	        	for (var i=0; i<data.length; i++) {
+	        		console.log(data[i].name + ": " + data[i].location.latitude + ", " + data[i].location.longitude);
+	        		targets[i] = data[i].location;
+	        		titles[i] = data[i].name;
+	        	}
 	        	showIparades();
+	        	initializeMap(currentLoc);
+	        	setTargetMarkers(targets);
+	        	//setTargetMarkerIcons();
+	        	setTargetMarkerInfoWindows(titles);
+	        	//setTimeout(function() {AutoBounds(targetMarkers);}, 2000);
 	          //postSuccess(data);
 	        },
 	        error : function(data) {
@@ -631,12 +646,36 @@ function getIparades(loc, nthTry) {
 	console.log("getIparades finished");
 }
 
-function initIparade() {
+function showIparades() {
+	console.log("showIparades()");
+	
+	var html = "";
+	//html = html + "<div id='iParadeSelectDiv'>";
+	html = html + "<img class='fullSplashImage' src='design/splash.gif'/>";
+	html = html + "<div class='iparadeSelectOverlay'>";
+	html = html + "<span>Choose an iParade:</span>";
+	html = html + "<select id=iParadeSelect>";
+	for (var i=0; i<iParades.length; i++) {
+		//html = html + "<option id='select" + i +"' onmousedown='alert()'>select" + i + "</option>";
+		html = html + "<option value='" + i + "' id='select" + i + "' >" + iParades[i].name + "</option>";
+	}
+	html = html + "</select>";
+	html = html + "<img id='splashNextButton' src='design/next_arrow.jpg' ontouchstart='initIparade()'/>";
+	html = html + "</div>";
+	//html = html + "</div>";
+	document.getElementById('startScreen').innerHTML = html;
+
+	console.log("showIparades finished");
+}
+
+
+function initIparade(listNum) {
 	console.log("initIparade()");
+	if (!listNum) {
+		listNum = $("#iParadeSelect option:selected").attr("value");
+	}
 	
-	var listNum = $("#iParadeSelect option:selected").attr("value");
-	
-	remoteContentDir = iParades[listNum].dir;
+	remoteContentDir = iParades[listNum].url;
 	
 	loadCssFile(remoteContentDir + remoteCssFilename);
 	
@@ -673,27 +712,6 @@ function showIparades() {
 	console.log("showIparades finished");
 }
 */
-function showIparades() {
-	console.log("showIparades()");
-	
-	var html = "";
-	//html = html + "<div id='iParadeSelectDiv'>";
-	html = html + "<img class='fullSplashImage' src='design/splash.gif'/>";
-	html = html + "<div class='iparadeSelectOverlay'>";
-	html = html + "<span>Choose an iParade:</span>";
-	html = html + "<select id=iParadeSelect>";
-	for (var i=0; i<iParades.length; i++) {
-		//html = html + "<option id='select" + i +"' onmousedown='alert()'>select" + i + "</option>";
-		html = html + "<option value='" + i + "' id='select" + i + "' >" + iParades[i].name + "</option>";
-	}
-	html = html + "</select>";
-	html = html + "<img id='splashNextButton' src='design/next_arrow.jpg' ontouchstart='initIparade()'/>";
-	html = html + "</div>";
-	//html = html + "</div>";
-	document.getElementById('startScreen').innerHTML = html;
-
-	console.log("showIparades finished");
-}
 
 function getMarginTop() {
     console.log("getMarginTop()");

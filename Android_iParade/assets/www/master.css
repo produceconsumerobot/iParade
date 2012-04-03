@@ -95,6 +95,10 @@ select {
 	width: 25%;
 }
 
+.mapInfo {
+	color: black;
+}
+
 .bodyImage {
 	width: 100%;
 	display: block;

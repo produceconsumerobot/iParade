@@ -5,6 +5,7 @@ var currentLoc; // where the device is currently
 var targetNum; // which target is currently being sought after
 //var nTargets; // number of targets
 var targetLocations; // array of TargetLocations for this parade
+var infoWindows;
 var gMap;
 var currentMarker;
 var currentCircle;
@@ -32,6 +33,7 @@ function initLocation() {
 	targetNum = 0;
 	//nTargets = 4;
 	targetLocations = new Array();
+	infoWindows = new Array();
 	gMap = null;
 	currentMarker = null;
 	currentCircle = null;
@@ -76,23 +78,10 @@ function initializeMap(loc) {
     //	m.style.height= h + "px";
 	gMap = new google.maps.Map(m, myOptions);
 	
-    
-	for (var i=1; i<targetLocations.length-1; i++ ) {
-		var tLoc = targetLocations[i];
-		console.log("Marker: " + tLoc.latitude + ", " + tLoc.longitude + ", " + tLoc.accuracy);
-		targetMarkers[i] = new google.maps.Marker({
-                                            position: new google.maps.LatLng(tLoc.latitude, tLoc.longitude),
-                                            map: gMap,
-                                            icon: "design/targetLocation.png",
-                                            title:""
-                                            });		
-	}
-	setTargetMarkerIcons();
-	
 	currentMarker = new google.maps.Marker({
                                            position: latlng,
                                            map: gMap,
-                                           title:"Hello World!"
+                                           title:"Your are here"
                                            });
     
 	currentCircle = new google.maps.Circle({
@@ -109,9 +98,54 @@ function initializeMap(loc) {
     console.log("initializeMap() finished");
 }
 
+function setZoom(zoom) {
+	console.log("setZoom(" + zoom + ")");
+	gMap.setZoom(zoom);
+	console.log("setZoom finished");
+}
+
+function setTargetMarkers(targets) {
+    console.log("setTargetMarkers()");
+	for (var i=0; i<targets.length; i++ ) {
+		var tLoc = targets[i];
+		console.log("Marker " + ":" + tLoc.latitude + ", " + tLoc.longitude + ", " + tLoc.accuracy);
+		targetMarkers[i] = new google.maps.Marker({
+                                            position: new google.maps.LatLng(tLoc.latitude, tLoc.longitude),
+                                            map: gMap,
+                                            icon: "design/targetLocation_next.png",
+                                            title: ""
+                                            });		
+	}
+	//setTargetMarkerIcons();
+	console.log("setTargetMarkers Finished");
+}
+
+function setTargetMarkerInfoWindows(titles) {
+	if (titles){
+		for (var i=0; i<targetMarkers.length; i++ ) {
+			if (titles[i]) {
+				console.log("Setting title: " + titles[i]);
+				var html = "";
+				html = html + "<span class='mapInfo'>" + titles[i] + "</span>";
+				html = html + "<button ontouchstart='initIparade("+ i +")'>Go!</button>";
+				infoWindows[i] = new google.maps.InfoWindow({content: html});
+
+				google.maps.event.addListener(targetMarkers[i], 'click', function() {
+					for (var j=0; j<targetMarkers.length; j++ ) {
+						if (this == targetMarkers[j]) {
+							console.log("marker click: " + j);
+							infoWindows[j].open(gMap,this);
+						}
+					}
+				});
+			}
+		}
+	}
+}
+
 function setTargetMarkerIcons() {
 	console.log("setTargetMarkerIcons()");
-	for (var i=1; i<targetMarkers.length-1; i++ ) {
+	for (var i=0; i<targetMarkers.length; i++ ) {
 		if (i == targetNum) {
 			targetMarkers[i].setIcon("design/targetLocation_next.png");
 		} else if (i < targetNum) {
@@ -123,6 +157,25 @@ function setTargetMarkerIcons() {
 	console.log("setTargetMarkerIcons finished");
 }
 
+function AutoBounds(markers) {
+	console.log("AutoBounds()");
+	var bounds = new google.maps.LatLngBounds();
+	var latlng = new google.maps.LatLng(currentLoc.latitude, currentLoc.longitude);
+	console.log("currentLoc:" + currentLoc.latitude + "," + currentLoc.longitude);
+	bounds.extend(latlng);
+	for (var i=0; i<markers.length; i++) {
+		console.log("Marker" + i + ":" + markers[i].position.lat() + "," +  markers[i].position.lng());
+		bounds.extend(markers[i].position);
+	}
+	if (gMap.getBounds()) {
+		console.log("getBounds=" + gMap.getBounds().toString());
+	} else {
+		console.log("Map Bounds not yet set");
+	}
+	console.log("AutoBounds=" + bounds.toString());
+	gMap.fitBounds(bounds);
+	console.log("AutoBounds finished");
+}
 
 //Lookup the targetLocations
 //Currently all locations are hard-coded
@@ -144,21 +197,23 @@ function getTargetLocations(currentLocation) {
 		console.log("TargetLocations acquired: " + data);
 
 		// The first location is a dummy location 
-		targetLocations[0] = new Location(0.0, 0.0, 1.0);
+		//targetLocations[0] = new Location(0.0, 0.0, 1.0);
 		
 		for (var i=0; i<data.length; i++) {
 			console.log("TargetLocation" + i);
 			if ((data[i].latitude) && (data[i].longitude) && (data[i].accuracy)) {
 				console.log(data[i].latitude + ", " + data[i].longitude + ", " + data[i].accuracy);
-				targetLocations[i+1] = new Location(data[i].latitude, data[i].longitude, data[i].accuracy);
+				targetLocations[i] = new Location(data[i].latitude, data[i].longitude, data[i].accuracy);
 			} else {
 				console.error("TargetLocation " + i + "is missing data");
 			}
 		}
 		
-		targetLocations[targetLocations.length] = new Location(0.0, 0.0, 1.0);
+		//targetLocations[targetLocations.length] = new Location(0.0, 0.0, 1.0);
 		
 		initializeMap(currentLocation);
+    	setTargetMarkers(targetLocations);
+    	setTargetMarkerIcons();
 	}
     console.log("getTargetLocations() finished");
 }
@@ -171,7 +226,7 @@ function updateLocation(loc) {
 		// This is the first location update
 		// call back to start processes
 		getIparades(loc);
-		currentLoc = new Location(loc.latitude, loc.latitude, loc.accuracy);
+		currentLoc = new Location(loc.latitude, loc.longitude, loc.accuracy);
 	} else {
 		currentLoc.latitude = loc.latitude;
 		currentLoc.longitude = loc.longitude;
@@ -185,29 +240,31 @@ function updateLocation(loc) {
 	if (checkingForTargetLocation) {
 		//alert("loc=" + currentLoc.latitude + "," + currentLoc.longitude + "," + currentLoc.accuracy + " target=" + targetLocations[targetNum].latitude + "," + targetLocations[targetNum].longitude + "," + targetLocations[targetNum].accuracy);
 		//alert("checkingForTargetLocation");
-		if (inTargetLocation(currentLoc, targetLocations[targetNum])) {
-			console.log("Target Location reached");
-			checkingForTargetLocation = false;
-			nextPage();
+		if (targetLocations[targetNum]) {
+			if (inTargetLocation(currentLoc, targetLocations[targetNum])) {
+				console.log("Target Location reached");
+				checkingForTargetLocation = false;
+				nextPage();
+			}
 		}
 	}		
     console.log("updateLocation finished");
 }
 
-//Timer to update gps location
-function startUpdateLocationTimer() {
-    console.log("startUpdateLocationTimer()");
-	if (updateLocationTimerId == null) {
-		updateLocationTimerId = setInterval("updateLocation(targetLocations[targetNum])", 1000);
-	}
-}
-function clearUpdateLocationTimer() {
-    console.log("clearUpdateLocationTimer()");
-	if (updateLocationTimerId != null) {
-		clearInterval(updateLocationTimerId);
-		updateLocationTimerId = null;
-	}
-}
+////Timer to update gps location
+//function startUpdateLocationTimer() {
+//    console.log("startUpdateLocationTimer()");
+//	if (updateLocationTimerId == null) {
+//		updateLocationTimerId = setInterval("updateLocation(targetLocations[targetNum])", 1000);
+//	}
+//}
+//function clearUpdateLocationTimer() {
+//    console.log("clearUpdateLocationTimer()");
+//	if (updateLocationTimerId != null) {
+//		clearInterval(updateLocationTimerId);
+//		updateLocationTimerId = null;
+//	}
+//}
 
 function startGpsTracking() {
 	console.log("startGpsTracking()");
@@ -309,14 +366,13 @@ function inTargetLocation(currentLocation, targetLocation) {
 function incrementTarget() {
 	console.log("incrementTarget()");
 	//if ((targetNum + 1) < nTargets) {
-	if ((targetNum + 1) < targetLocations.length) {
+	if ((targetNum) < targetLocations.length) {
 		console.log("targetNum++");
 		targetNum++;
 		setTargetMarkerIcons();
 	} else {
 		console.log("targetNum=" + targetNum + ", targetLocations.length=" + targetLocations.length);
 	}
-	if (DEBUG > 0) alert("targetNum=" + targetNum);
 }	
 
 //This is for testing with fakeGPS
@@ -328,7 +384,9 @@ function testLocChangeTimer() {
 }
 function testLocChange() {
 	console.log("testLocChange");
-	updateLocation(targetLocations[targetNum]);
+	if (targetLocations[targetNum]) {
+		updateLocation(targetLocations[targetNum]);
+	}
 }
 
 
