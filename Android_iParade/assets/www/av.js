@@ -30,7 +30,10 @@ function playVideo() {
             
             var vid = $("#playVid");
             if (vid) {
+            	console.log("vid.addEventListener: loadedmetadata");
             	vid.addEventListener("loadedmetadata", goFullscreen, false);
+            } else {
+            	console.log("#playVid not found");
             }
         } 
 	} 
@@ -38,8 +41,10 @@ function playVideo() {
 }
 
 function goFullscreen(){
+	console.log("goFullscreen()");
 	var vid = $("#playVid");
     if (vid && vid.webkitSupportsFullscreen) {
+    	console.log("vid.webkitEnterFullscreen()");
     	vid.webkitEnterFullscreen();
     }
 }
