@@ -27,20 +27,42 @@ function playVideo() {
             html = html + "<source src='" + localContentDir + "/" + localVidBase + vidExt + "' type='video/mp4' /></video>"; 
             
             $("#playVideoButton").html(html);
-            
-            var vid = $("#playVid");
-            if (vid) {
-            	console.log("vid.addEventListener: loadedmetadata");
-            	vid.addEventListener("loadedmetadata", goFullscreen, false);
-            } else {
-            	console.log("#playVid not found");
-            }
+            vidAddEventListener("loadedmetadata");
         } 
 	} 
     console.log("playVideo finished");
 }
 
-function goFullscreen(){
+function vidAddEventListener(event, nthTry) {
+	console.log("vidAddEventListener(" + event + ")");
+	
+	// function to try to add again
+	function tryAgain(evnt, ntry) {
+		if (ntry < maxTries) {
+			// Wait and try try again...
+	        setTimeout(function() { vidAddEventListener(evnt, ntry);}, ntry*tryDelay/4);
+		}
+	}
+	
+	// nthTry keeps track of number of attempts
+	if (!nthTry) {
+		nthTry = 1;
+	} else {
+		nthTry++;
+	}	
+	
+    var vid = $("#playVid");
+    if (vid) {
+    	console.log("vid.addEventListener: loadedmetadata");
+    	vid.addEventListener(event, vidFullscreen, false);
+    } else {
+    	console.log("#playVid not found, tries=" + nthTry);
+    	tryAgain(event, nthTry);
+    }
+
+}
+
+function vidFullscreen(){
 	console.log("goFullscreen()");
 	var vid = $("#playVid");
     if (vid && vid.webkitSupportsFullscreen) {
