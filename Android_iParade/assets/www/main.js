@@ -30,7 +30,7 @@ var voiceover = true;
 
 var hideTabsTimeout = 2000;
 var inTargetVibLen = 200;
-var maxTries = 10;
+var maxTries = 15;
 var tryDelay = 1000;
 
 //window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && window.attachEvent("onload", init);

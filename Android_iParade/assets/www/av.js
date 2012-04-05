@@ -28,16 +28,19 @@ function playVideo() {
             
             $("#playVideoButton").html(html);
             
-            $("#playVid").addEventListener("loadedmetadata", goFullscreen, false);
-            
+            var vid = $("#playVid");
+            if (vid) {
+            	vid.addEventListener("loadedmetadata", goFullscreen, false);
+            }
         } 
 	} 
     console.log("playVideo finished");
 }
 
 function goFullscreen(){
-    if ($("#playVid").webkitSupportsFullscreen) {
-    	$("#playVid").webkitEnterFullscreen();
+	var vid = $("#playVid");
+    if (vid && vid.webkitSupportsFullscreen) {
+    	vid.webkitEnterFullscreen();
     }
 }
 
