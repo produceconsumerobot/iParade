@@ -28,11 +28,18 @@ function playVideo() {
             
             $("#playVideoButton").html(html);
             
+            $("#playVid").addEventListener("loadedmetadata", goFullscreen, false);
+            
         } 
 	} 
     console.log("playVideo finished");
 }
 
+function goFullscreen(){
+    if ($("#playVid").webkitSupportsFullscreen) {
+    	$("#playVid").webkitEnterFullscreen();
+    }
+}
 
 function getVideo(targetNumber, nthTry) {
 	console.log("getVideo(" + targetNumber + ")");
