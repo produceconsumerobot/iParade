@@ -496,7 +496,9 @@ function getHomeContent(pageNum) {
 		setTimeout(function() {if (!vidDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
 			1000);
 		navigator.notification.vibrate(inTargetVibLen);
-		playVoiceover();
+		if (!voicoverAudioPlayer) { // only play voiceover if it wasn't started already
+			playVoiceover();
+		}
 		displayVidElement();		
 	}
 	console.log("finishing getHomeContent");

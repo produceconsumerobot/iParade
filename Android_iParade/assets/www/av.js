@@ -83,6 +83,26 @@ function getVideo(targetNumber, nthTry) {
     console.log("getVideo finished");
 }
 
+
+
+function playAudioTheme() {
+	console.log("playAudioTheme()");
+	
+	if (audioThemeDownloadComplete) {
+        if (device.platform.toLowerCase().search("android") >= 0) {
+        	themeAudioPlayer = new AudioPlayer(localDir + "/" + localAudioThemeBase + audioThemeExt);
+        	themeAudioPlayer.looping(true);
+        	themeAudioPlayer.play();
+        } else {
+        	themeAudioPlayer = new AudioPlayer(localContentDir + "/" + localAudioThemeBase + audioThemeExt);
+        	themeAudioPlayer.looping(true);
+        	themeAudioPlayer.play();
+        }
+	}
+	
+    console.log("playAudioTheme finished");
+}
+
 function getAudioTheme(nthTry) {
 	console.log("getAudioTheme()");
 
@@ -133,25 +153,6 @@ function getAudioTheme(nthTry) {
 	}
     console.log("getAudioTheme finished");
 }
-
-function playAudioTheme() {
-	console.log("playAudioTheme()");
-	
-	if (audioThemeDownloadComplete) {
-        if (device.platform.toLowerCase().search("android") >= 0) {
-        	themeAudioPlayer = new AudioPlayer(localDir + "/" + localAudioThemeBase + audioThemeExt);
-        	themeAudioPlayer.looping(true);
-        	themeAudioPlayer.play();
-        } else {
-        	themeAudioPlayer = new AudioPlayer(localContentDir + "/" + localAudioThemeBase + audioThemeExt);
-        	themeAudioPlayer.looping(true);
-        	themeAudioPlayer.play();
-        }
-	}
-	
-    console.log("playAudioTheme finished");
-}
-
 
 function playVoiceover() {
 	console.log("playVoiceover()");
