@@ -3,7 +3,6 @@ var faceGPSdelay = 7000; // delay to achieve location
 
 var currentLoc; // where the device is currently
 var targetNum; // which target is currently being sought after
-//var nTargets; // number of targets
 var targetLocations; // array of TargetLocations for this parade
 var infoWindows;
 var gMap;
@@ -28,10 +27,8 @@ function Location(lat, long, acc) {
 
 function initLocation() {
 	console.log("initLocation()");
-	//currentLoc = new Location(40.777422, -74.071198, 500.0);
 	currentLoc = null;
 	targetNum = 0;
-	//nTargets = 4;
 	targetLocations = new Array();
 	infoWindows = new Array();
 	gMap = null;
@@ -49,33 +46,26 @@ function initLocation() {
 
 function initializeMap(loc) {
     console.log('initializeMap(loc)');
-	//updateLocation(currentLoc);
 	
 	console.log("initializeMap: " + loc.latitude + ", " + loc.longitude + ", " + loc.accuracy);
 	var latlng = new google.maps.LatLng(loc.latitude, loc.longitude);
 	
-	//getTargetLocations(currentLoc);
-	
-	//var latlng = new google.maps.LatLng(0.506185, 0.553519);
 	var myOptions = {
-    zoom: 15,
-    center: latlng,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
-    mapTypeControl: true,
-    mapTypeControlOptions: {
-    style: google.maps.MapTypeControlStyle.DEFAULT,
-    position: google.maps.ControlPosition.LEFT_TOP
-    },
-    streetViewControl: true,
-    streetViewControlOptions: {
-    position: google.maps.ControlPosition.LEFT_CENTER
-    }		    
+			zoom: 15,
+			center: latlng,
+			mapTypeId: google.maps.MapTypeId.ROADMAP,
+			mapTypeControl: true,
+			mapTypeControlOptions: {
+				style: google.maps.MapTypeControlStyle.DEFAULT,
+				position: google.maps.ControlPosition.LEFT_TOP
+			},
+			streetViewControl: true,
+			streetViewControlOptions: {
+				position: google.maps.ControlPosition.LEFT_CENTER
+			}		    
 	};
+
 	var m = document.getElementById("map");
-    //	var w = getWindowWidth() - getWindowWidth()/8;
-    //	var h = getWindowHeight() - 30;
-    //	m.style.width= w + "px";
-    //	m.style.height= h + "px";
 	gMap = new google.maps.Map(m, myOptions);
 	
 	currentMarker = new google.maps.Marker({
@@ -116,7 +106,6 @@ function setTargetMarkers(targets) {
                                             title: ""
                                             });		
 	}
-	//setTargetMarkerIcons();
 	console.log("setTargetMarkers Finished");
 }
 
@@ -196,9 +185,6 @@ function getTargetLocations(currentLocation) {
 	function parseTargetLocations(data) {
 		console.log("TargetLocations acquired: " + data);
 
-		// The first location is a dummy location 
-		//targetLocations[0] = new Location(0.0, 0.0, 1.0);
-		
 		for (var i=0; i<data.length; i++) {
 			console.log("TargetLocation" + i);
 			if ((data[i].latitude) && (data[i].longitude) && (data[i].accuracy)) {
@@ -208,8 +194,6 @@ function getTargetLocations(currentLocation) {
 				console.error("TargetLocation " + i + "is missing data");
 			}
 		}
-		
-		//targetLocations[targetLocations.length] = new Location(0.0, 0.0, 1.0);
 		
 		initializeMap(currentLocation);
     	setTargetMarkers(targetLocations);
@@ -238,8 +222,6 @@ function updateLocation(loc) {
 	
 	console.log("updateLocation: checkingForTargetLocation = " + checkingForTargetLocation);
 	if (checkingForTargetLocation) {
-		//alert("loc=" + currentLoc.latitude + "," + currentLoc.longitude + "," + currentLoc.accuracy + " target=" + targetLocations[targetNum].latitude + "," + targetLocations[targetNum].longitude + "," + targetLocations[targetNum].accuracy);
-		//alert("checkingForTargetLocation");
 		if (targetLocations[targetNum]) {
 			if (inTargetLocation(currentLoc, targetLocations[targetNum])) {
 				console.log("Target Location reached");
@@ -251,25 +233,17 @@ function updateLocation(loc) {
     console.log("updateLocation finished");
 }
 
-////Timer to update gps location
-//function startUpdateLocationTimer() {
-//    console.log("startUpdateLocationTimer()");
-//	if (updateLocationTimerId == null) {
-//		updateLocationTimerId = setInterval("updateLocation(targetLocations[targetNum])", 1000);
-//	}
-//}
-//function clearUpdateLocationTimer() {
-//    console.log("clearUpdateLocationTimer()");
-//	if (updateLocationTimerId != null) {
-//		clearInterval(updateLocationTimerId);
-//		updateLocationTimerId = null;
-//	}
-//}
-
 function startGpsTracking() {
 	console.log("startGpsTracking()");
 	var options = { "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
 	gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
+}
+
+function stopGpsTracking() {
+	console.log("stopGpsTracking()");
+	if (gpsWatch) {
+		navigator.geolocation.clearWatch(gpsWatch);
+	}
 }
 
 // geolocation callbacks
@@ -325,7 +299,6 @@ function recenterMap() {
 	if (gMap) {
 		var latlng = new google.maps.LatLng(currentLoc.latitude, currentLoc.longitude);
         gMap.panTo(latlng);
-		//gMap.setCenter(latlng);
 	} else {
 		console.log("gMap == null");
 	}
@@ -365,7 +338,6 @@ function inTargetLocation(currentLocation, targetLocation) {
 //increment to the next TargetLocation
 function incrementTarget() {
 	console.log("incrementTarget()");
-	//if ((targetNum + 1) < nTargets) {
 	if ((targetNum) < targetLocations.length) {
 		console.log("targetNum++");
 		targetNum++;

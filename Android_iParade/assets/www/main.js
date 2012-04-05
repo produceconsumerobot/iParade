@@ -6,8 +6,8 @@ var contentDivs = new Array();
 var contentPage;
 var locCheckTimerId = null; // timer ID
 var startTabsTimerId = null; // timer ID
-var my_audio = null;
-var audioTimer = null;
+var themeAudioPlayer = null;
+var voicoverAudioPlayer = null;
 var iParades = null;
 
 var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/";
@@ -21,6 +21,7 @@ var iParadesFile = "iParades.php";
 var localDir = "iParade";
 var localVidBase = "iparadeVideo";
 var localAudioThemeBase = "iparadeTheme";
+var localVoiceoverBase = "iparadeVoiceover";
 var localContentDir = null;
 var vidExt = ".mp4";
 var voiceoverExt = ".mp3";
@@ -54,11 +55,10 @@ function onDeviceReady() {
 	
 	startGpsTracking();
 
-	loopingAudio = true;
-	playAudio(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
+	themeAudioPlayer = new AudioPlayer(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
+	themeAudioPlayer.looping(true);
+	themeAudioPlayer.play();
 	
-	//showIparadeOptions();
-
     console.log('onDeviceReady() finished');
 }
 
@@ -67,11 +67,7 @@ function getFileSuccess(fileEntry) {
 }
 
 function getDirSuccess(dir) {
-	//console.log("getDirSuccess: " + dir.toURI());
-	//console.log("getDirSuccess: " + dir.toURI().replace("file://",""));
     console.log("getDirSuccess: " + dir.fullPath);
-	//localContentDir = dir.toURI().replace("file://","");
-    //localContentDir = dir.toURI();
     localContentDir = dir.fullPath;
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
 }
@@ -109,8 +105,6 @@ function checkConnection() {
     	setTimeout(function() { checkConnection(); }, 1000);
     	return false;
     } else {
-    	//alert('Connection type: ' + networkState);
-    	//alert('Connection type: ' + states[networkState]);
     	return true;
     }
     console.log('checkConnection() finished');
@@ -128,13 +122,15 @@ function toggleVoiceover() {
 	voiceover = !voiceover;
 	if (!voiceover) {
 		console.log("voiceover off");
-		releaseAudio();
-		//document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn on voiceover";
+		if (voicoverAudioPlayer) {
+			voicoverAudioPlayer.release();
+			voicoverAudioPlayer = null;
+		}
 		document.getElementById("toggleVoiceoverButton").src = "design/voice_over_off.jpg";
 	} else {
 		console.log("voiceover on");
-		//document.getElementById("toggleVoiceoverButton").childNodes[0].nodeValue="Turn off voiceover";
 		document.getElementById("toggleVoiceoverButton").src = "design/voice_over_on.jpg";
+		playVoiceover();
 	}
     console.log("toggleVoiceover finished");
 }
@@ -148,10 +144,30 @@ function mouseDown() {
 function onBackKeyDown() {
 	// Handle the back button
 	console.log("onBackKeyDown()");
-    if (!contentPage) {
-        console.log("navigator.app.exitApp()");
-        navigator.app.exitApp();
-    }
+
+	function onConfirm(button) {
+		console.log("onConfirm(" + button + ")");
+		if (button==1) {
+			if (voicoverAudioPlayer) {
+				voicoverAudioPlayer.release();
+				voicoverAudioPlayer = null;
+			}			
+			if (themeAudioPlayer) {
+				themeAudioPlayer.release();
+				themeAudioPlayer = null;
+			}
+			stopGpsTracking();
+			navigator.app.exitApp();
+		}
+	}
+
+	// Show a custom confirmation dialog
+	navigator.notification.confirm(
+			'Do you want to quit iParade?',  // message
+			onConfirm,              // callback to invoke with index of button pressed
+			'Quit iParade?',            // title
+			'Quit,Cancel'          // buttonLabels
+	);
 }
 
 function onMenuKeyDown() {
@@ -248,10 +264,6 @@ function showTab(options) {
 		selectedId = getHash( this.getAttribute('href') );
 	}
     
-//    if (selectedId == 'home') {
-//    	getHomeContent(contentPage);
-//    }
-
 	// Highlight the selected tab, and dim all others.
 	// Also show the selected content div, and hide all others.
 	for ( var id in contentDivs ) {
@@ -264,7 +276,6 @@ function showTab(options) {
 			contentDivs[id].className = 'tabContent hide';
 		}
 	}
-	//contentDivs[selectedId].style.height = getWindowHeight() + "px";
 	
 	if (selectedId == 'map') {
 		resizeMap();
@@ -313,8 +324,10 @@ function getWindowHeight() {
 	
 	w4 = $(window).height();
 
-	//w = Math.max(w, w1, w2, w3);
-	w = w4;				
+	ww = $(window).width();
+	
+	// enforce landscape
+	w = Math.min(w4, ww);
 
 	if ((w == null) || (w == 0)) {
 		w = "auto";
@@ -322,7 +335,7 @@ function getWindowHeight() {
 	if (DEBUG > 1)  {
 		alert ("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h=" + w);
 	}
-    console.log("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h4=" + w4 + ", h=" + w);
+    console.log("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h4=" + w4 + ", ww=" + ww + ", h=" + w);
     console.log("getWindowHeight()=" + w);
 	return w + "";
 }
@@ -349,9 +362,11 @@ function getWindowWidth() {
 	}
 	
 	w4 = $(window).width();
+	
+	h = $(window).height();
 
-	//w = Math.max(w, w1, w2, w3);	
-	w = w4;			
+	// enforce landscape
+	w = Math.max(w4, h);			
 
 	if ((w == null) || (w == 0)) {
 		w = "auto";
@@ -359,7 +374,7 @@ function getWindowWidth() {
 	if (DEBUG > 1)  {
 		alert ("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w=" + w);
 	}
-    console.log("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w4=" + w4 + ", w=" + w);
+    console.log("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w4=" + w4 + ", h=" + h + ", w=" + w);
     console.log("getWindowWidth()=" + w);
 	return w + "";
 }
@@ -379,8 +394,14 @@ function nextPage() {
 		return;
 	}
 	
-	releaseAudio();
-	loopingAudio = false;
+	if (voicoverAudioPlayer) {
+		voicoverAudioPlayer.release();
+		voicoverAudioPlayer = null;
+	}			
+	if (themeAudioPlayer) {
+		themeAudioPlayer.release();
+		themeAudioPlayer = null;
+	}
     
 	contentPage++;
 	if ((contentPage > 2) && (contentPage % 2) == 0) {
@@ -398,7 +419,14 @@ function restartApp() {
     function onConfirm(button) {
         console.log("onConfirm(" + button + ")");
     	if (button==1) {
-    		releaseAudio();
+			if (voicoverAudioPlayer) {
+				voicoverAudioPlayer.release();
+				voicoverAudioPlayer = null;
+			}			
+			if (themeAudioPlayer) {
+				themeAudioPlayer.release();
+				themeAudioPlayer = null;
+			}
 	    	
             if (navigator.app) {
                 navigator.app.loadUrl("file:///android_asset/www/index.html"); 
@@ -426,9 +454,7 @@ function getHomeContent(pageNum) {
 	if (pageNum == 0) {
 		// startup screen is special
 		html = html + "<div id='startScreen' style='margin-top:" + getMarginTop() + "px' >";
-		//html = html + "<div id='iParadeSearching'>";
 		html = html + "<p id='iParadeSearching'>Searching for iParades...</p>";
-		//html = html + "</div>";
 		html = html + "<img class='fullSplashImage' src='design/splash.gif'/>";
 		html = html + "</div>";
 		document.getElementById('home').innerHTML = html;
@@ -442,48 +468,35 @@ function getHomeContent(pageNum) {
 		html = html + getNextButton(false); 
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + "0_text.html");
-		//$("#textContent").load(remoteContentDir + targetNum + "_text.html");
 	} else if (targetNum == (targetLocations.length)) {
 		// Last page is special
 		html = html + "<div id='textContent' class='paddedContent'></div>";
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
-		//$("#textContent").load(remoteContentDir + targetNum + "_text.html");	
 		playAudioTheme();
 	} else if ((pageNum % 2) == 0) {
 		// Between page
 		html = html + "<img class='bodyImage' src='" + remoteContentDir + (targetNum + 1) + "_btwImage" + ".jpg' style='margin-top:" + getMarginTop() + "px' />";
 		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
-		localVidPath = null;
+		vidDownloadComplete = false;
 		playAudioTheme();
+		getVoiceover((targetNum + 1));
 		getVideo((targetNum + 1));
 		if (fakeGPS) testLocChangeTimer();
 	} else {
 		// Main content page
 		html = html + "<div id='textContent' class='paddedContent'></div>";
 		html = html + "<div id='playVideoButton'";
-		//html = html + "<img id='downloadingImg' style='display:block' src='design/downloading.gif'/>";
-		//html = html + "<img id='playImg' style='display:none' src='design/play.jpg'/>";
-		//html = html + "<video id='playVid' style='display:none' controls='controls'>";
-		//html = html + "<source src='' type='video/mp4' /></video>";
 		html = html + "</div>";
-		//html = html + "<button id='playVideoButton' type='button' class='buttonCenter button' >...Downloading Video...</button>";
 		html = html + getNextButton(false);
-		//html = html +  "<div class='clearBoth'>";
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
-		//$("#textContent").load(remoteContentDir + targetNum + "_text.html", 
-		//		function () {
-		//	$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");
-		//});
-		
-		// Delay showing the downloading gif to let loadHtml complete
 		// If the video has already downloaded we don't need to show the downloading gif
 		setTimeout(function() {if (!vidDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
 			1000);
 		navigator.notification.vibrate(inTargetVibLen);
-		getVoiceover((targetNum + 1));
+		playVoiceover();
 		displayVidElement();		
 	}
 	console.log("finishing getHomeContent");
@@ -528,7 +541,6 @@ function getNextButton(visible) {
 	}
 	console.log("returning nextButton");
 	return nextButton;
-	//"<button id='nextButton' type='button' class='rightFloat button' onclick='navigator.app.exitApp()' style='visibility:hidden;'>Exit iParade</button>";
 }
 
 function showNextButton(delay) {
@@ -543,33 +555,14 @@ function displayVidElement() {
 	console.log("displayVidElement()");
 	if (vidDownloadComplete && !checkingForTargetLocation) {
 		console.log("displaying Video element");
-        
+
 		hideDownloadingImg(0);
-	    
-	    // Check if the device supports video
-	    //var vidTest = $("#playVid");
-        
-	    //if (device.platform.toLowerCase().search("android") >= 0) {
-	    	// Video not supported :(
-            console.log("Creating img element");
-            
-            var html = "";
-            html = html + "<img id='playImg' src='design/play.jpg' ontouchstart='playVideo(); showNextButton(2000);'/>";
-	    	//setTimeout(function() { $("#playVideoButton #playImg").css("display", "block"); }, 1000);
-	    	//document.getElementById("playVideoButton").ontouchstart=function(){ playVideo(); };
-        /*} else {
-            // Video supported!!
-            console.log("Creating video element: " + localVidPath);
-            
-            var html = "";
-            html = html + "<div ontouchstart='showNextButton();'>";
-            html = html + "<video id='playVid' controls='controls' autoplay='autoplay' ontouchstart='showNextButton();' >";
-            html = html + "<source src='" + localVidPath + "' type='video/mp4' /></video>"; 
-            html = html + "</div>";
-            
- 	    } 
-         */
-        $("#playVideoButton").html(html);
+
+		console.log("Creating img element");
+
+		var html = "";
+		html = html + "<img id='playImg' src='design/play.jpg' ontouchstart='playVideo(); showNextButton(2000);'/>";
+		$("#playVideoButton").html(html);
         
 	}
     console.log("displayVidElement finished");
@@ -630,15 +623,11 @@ function getIparades(loc, nthTry) {
 	        	showIparades();
 	        	initializeMap(currentLoc);
 	        	setTargetMarkers(targets);
-	        	//setTargetMarkerIcons();
 	        	setTargetMarkerInfoWindows(titles);
-	        	//setTimeout(function() {AutoBounds(targetMarkers);}, 2000);
-	          //postSuccess(data);
 	        },
 	        error : function(data) {
 	          console.error("error in getIparades(" + loc.latitude + "," + loc.longitude + ")");
 	          tryAgain(loc, nthTry);
-	          //setTimeout(function() { getIparades(loc); }, 1000);
 	        }
 	      });
 	}
@@ -650,19 +639,16 @@ function showIparades() {
 	console.log("showIparades()");
 	
 	var html = "";
-	//html = html + "<div id='iParadeSelectDiv'>";
 	html = html + "<img class='fullSplashImage' src='design/splash.gif'/>";
 	html = html + "<div class='iparadeSelectOverlay'>";
 	html = html + "<span>Choose an iParade:</span>";
 	html = html + "<select id=iParadeSelect>";
 	for (var i=0; i<iParades.length; i++) {
-		//html = html + "<option id='select" + i +"' onmousedown='alert()'>select" + i + "</option>";
 		html = html + "<option value='" + i + "' id='select" + i + "' >" + iParades[i].name + "</option>";
 	}
 	html = html + "</select>";
 	html = html + "<img id='splashNextButton' src='design/next_arrow.jpg' ontouchstart='initIparade()'/>";
 	html = html + "</div>";
-	//html = html + "</div>";
 	document.getElementById('startScreen').innerHTML = html;
 
 	console.log("showIparades finished");
@@ -679,39 +665,13 @@ function initIparade(listNum) {
 	
 	loadCssFile(remoteContentDir + remoteCssFilename);
 	
-	//playAudioTheme();
-	getAudioTheme();
-	//playAudio(contentAudioTheme + voiceoverExt);
-	
 	getTargetLocations(currentLoc);
 	
 	nextPage();
+	getAudioTheme();
 	
 	console.log("initIparade finished");
 }
-/*
-function showIparades() {
-	console.log("showIparades()");
-	
-	var html = "";
-	html = html + "<div id='iParadeSelectDiv'>";
-	html = html + "<img class='splashImage' src='design/splash.gif'/>";
-	html = html + "<div>";
-	html = html + "<p>Choose an iParade:</p>";
-	html = html + "<select id=iParadeSelect>";
-	for (var i=0; i<iParades.length; i++) {
-		//html = html + "<option id='select" + i +"' onmousedown='alert()'>select" + i + "</option>";
-		html = html + "<option value='" + i + "' id='select" + i + "' >" + iParades[i].name + "</option>";
-	}
-	html = html + "</select>";
-	html = html + "<img id='nextButton' src='design/next_arrow.jpg' ontouchstart='initIparade()'/>";
-	html = html + "</div>";
-	html = html + "</div>";
-	document.getElementById('startScreen').innerHTML = html;
-
-	console.log("showIparades finished");
-}
-*/
 
 function getMarginTop() {
     console.log("getMarginTop()");
