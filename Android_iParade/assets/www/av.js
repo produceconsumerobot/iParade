@@ -25,9 +25,16 @@ function playVideo() {
             var html = "";
             html = html + "<video id='playVid' controls='controls' autoplay='autoplay' >";
             html = html + "<source src='" + localContentDir + "/" + localVidBase + vidExt + "' type='video/mp4' /></video>"; 
+
+            //var html = "";
+            //html = html + "<video id='playVid' controls='controls' src='" + localContentDir + "/" + localVidBase + vidExt + "'>";
+            //html = html + "</video>";
+            //html = html + "<source src='" + localContentDir + "/" + localVidBase + vidExt + "' type='video/mp4' /></video>"; 
+
             
             $("#playVideoButton").html(html);
-            setTimeout(function() {vidPrepFullScreen();}, 750);
+            
+            //setTimeout(function() {vidPrepFullScreen();}, 750);
         } 
 	} 
     console.log("playVideo finished");

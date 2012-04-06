@@ -10,8 +10,10 @@ var themeAudioPlayer = null;
 var voicoverAudioPlayer = null;
 var iParades = null;
 
-var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/";
-var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/iparade2/";
+var remoteContentHub  = "http://archive.rhizome.org/lovid/iparade/";
+var remoteContentDir = null;
+//var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/";
+//var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/iparade2/";
 var remoteVidBase = "_video";
 var remoteVoiceOverBase = "_voiceover";
 var remoteAudioThemeBase = "audioTheme";
