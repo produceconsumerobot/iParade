@@ -10,6 +10,7 @@ var currentMarker;
 var currentCircle;
 var targetMarkers;
 var gpsWatch = null;
+var gpsWatch2 = null;
 var gpsGood;
 var minAccuracy;
 var checkingForTargetLocation; 
@@ -36,6 +37,7 @@ function initLocation() {
 	currentCircle = null;
 	targetMarkers = new Array();
 	gpsWatch = null;
+	gpsWatch2 = null;
 	gpsGood = false;
 	minAccuracy = 50;
 	checkingForTargetLocation = false; 
@@ -237,8 +239,8 @@ function startGpsTracking() {
 	console.log("startGpsTracking()");
 	//var options = { frequency: 1000, "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
 	var options = { frequency: 3000, maximumAge: 5000, timeout: 10000, enableHighAccuracy: true };
-    //gpsWatch = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError);}, 2000);
 	gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
+	gpsWatch2 = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError, options);}, 10000);
 
 
 	// geolocation callbacks
@@ -259,6 +261,10 @@ function stopGpsTracking() {
 	if (gpsWatch) {
 		navigator.geolocation.clearWatch(gpsWatch);
 		gpsWatch = null;
+	}
+	if (gpsWatch2) {
+		window.clearInterval(gpsWatch2);
+		gpsWatch2 = null;
 	}
 }
 
