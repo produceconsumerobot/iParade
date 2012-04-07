@@ -111,7 +111,7 @@ function checkConnection() {
     
     if ((!networkState) || (networkState == Connection.UNKNOWN) ||  (networkState == Connection.NONE)) {
     	//offlineAlert();
-    	setTimeout(function() { checkConnection(); }, 1000);
+    	//setTimeout(function() { checkConnection(); }, 1000);
     	return false;
     } else {
     	return true;
