@@ -127,7 +127,7 @@ select {
 #home > #reloadButton {
 	display: inline;
 	float: left;
-	width:4%;
+	width:5%;
 	height:auto;
 	margin-left:5%;
 /* 	margin-top:20px; */
@@ -145,9 +145,9 @@ select {
 #playVideoButton {
 	display: inline;
 	float: left;
-	margin-left: 5%;
+	margin-left: 4%;
 	padding-bottom: 20px;
-	width: 55%;
+	width: 54%;
 	height: auto;
 }
 
