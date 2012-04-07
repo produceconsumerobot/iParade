@@ -235,8 +235,9 @@ function updateLocation(loc) {
 
 function startGpsTracking() {
 	console.log("startGpsTracking()");
-	var options = { "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
-	gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
+	//var options = { "frequency": 1000, "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
+    gpsWatch = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError);}, 2000);
+	//gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
 }
 
 function stopGpsTracking() {
