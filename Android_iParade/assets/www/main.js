@@ -23,6 +23,7 @@ var remoteCssFilename = "stylesheet.css";
 var iParadesFile = "iParades.php";
 
 var localDir = "iParade";
+//var localDir = "com.produceconsumerobot.lovid.iparade/iParade/";
 var localVidBase = "iparadeVideo";
 var localAudioThemeBase = "iparadeTheme";
 var localVoiceoverBase = "iparadeVoiceover";
@@ -70,11 +71,11 @@ function onDeviceReady() {
 }
 
 function getFileSuccess(fileEntry) {
-    console.log("getFileSuccess: " + fileEntry.fullPath);
+    console.log("getFileSuccess(): " + fileEntry.fullPath);
 }
 
 function getDirSuccess(dir) {
-    console.log("getDirSuccess: " + dir.fullPath);
+    console.log("getDirSuccess(): " + dir.fullPath);
     localContentDir = dir.fullPath;
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
 }
@@ -88,6 +89,7 @@ function onFileSystemSuccess(fileSystem) {
 }
 
 function onFileSystemFail(evt) {
+    console.log("onFileSystemFail()");
     console.log(evt.target.error.code);
     window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
 }
@@ -122,6 +124,12 @@ function checkConnection() {
 function offlineAlert() {
 	console.log("offlineAlert()");
 	navigator.notification.alert('You are currently offline.\nPlease connect to the network to continue.');
+}
+
+//Alert to notify user that they are offline
+function localStorageAlert() {
+	console.log("localStorageAlert()");
+	navigator.notification.alert('Cannot access local file system. Try inserting an SD card.');
 }
 
 function toggleVoiceover() {
@@ -526,6 +534,7 @@ function nextPage() {
 	}
 	
 	if (!localContentDir) {
+		localStorageAlert();
 		return;
 	}
 	

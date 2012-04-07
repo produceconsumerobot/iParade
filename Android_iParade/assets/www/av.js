@@ -117,6 +117,7 @@ function playAudioTheme() {
 		}
 		if (device.platform.toLowerCase().search("android") >= 0) {
 			themeAudioPlayer = new AudioPlayer(localDir + "/" + localAudioThemeBase + audioThemeExt);
+			//themeAudioPlayer = new AudioPlayer("/com.produceconsumerobot.lovid.iparade/iParade/" + "/" + localAudioThemeBase + audioThemeExt);
 			themeAudioPlayer.looping(true);
 			themeAudioPlayer.play();
 		} else {
