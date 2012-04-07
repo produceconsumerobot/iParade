@@ -109,7 +109,8 @@ function checkConnection() {
     states[Connection.CELL_4G]  = 'Cell 4G connection';
     states[Connection.NONE]     = 'No network connection';
     
-    if ((!networkState) || (networkState == Connection.UNKNOWN) ||  (networkState == Connection.NONE)) {
+    //if ((!networkState) || (networkState == Connection.UNKNOWN) ||  (networkState == Connection.NONE)) {
+    if ((!networkState)  ||  (networkState == Connection.NONE)) {
     	//offlineAlert();
     	//setTimeout(function() { checkConnection(); }, 1000);
     	return false;

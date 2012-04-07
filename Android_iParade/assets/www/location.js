@@ -9,7 +9,7 @@ var gMap;
 var currentMarker;
 var currentCircle;
 var targetMarkers;
-var gpsWatch;
+var gpsWatch = null;
 var gpsGood;
 var minAccuracy;
 var checkingForTargetLocation; 
@@ -235,29 +235,33 @@ function updateLocation(loc) {
 
 function startGpsTracking() {
 	console.log("startGpsTracking()");
-	//var options = { "frequency": 1000, "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
-    gpsWatch = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError);}, 2000);
-	//gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
+	//var options = { frequency: 1000, "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
+	var options = { frequency: 3000, maximumAge: 5000, timeout: 10000, enableHighAccuracy: true };
+    //gpsWatch = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError);}, 2000);
+	gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
+
+
+	// geolocation callbacks
+	function geolocationCallbackSuccess(position) {
+		console.log("geolocationCallbackSuccess(): " + position.coords.latitude + ", " + position.coords.longitude + ", " + position.coords.accuracy + ", ");
+		gpsGood = true;
+		updateLocation({"latitude":position.coords.latitude, "longitude":position.coords.longitude, "accuracy":position.coords.accuracy});
+	}
+	function geolocationCallbackError(error) {
+		console.log("geolocationCallbackError()");
+		gpsGood = false;
+		//badGpsAlert();
+	}
 }
 
 function stopGpsTracking() {
 	console.log("stopGpsTracking()");
 	if (gpsWatch) {
 		navigator.geolocation.clearWatch(gpsWatch);
+		gpsWatch = null;
 	}
 }
 
-// geolocation callbacks
-function geolocationCallbackSuccess(position) {
-	console.log("geolocationCallbackSuccess(): " + position.coords.latitude + ", " + position.coords.longitude + ", " + position.coords.accuracy + ", ");
-	gpsGood = true;
-	updateLocation({"latitude":position.coords.latitude, "longitude":position.coords.longitude, "accuracy":position.coords.accuracy});
-}
-function geolocationCallbackError(error) {
-	console.log("geolocationCallbackError()");
-	gpsGood = false;
-	badGpsAlert();
-}
 
 function badGpsAlert() {
 	console.log("badGpsAlert()");
