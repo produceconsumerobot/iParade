@@ -279,11 +279,16 @@ function checkGPS() {
 	if (fakeGPS) {
 		return true;
 	}
-	if ((gpsGood) && (currentLoc.accuracy < minAccuracy)){
-		return true;
-	} else {
+	if ((device.platform.toLowerCase().search("android") >= 0) && (currentLoc.accuracy > minAccuracy)) {
 		return false;
+	} else {
+		return true;
 	}
+	//if ((gpsGood) && (currentLoc.accuracy < minAccuracy)){
+	//	return true;
+	//} else {
+	//	return false;
+	//}
 }
 
 
