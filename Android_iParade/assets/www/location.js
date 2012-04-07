@@ -251,7 +251,10 @@ function startGpsTracking() {
 	}
 	function geolocationCallbackError(error) {
 		console.log("geolocationCallbackError()");
-		gpsGood = false;
+		for (e in error) {
+			console.log(e + ": " + error[e]);
+		}
+		//gpsGood = false;
 		//badGpsAlert();
 	}
 }
