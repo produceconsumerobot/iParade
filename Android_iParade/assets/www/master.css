@@ -13,12 +13,6 @@ button {
 	
 }
 
-#nextButton
-{
-	height:auto;
-	width:12%;
-}
-
 #restartAppButton
 {
 	float:left;
@@ -123,17 +117,35 @@ select {
 #home{
 }
 
+#settingsButtons #reloadButton {
+	float:left;
+	height:auto;
+	width:12%;
+	margin:5%;
+}
+
+#home > #reloadButton {
+	display: inline;
+	float: left;
+	width:4%;
+	height:auto;
+	margin-left:5%;
+/* 	margin-top:20px; */
+}
+
 #nextButton {
+	display: inline;
 	float: right;
-	margin-right: 20%;
-	margin-top: 20px;
+	margin-right: 18%;
+/* 	margin-top: 20px; */
 	width: 10%;
 	height: auto;
 }
 
 #playVideoButton {
+	display: inline;
 	float: left;
-	margin-left: 15%;
+	margin-left: 5%;
 	padding-bottom: 20px;
 	width: 55%;
 	height: auto;

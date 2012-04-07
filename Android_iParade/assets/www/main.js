@@ -10,7 +10,9 @@ var themeAudioPlayer = null;
 var voicoverAudioPlayer = null;
 var iParades = null;
 
-var remoteContentHub  = "http://archive.rhizome.org/lovid/iparade/";
+
+//var remoteContentHub  = "http://archive.rhizome.org/lovid/iparade/";
+var remoteContentHub  = "http://archive.rhizome.org:8080/lovid/iparade/";
 var remoteContentDir = null;
 //var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/";
 //var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/iparade2/";
@@ -57,6 +59,9 @@ function onDeviceReady() {
 	
 	startGpsTracking();
 
+	if (themeAudioPlayer) {
+		themeAudioPlayer.release();
+	}
 	themeAudioPlayer = new AudioPlayer(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
 	themeAudioPlayer.looping(true);
 	themeAudioPlayer.play();
@@ -381,39 +386,6 @@ function getWindowWidth() {
 	return w + "";
 }
 
-// Moves to the next page in the sequence
-function nextPage() {
-	console.log("nextPage()");
-	// If the device isn't online, don't move to the next page
-	if (!checkConnection()) {
-		offlineAlert();
-		return;
-	}
-	
-	// If the device GPS isn't enabled, don't move to the next page
-	if (!checkGPS()) {
-		badGpsAlert();
-		return;
-	}
-	
-	if (voicoverAudioPlayer) {
-		voicoverAudioPlayer.release();
-		voicoverAudioPlayer = null;
-	}			
-	if (themeAudioPlayer) {
-		themeAudioPlayer.release();
-		themeAudioPlayer = null;
-	}
-    
-	contentPage++;
-	if ((contentPage > 2) && (contentPage % 2) == 0) {
-		incrementTarget();
-	}
-	getHomeContent(contentPage);
-	showTab({"id" : 'home'});
-	hideTabs();
-    console.log("nextPage finished");
-}
 
 function restartApp() {
 	console.log("restartApp()");
@@ -448,6 +420,137 @@ function restartApp() {
                                    );
 }
 
+function reloadHome(pageNum) {
+	console.log("reloadHome()");
+	// process the confirmation dialog result
+    function onConfirm(button) {
+        console.log("onConfirm(" + button + ")");
+    	if (button==1) {
+    		// If the device isn't online, don't move to the next page
+    		if (!checkConnection()) {
+    			offlineAlert();
+    			return;
+    		}
+    		
+    		// If the device GPS isn't enabled, don't move to the next page
+    		if (!checkGPS()) {
+    			badGpsAlert();
+    			return;
+    		}
+    		
+    		if (voicoverAudioPlayer) {
+				voicoverAudioPlayer.release();
+				voicoverAudioPlayer = null;
+			}			
+			if (themeAudioPlayer) {
+				themeAudioPlayer.release();
+				themeAudioPlayer = null;
+			}
+    		
+    		if (pageNum == 0) {
+    			// startup screen is special
+                if (navigator.app) {
+                    navigator.app.loadUrl("file:///android_asset/www/index.html"); 
+                } else {
+                    //window.location = "index.html";
+                    window.location.reload(true);
+                }
+    		} else if (pageNum == 1) {
+    			// First page is special
+    			
+    			// This is a hack because file transfer isn't cancelable
+    			// and we don't want to play the theme endlessly without recourse
+                //if (navigator.app) {
+                //    navigator.app.loadUrl("file:///android_asset/www/index.html"); 
+                //} else {
+                //    //window.location = "index.html";
+                //    window.location.reload(true);
+                //}    			
+                
+    			getHomeContent(contentPage);
+    			showTab({"id" : 'home'});
+    			setTimeout("hideTabs()", 100);
+    		} else if (targetNum == (targetLocations.length)) {
+    			// Last page is special
+    			getHomeContent(contentPage);
+    			showTab({"id" : 'home'});
+    			setTimeout("hideTabs()", 100);
+    		} else if ((pageNum % 2) == 0) {
+    			// Between page
+    			getHomeContent(contentPage);
+    			showTab({"id" : 'home'});
+    			setTimeout("hideTabs()", 100);
+    		} else {
+    			// Main content page
+    			
+    			// Re-download voiceover and video
+    			vidDownloadComplete = false;
+    			voiceoverDownloadComplete = false;
+    			getVoiceover((targetNum + 1));
+    			getVideo((targetNum + 1));
+    			
+    			getHomeContent(contentPage);
+    			showTab({"id" : 'home'});
+    			setTimeout("hideTabs()", 100);
+    		}
+    		
+
+    	}
+    }
+    
+    // Show a custom confirmation dialog
+    navigator.notification.confirm(
+                                   'Reload the current step?',  // message
+                                   onConfirm,              // callback to invoke with index of button pressed
+                                   'Reload step?',            // title
+                                   'Reload,Cancel'          // buttonLabels
+                                   );
+    
+    console.log("reloadHome() finished");
+}
+
+// Moves to the next page in the sequence
+function nextPage() {
+	console.log("nextPage()");
+	
+	// If the device isn't online, don't move to the next page
+	if (!checkConnection()) {
+		offlineAlert();
+		return;
+	}
+	
+	// If the device GPS isn't enabled, don't move to the next page
+	if (!checkGPS()) {
+		badGpsAlert();
+		return;
+	}
+	
+	if (!localContentDir) {
+		return;
+	}
+	
+	checkingForTargetLocation = false;
+	
+	if (voicoverAudioPlayer) {
+		voicoverAudioPlayer.release();
+		voicoverAudioPlayer = null;
+	}			
+	if (themeAudioPlayer) {
+		themeAudioPlayer.release();
+		themeAudioPlayer = null;
+	}
+    
+	contentPage++;
+	if ((contentPage > 2) && (contentPage % 2) == 0) {
+		incrementTarget();
+	}
+	getHomeContent(contentPage);
+	showTab({"id" : 'home'});
+	setTimeout("hideTabs()", 100);
+	//hideTabs();
+    console.log("nextPage finished");
+}
+
 //Returns html for the home tab based on the value of pageNum	
 function getHomeContent(pageNum) {
 	console.log("getHomeContent(" + pageNum + ")");
@@ -462,7 +565,9 @@ function getHomeContent(pageNum) {
 		document.getElementById('home').innerHTML = html;
 	} else if (pageNum == 1) {
 		// First page is special
+		getAudioTheme();
 		html = html + "<div id='textContent' class='paddedContent'></div>";
+		html = html + "<img src='design/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
 		html = html + "<div id='playVideoButton'";
 		html = html + "</div>";
 		setTimeout(function() {if (!audioThemeDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
@@ -473,6 +578,8 @@ function getHomeContent(pageNum) {
 	} else if (targetNum == (targetLocations.length)) {
 		// Last page is special
 		html = html + "<div id='textContent' class='paddedContent'></div>";
+		html = html + "<img src='design/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
+		html = html + "<img src='design/repeat.jpg' id='nextButton' ontouchstart='restartApp()' />"; 
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
 		playAudioTheme();
@@ -482,13 +589,16 @@ function getHomeContent(pageNum) {
 		document.getElementById('home').innerHTML = html;
 		checkingForTargetLocation = true;
 		vidDownloadComplete = false;
+		voiceoverDownloadComplete = false;
 		playAudioTheme();
 		getVoiceover((targetNum + 1));
 		getVideo((targetNum + 1));
 		if (fakeGPS) testLocChangeTimer();
 	} else {
 		// Main content page
+		//html = html + "<img src='design/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
 		html = html + "<div id='textContent' class='paddedContent'></div>";
+		html = html + "<img src='design/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
 		html = html + "<div id='playVideoButton'";
 		html = html + "</div>";
 		html = html + getNextButton(false);
@@ -552,7 +662,7 @@ function showNextButton(delay) {
 }
 
 function hideDownloadingImg(delay) {
-	setTimeout(function() { $("#downloadingImg").css("display", "none"); }, delay);
+	setTimeout(function() { if ($("#downloadingImg")) {$("#downloadingImg").css("display", "none"); }}, delay);
 }
 
 function displayVidElement() {
@@ -672,7 +782,6 @@ function initIparade(listNum) {
 	getTargetLocations(currentLoc);
 	
 	nextPage();
-	getAudioTheme();
 	
 	console.log("initIparade finished");
 }

@@ -225,7 +225,7 @@ function updateLocation(loc) {
 		if (targetLocations[targetNum]) {
 			if (inTargetLocation(currentLoc, targetLocations[targetNum])) {
 				console.log("Target Location reached");
-				checkingForTargetLocation = false;
+				
 				nextPage();
 			}
 		}

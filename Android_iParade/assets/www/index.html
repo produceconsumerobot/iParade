@@ -14,6 +14,7 @@
 <script type="text/javascript" charset="utf-8" src="jquery.min"></script>
 <script type="text/javascript" charset="utf-8" src="video.js"></script>
 <script type="text/javascript" charset="utf-8" src="AudioPlayer.js"></script>
+<script type="text/javascript" charset="utf-8" src="FileTransferRepeater.js"></script>
 <script type="text/javascript" charset="utf-8" src="av.js"></script>
 <script type="text/javascript" charset="utf-8" src="location.js"></script>
 <script type="text/javascript" charset="utf-8" src="ios.js"></script>
@@ -53,10 +54,13 @@
 	<div class="tabContent hide" id="settings">
 		<div class='paddedContent'>
 			<h2>Settings</h2>
-			<div>
+			<div id=settingsButtons>
 				<img src='design/repeat.jpg' id='restartAppButton'
-					ontouchstart='restartApp()' /> <img src='design/voice_over_on.jpg'
+					ontouchstart='restartApp()' /> 
+					<img src='design/voice_over_on.jpg'
 					id='toggleVoiceoverButton' ontouchstart='toggleVoiceover()' />
+					<img src='design/reload_page.jpg'
+					id='reloadButton' ontouchstart='reloadHome(contentPage)' />
 			</div>
 		</div>
 	</div>
