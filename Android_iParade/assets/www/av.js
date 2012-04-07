@@ -98,6 +98,8 @@ function getVideo(targetNumber) {
 			function (entry) {
 		console.log("getVideo download complete: " + entry.fullPath);
 
+		videoFileTransfer.cancel();
+		videoFileTransfer = null;
 		vidDownloadComplete = true;
 		displayVidElement();
 	}
@@ -142,6 +144,8 @@ function getAudioTheme() {
 			function (entry) {
 		console.log("getAudioTheme download complete: " + entry.fullPath);
 
+		audioThemeFileTransfer.cancel();
+		audioThemeFileTransfer = null;
 		audioThemeDownloadComplete = true;
 		playAudioTheme();
 		hideDownloadingImg(0);
@@ -173,56 +177,6 @@ function playVoiceover() {
 	console.log("playVoiceover finished");
 }
 
-function getVoiceover(targetNumber, nthTry) {
-	console.log("getVoiceover(" + targetNumber + ")");
-
-	// function to try to get audio theme again
-	function tryAgain(ntry) {
-		if (ntry < maxTries) {
-			// Wait and try try again...
-			setTimeout(function() { getVoiceover(targetNumber, ntry);}, ntry*tryDelay/2);
-		}
-	}
-
-	// nthTry keeps track of number of attempts
-	if (!nthTry) {
-		nthTry = 1;
-	} else {
-		nthTry++;
-	}
-
-	// If localContentDir isn't set yet, try again
-	if (!localContentDir) {
-		tryAgain(nthTry);
-	} else {
-		var remoteFile = remoteContentDir + targetNumber + remoteVoiceOverBase + voiceoverExt;
-		var localFile = localContentDir + "/" + localVoiceoverBase + voiceoverExt;
-
-		voiceoverDownloadComplete = false;
-
-		var fileTransfer = new FileTransfer();
-		fileTransfer.download(
-				remoteFile,
-				localFile,
-				function(entry) {
-					console.log("download complete: " + entry.fullPath);
-
-					voiceoverDownloadComplete = true;
-					playVoiceover();
-				},
-				function(error) {
-					console.log("download error source " + error.source);
-					console.log("download error target " + error.target);
-					console.log("upload error code" + error.code);
-					// Try try again...
-					tryAgain(nthTry);	
-				}
-		);
-	}
-	console.log("getVoiceover finished");
-}
-
-
 function getVoiceover(targetNumber) {
 	console.log("getVoiceover(" + targetNumber + ")");
 
@@ -238,6 +192,8 @@ function getVoiceover(targetNumber) {
 			function (entry) {
 		console.log("getVoiceover download complete: " + entry.fullPath);
 
+		voiceoverFileTransfer.cancel();
+		voiceoverFileTransfer = null;
 		voiceoverDownloadComplete = true;
 		playVoiceover();
 	}

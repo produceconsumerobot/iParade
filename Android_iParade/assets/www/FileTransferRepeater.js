@@ -9,8 +9,9 @@ function FileTransferRepeater(remoteFile, localFile, successCallback, failCallba
 
 	this.cancel = function() {
 		_cancel = true;
+		fileTransfer = null;
 	};
-
+	
 	this.download = function(nthTry) {
 		console.log("FileTransferRepeater.download()");
 
