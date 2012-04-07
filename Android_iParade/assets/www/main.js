@@ -502,7 +502,7 @@ function reloadHome(pageNum) {
     navigator.notification.confirm(
                                    'Reload the current step?',  // message
                                    onConfirm,              // callback to invoke with index of button pressed
-                                   'Reload step?',            // title
+                                   'Reload Step?',            // title
                                    'Reload,Cancel'          // buttonLabels
                                    );
     
