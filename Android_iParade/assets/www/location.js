@@ -240,7 +240,7 @@ function startGpsTracking() {
 	//var options = { frequency: 1000, "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
 	var options = { frequency: 3000, maximumAge: 5000, timeout: 10000, enableHighAccuracy: true };
 	gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
-	gpsWatch2 = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError, options);}, 10000);
+	gpsWatch2 = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError, options);}, 7500);
 
 
 	// geolocation callbacks
@@ -282,11 +282,16 @@ function checkGPS() {
 	if (fakeGPS) {
 		return true;
 	}
-	if ((device.platform.toLowerCase().search("android") >= 0) && (currentLoc.accuracy > minAccuracy)) {
-		return false;
+	if (device.platform.toLowerCase().search("android") >= 0) {
+		if (gpsGood && currentLoc.accuracy < minAccuracy) {
+			return true;
+		} else {
+			return false;
+		}
 	} else {
 		return true;
 	}
+	
 	//if ((gpsGood) && (currentLoc.accuracy < minAccuracy)){
 	//	return true;
 	//} else {
@@ -345,7 +350,7 @@ function inTargetLocation(currentLocation, targetLocation) {
 	console.log("inTargetLocation: currentLocation.accuracy = " + currentLocation.accuracy);
 	console.log("inTargetLocation: targetLocation.accuracy = " + targetLocation.accuracy);
 	
-	if ((distance!=null) && ((distance - currentLocation.accuracy - targetLocation.accuracy) <= 0)) {
+	if ((distance!=null) && ((distance - targetLocation.accuracy) <= 0)) {
         console.log("inTargetLocation finished");
         return true;
 	} else {

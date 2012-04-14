@@ -10,11 +10,11 @@ var themeAudioPlayer = null;
 var voicoverAudioPlayer = null;
 var iParades = null;
 
+//var remoteContentHub  = "http://archive.rhizome.org:8080/lovid/iparade/";
+var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/iparade/";
 
 //var remoteContentHub  = "http://archive.rhizome.org/lovid/iparade/";
-var remoteContentHub  = "http://archive.rhizome.org:8080/lovid/iparade/";
 var remoteContentDir = null;
-//var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/";
 //var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/iparade2/";
 var remoteVidBase = "_video";
 var remoteVoiceOverBase = "_voiceover";
@@ -442,10 +442,10 @@ function reloadHome(pageNum) {
     		}
     		
     		// If the device GPS isn't enabled, don't move to the next page
-    		if (!checkGPS()) {
-    			badGpsAlert();
-    			return;
-    		}
+    		//if (!checkGPS()) {
+    		//	badGpsAlert();
+    		//	return;
+    		//}
     		
     		if (voicoverAudioPlayer) {
 				voicoverAudioPlayer.release();
@@ -529,10 +529,10 @@ function nextPage() {
 	}
 	
 	// If the device GPS isn't enabled, don't move to the next page
-	if (!checkGPS()) {
-		badGpsAlert();
-		return;
-	}
+	//if (!checkGPS()) {
+	//	badGpsAlert();
+	//	return;
+	//}
 	
 	if (!localContentDir) {
 		localStorageAlert();
@@ -781,6 +781,12 @@ function showIparades() {
 
 function initIparade(listNum) {
 	console.log("initIparade()");
+	
+	if (!checkGPS()) {
+		badGpsAlert();
+		return;
+	}
+	
 	if (!listNum) {
 		listNum = $("#iParadeSelect option:selected").attr("value");
 	}
@@ -788,6 +794,8 @@ function initIparade(listNum) {
 	remoteContentDir = iParades[listNum].url;
 	
 	loadCssFile(remoteContentDir + remoteCssFilename);
+	
+	loadHtml($("#notes > div.paddedContent"), remoteContentDir + "notes.html");
 	
 	getTargetLocations(currentLoc);
 	

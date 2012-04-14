@@ -104,6 +104,12 @@ select {
 		display: block;
 }
 
+img.instructions {
+	display: inline;
+	height: 55px;
+	width: auto;
+}
+
 .pageTitle {
 	text-align:center;
 }
