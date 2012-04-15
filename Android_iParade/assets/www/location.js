@@ -1,4 +1,4 @@
-var fakeGPS = false; // for debugging
+var fakeGPS = true; // for debugging
 var fakeGPSdelay = 7000; // delay to achieve location
 
 var currentLoc; // where the device is currently
@@ -12,7 +12,7 @@ var targetMarkers;
 var gpsWatch = null;
 var gpsWatch2 = null;
 var gpsGood;
-var minAccuracy;
+var minAccuracy = 50;
 var checkingForTargetLocation; 
 var updateLocationTimerId; // timer ID
 var testLocChangeTimerId; // timer ID
@@ -39,7 +39,6 @@ function initLocation() {
 	gpsWatch = null;
 	gpsWatch2 = null;
 	gpsGood = false;
-	minAccuracy = 50;
 	checkingForTargetLocation = false; 
 	updateLocationTimerId = null;
 	testLocChangeTimerId = null;

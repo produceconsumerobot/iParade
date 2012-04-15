@@ -1,9 +1,9 @@
 var DEBUG = 0;
 
-var tabLinks = new Array();
-var tabListItems = new Array();
-var contentDivs = new Array();
-var contentPage;
+var tabLinks = null;
+var tabListItems = null;
+var contentDivs = null;
+var contentPage = 0;
 var locCheckTimerId = null; // timer ID
 var startTabsTimerId = null; // timer ID
 var themeAudioPlayer = null;
@@ -12,9 +12,8 @@ var iParades = null;
 
 //var remoteContentHub  = "http://archive.rhizome.org:8080/lovid/iparade/";
 var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/iparade/";
-
-//var remoteContentHub  = "http://archive.rhizome.org/lovid/iparade/";
 var remoteContentDir = null;
+//var remoteContentHub  = "http://archive.rhizome.org/lovid/iparade/";
 //var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/iparade2/";
 var remoteVidBase = "_video";
 var remoteVoiceOverBase = "_voiceover";
@@ -100,15 +99,6 @@ function checkConnection() {
     
     console.log('Connection type: ' + networkState);
     
-    var states = {};
-    states[Connection.UNKNOWN]  = 'Unknown connection';
-    states[Connection.ETHERNET] = 'Ethernet connection';
-    states[Connection.WIFI]     = 'WiFi connection';
-    states[Connection.CELL_2G]  = 'Cell 2G connection';
-    states[Connection.CELL_3G]  = 'Cell 3G connection';
-    states[Connection.CELL_4G]  = 'Cell 4G connection';
-    states[Connection.NONE]     = 'No network connection';
-    
     //if ((!networkState) || (networkState == Connection.UNKNOWN) ||  (networkState == Connection.NONE)) {
     if ((!networkState)  ||  (networkState == Connection.NONE)) {
     	//offlineAlert();
@@ -119,7 +109,6 @@ function checkConnection() {
     }
     console.log('checkConnection() finished');
 }
-
 
 // Alert to notify user that they are offline
 function offlineAlert() {
@@ -214,7 +203,9 @@ function init() {
 	loadCssFile(remoteContentHub + remoteCssFilename);
 	
 	tabLinks = new Array();
+	tabListItems = new Array();
 	contentDivs = new Array();
+	
 	contentPage = 0;
 	locCheckTimerId = null; // timer ID
 	startTabsTimerId = null; // timer ID
@@ -251,17 +242,15 @@ function init() {
 	// Assign onclick events to the tab links, and
 	// highlight the first tab
 	var i = 0;
-
 	for ( var id in tabListItems ) {
-		tabListItems[id].ontouchend = showTab;
-		tabListItems[id].onclick = showTab;
+		tabListItems[id].ontouchstart = showTab;
+		//tabListItems[id].onclick = showTab;
 		if ( i == 0 ) tabListItems[id].className = 'selected';
 		i++;
 	}
 	
 	// Hide all content divs except the first
 	var i = 0;
-
 	for ( var id in contentDivs ) {
 		if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
 		i++;
@@ -772,6 +761,7 @@ function showIparades() {
 	}
 	html = html + "</select>";
 	html = html + "<img id='splashNextButton' src='design/next_arrow.jpg' ontouchstart='initIparade()'/>";
+	html = html + "<span class='splashNextText'>Press NEXT<br/>to begin:</span>";
 	html = html + "</div>";
 	document.getElementById('startScreen').innerHTML = html;
 
