@@ -55,7 +55,8 @@ function onDeviceReady() {
 	// Request the root file system for writing audio/video
 	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
 	
-	window.onscroll = floater;
+	//window.onscroll = floater;
+    $("html").scroll( "floater()" );
 	
 	startGpsTracking();
 
@@ -657,11 +658,27 @@ function getNextButton(visible) {
 }
 
 function showNextButton(delay) {
-    setTimeout(function() { document.getElementById("nextButton").style.visibility="visible"; }, delay);
+    console.log("showNextButton(" + delay + ")");
+    setTimeout(function() {
+               console.log("showing nextButton");
+               if ($("#nextButton")) {
+                $("#nextButton").css("visibility", "visible");
+               } else {
+                console.log("nextButton not found");
+               }
+               //document.getElementById("nextButton").style.visibility="visible"; 
+               console.log("finished showing nextButton");
+               }, delay);
 }
 
 function hideDownloadingImg(delay) {
-	setTimeout(function() { if ($("#downloadingImg")) {$("#downloadingImg").css("display", "none"); }}, delay);
+    console.log("hideDownloadingImg(" + delay + ")");
+	setTimeout(function() { 
+               if ($("#downloadingImg")) {
+               console.log("hiding downloadingImg");
+               $("#downloadingImg").css("display", "none"); 
+               }
+               }, delay);
 }
 
 function displayVidElement() {
