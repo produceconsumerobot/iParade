@@ -89,8 +89,8 @@ select {
 	font-size: 0.7em;
 	float: right;
 	text-align: right;
-	margin-right: 1%;
-	margin-top: 6px;
+	margin-right: 1ex;
+	margin-top: 1ex;
 }
 
 #splashNextButton {

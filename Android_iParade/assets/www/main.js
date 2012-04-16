@@ -1,4 +1,5 @@
 var DEBUG = 0;
+var CRAZYD = false;
 
 var tabLinks = null;
 var tabListItems = null;
@@ -42,7 +43,11 @@ var tryDelay = 1000;
 // PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
 function onDeviceReady() {
     console.log('onDeviceReady()');
-    console.log("device=" + device.platform);
+    console.log("device.platform=" + device.platform);
+    console.log("device.uuid=" + device.uuid);
+    console.log("device.name=" + device.name);
+    console.log("device.version=" + device.version);
+    console.log("device.phonegap=" + device.phonegap);
     
     checkConnection();
     
@@ -60,12 +65,14 @@ function onDeviceReady() {
 	
 	startGpsTracking();
 
+    if (!CRAZYD) {
 	if (themeAudioPlayer) {
 		themeAudioPlayer.release();
 	}
 	themeAudioPlayer = new AudioPlayer(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
 	themeAudioPlayer.looping(true);
 	themeAudioPlayer.play();
+    }
 	
     console.log('onDeviceReady() finished');
 }
@@ -570,9 +577,12 @@ function getHomeContent(pageNum) {
 		html = html + "<img src='design/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
 		html = html + "<div id='playVideoButton'";
 		html = html + "</div>";
-		setTimeout(function() {if (!audioThemeDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
-				500);
+		if (!CRAZYD) {
+            setTimeout(function() {if (!audioThemeDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}}, 500);
 		html = html + getNextButton(false); 
+        } else {
+            html = html + getNextButton(true);
+        }
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + "0_text.html");
 	} else if (targetNum == (targetLocations.length)) {

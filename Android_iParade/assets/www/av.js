@@ -111,6 +111,10 @@ function getVideo(targetNumber) {
 function playAudioTheme() {
 	console.log("playAudioTheme()");
 
+    if (CRAZYD) {
+        return false;
+    }
+    
 	if (audioThemeDownloadComplete) {
 		if (themeAudioPlayer) {
 			themeAudioPlayer.release();
@@ -132,6 +136,12 @@ function playAudioTheme() {
 
 function getAudioTheme() {
 	console.log("getAudioTheme()");
+    
+    if (CRAZYD) {
+		hideDownloadingImg(0);
+		showNextButton(500);   
+        return false;
+    }
 
 	audioThemeDownloadComplete = false;
 
