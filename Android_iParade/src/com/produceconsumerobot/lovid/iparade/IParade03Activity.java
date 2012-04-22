@@ -1,6 +1,6 @@
 package com.produceconsumerobot.lovid.iparade;
 
-import com.phonegap.*;
+import org.apache.cordova.DroidGap;
 import android.os.Bundle;
 
 public class IParade03Activity extends DroidGap {
@@ -8,7 +8,6 @@ public class IParade03Activity extends DroidGap {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.init();
         super.loadUrl("file:///android_asset/www/index.html");
     }
 }
