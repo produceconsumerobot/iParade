@@ -120,6 +120,10 @@ img.instructions {
 	width: auto;
 }
 
+p.credits {
+	text-align: center;
+}
+
 .pageTitle {
 	text-align:center;
 }
