@@ -191,6 +191,7 @@ video#playVid {
 
 div.paddedContent {
 	padding: 0% 15% 0% 2%;
+    font-size: 0.8em;
 }
 
 ul#tabs {

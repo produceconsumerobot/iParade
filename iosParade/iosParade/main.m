@@ -20,7 +20,7 @@
 //  main.m
 //  iosParade
 //
-//  Created by Sean Montgomery on 4/1/12.
+//  Created by Sean Montgomery on 4/20/12.
 //  Copyright __MyCompanyName__ 2012. All rights reserved.
 //
 
