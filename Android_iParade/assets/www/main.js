@@ -575,15 +575,15 @@ function getHomeContent(pageNum) {
 		getAudioTheme();
 		html = html + "<div id='textContent' class='paddedContent'></div>";
 		html = html + "<img src='design/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
-		html = html + "<div id='playVideoButton'";
-		html = html + "</div>";
-		if (!CRAZYD) {
-            setTimeout(function() {if (!audioThemeDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}}, 500);
-		html = html + getNextButton(false); 
+		html = html + "<div id='playVideoButton'>";
+        if (!audioThemeDownloadComplete) {
+            html = html + "<img id='downloadingImg' src='design/downloading.gif'/>";
         } else {
-            html = html + getNextButton(true);
+            console.log("audioThemeDownloadComplete == true");
         }
-		document.getElementById('home').innerHTML = html;
+		html = html + "</div>";
+        html = html + getNextButton(false); 
+ 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + "0_text.html");
 	} else if (targetNum == (targetLocations.length)) {
 		// Last page is special
@@ -609,14 +609,17 @@ function getHomeContent(pageNum) {
 		//html = html + "<img src='design/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
 		html = html + "<div id='textContent' class='paddedContent'></div>";
 		html = html + "<img src='design/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
-		html = html + "<div id='playVideoButton'";
+		html = html + "<div id='playVideoButton'>";
+        // If the video has already downloaded we don't need to show the downloading gif
+        if (!vidDownloadComplete) {
+            html = html + "<img id='downloadingImg' src='design/downloading.gif'/>";
+        } else {
+            console.log("vidDownloadComplete == true");
+        }
 		html = html + "</div>";
 		html = html + getNextButton(false);
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
-		// If the video has already downloaded we don't need to show the downloading gif
-		setTimeout(function() {if (!vidDownloadComplete) {$("#playVideoButton").html("<img id='downloadingImg' src='design/downloading.gif'/>");}},
-			1000);
 		navigator.notification.vibrate(inTargetVibLen);
 		if (!voicoverAudioPlayer) { // only play voiceover if it wasn't started already
 			playVoiceover();
