@@ -16,7 +16,7 @@ var floater = function () {
         //var vs;
         //if (dv) { vs = dv.split("."); }
         //if (vs && (vs.length >= 3) && (vs[0] <= 5) && (vs[1] <= 0) && (vs[2] <= 0)) {
-        if (dv && (dv <= maxVersion)) {
+        if (dv && (dv < maxVersion)) {
             console.log("adjusting menu position (max v=" + maxVersion + ")");
         var top = $(window).scrollTop() + 'px';
         var bottom = (-$(window).scrollTop()) + 'px';
