@@ -83,7 +83,8 @@ function getFileSuccess(fileEntry) {
 
 function getDirSuccess(dir) {
     console.log("getDirSuccess(): " + dir.fullPath);
-    localContentDir = dir.fullPath;
+    var temp = dir.fullPath;
+    localContentDir = temp.replace("file://","");
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
 }
 

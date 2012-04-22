@@ -1,7 +1,9 @@
 
 function FileTransferRepeater(remoteFile, localFile, successCallback, failCallback) {
 	console.log("FileTransferRepeater()");
-
+	console.log("FileTransferRepeater remoteFile = " + remoteFile);
+	console.log("FileTransferRepeater localFile = " + localFile);
+	
 	var _cancel = false;
 	var maxTries = 20;
 	var tryDelay = 500;
@@ -12,7 +14,7 @@ function FileTransferRepeater(remoteFile, localFile, successCallback, failCallba
 		fileTransfer = null;
 	};
 	
-	this.download = function(nthTry) {
+	function download(nthTry) {
 		console.log("FileTransferRepeater.download()");
 
 		// function to try to get audio theme again
@@ -43,7 +45,7 @@ function FileTransferRepeater(remoteFile, localFile, successCallback, failCallba
 				function(error) {
 					console.log("download error source " + error.source);
 					console.log("download error target " + error.target);
-					console.log("upload error code" + error.code);
+					console.log("transfer error code" + error.code);
 					// Try try again...
 					if (!_cancel){
 						tryAgain(nthTry);	
@@ -51,6 +53,10 @@ function FileTransferRepeater(remoteFile, localFile, successCallback, failCallba
 				}
 		);
 		console.log("FileTransferRepeater.download() finished");
+	}
+	
+	this.download = function(nthTry) {
+		download(nthTry);
 	};
 	
 	console.log("FileTransferRepeater() finished");

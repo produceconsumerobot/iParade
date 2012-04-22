@@ -147,7 +147,8 @@ function getAudioTheme() {
 
 	var remoteFile = remoteContentDir + remoteAudioThemeBase + audioThemeExt;
 	var localFile = localContentDir + "/" + localAudioThemeBase + audioThemeExt;
-
+	//var localFile = "/mnt/sdcard/iParade" + "/" + localAudioThemeBase + audioThemeExt;
+	
 	if (audioThemeFileTransfer) {
 		audioThemeFileTransfer.cancel();
 	}
