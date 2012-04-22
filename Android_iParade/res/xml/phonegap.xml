@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<phonegap>
-    <access origin="http://*.produceconsumerobot.com"/>
-    <access origin="http://*.rhizome.org"/>
-    <access origin="http://*.gstatic.com"/>
-    <access origin="http://*.googleapis.com"/>
-</phonegap>
