@@ -11,8 +11,8 @@ var themeAudioPlayer = null;
 var voicoverAudioPlayer = null;
 var iParades = null;
 
-//var remoteContentHub  = "http://archive.rhizome.org:8080/lovid/iparade/";
-var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/iparade/";
+var remoteContentHub  = "http://archive.rhizome.org:8080/lovid/iparade/";
+//var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/iparade/";
 var remoteContentDir = null;
 //var remoteContentHub  = "http://archive.rhizome.org/lovid/iparade/";
 //var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/iparade2/";
