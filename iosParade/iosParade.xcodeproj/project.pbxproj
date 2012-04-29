@@ -458,6 +458,61 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		AF8741C8154CFD8B00C7C5E6 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					"$(ARCHS_STANDARD_32_BIT)",
+				);
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Kyle Lapidus";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "2DBD4C35-BA11-49F8-B8CE-075C329277D9";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = AppStore;
+		};
+		AF8741C9154CFD8B00C7C5E6 /* AppStore */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Kyle Lapidus";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = /Users/Shared/Cordova/Frameworks;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "iosParade/iosParade-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NDEBUG=1,",
+					"CORDOVA_FRAMEWORK=1",
+				);
+				INFOPLIST_FILE = "iosParade/iosParade-Info.plist";
+				OTHER_LDFLAGS = (
+					"-weak_framework",
+					UIKit,
+					"-weak_framework",
+					AVFoundation,
+					"-weak_framework",
+					CoreMedia,
+					"-weak_library",
+					/usr/lib/libSystem.B.dylib,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "852232B1-6FAE-4D73-94C3-3C53B585DD1B";
+				TARGETED_DEVICE_FAMILY = "1,2";
+				WRAPPER_EXTENSION = app;
+			};
+			name = AppStore;
+		};
 		AFEF246015419103009933B3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -481,6 +536,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 3.0;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -562,7 +618,6 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
@@ -575,6 +630,7 @@
 			buildConfigurations = (
 				AFEF246015419103009933B3 /* Debug */,
 				AFEF246115419104009933B3 /* Release */,
+				AF8741C8154CFD8B00C7C5E6 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -584,6 +640,7 @@
 			buildConfigurations = (
 				AFEF246315419104009933B3 /* Debug */,
 				AFEF246415419104009933B3 /* Release */,
+				AF8741C9154CFD8B00C7C5E6 /* AppStore */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

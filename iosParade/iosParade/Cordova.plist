@@ -22,6 +22,7 @@
 	<false/>
 	<key>ExternalHosts</key>
 	<array>
+		<string>*.lovid.org</string>
 		<string>*.rhizome.org</string>
 		<string>*.gstatic.com</string>
 		<string>*.googleapis.com</string>
