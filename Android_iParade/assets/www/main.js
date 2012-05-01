@@ -73,6 +73,10 @@ function onDeviceReady() {
 	themeAudioPlayer.looping(true);
 	themeAudioPlayer.play();
     }
+    
+	if (!checkGPS()) {
+		badGpsAlert();
+	}
 	
     console.log('onDeviceReady() finished');
 }
