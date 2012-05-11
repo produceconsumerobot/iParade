@@ -1,4 +1,4 @@
-var fakeGPS = false; // for debugging
+var fakeGPS = true; // for debugging
 var fakeGPSdelay = 7000; // delay to achieve location
 
 var currentLoc; // where the device is currently

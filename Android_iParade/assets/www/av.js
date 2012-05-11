@@ -20,8 +20,11 @@ function playVideo() {
 			themeAudioPlayer = null;
 		}
 		if (device.platform.toLowerCase().search("android") >= 0) {
-			console.log("showVideo2(" + localContentDir + "/" + localVidBase + vidExt + ")");
-			showVideo2(localContentDir + "/" + localVidBase + vidExt); // play the locally stored video
+			//var filepath = "file://" + localContentDir + "/" + localVidBase + vidExt;
+			var filepath = localContentDir + "/" + localVidBase + vidExt;
+			console.log("showVideo2(" + filepath + ")");
+			showVideo2(filepath); // play the locally stored video
+			//showVideo2(localContentDir + "/" + localVidBase + vidExt); // play the locally stored video
 		} else {
 			// Video supported!!
 			console.log("Creating video element: " + localContentDir + "/" + localVidBase + vidExt);
@@ -108,6 +111,37 @@ function getVideo(targetNumber) {
 	console.log("getVideo() finished");
 }
 
+function deleteLocalMedia() {
+    console.log("deleteLocalMedia()");
+    
+    function onFileSystemFail(evt) {
+        console.log("onFileSystemFail()");
+        console.log(evt.target.error.code);
+    }
+    
+    function removeSuccess() {
+    	console.log("removeSuccess()");
+    }
+    
+    function removeFile(fileEntry) {
+        console.log("removeFile(): " + fileEntry.fullPath);
+        fileEntry.remove(removeSuccess, onFileSystemFail);
+    }
+    if (localDirectoryEntry) {
+//    	if (themeAudioPlayer) {
+//    		themeAudioPlayer.release();
+//    		themeAudioPlayer = null;
+//    	}
+		if (voicoverAudioPlayer) {
+			voicoverAudioPlayer.release();
+			voicoverAudioPlayer = null;
+		}
+		localDirectoryEntry.getFile(localVidBase + vidExt, {create: false, exclusive: false}, removeFile, onFileSystemFail);
+    	//dir.getFile(localAudioThemeBase + audioThemeExt, {create: false, exclusive: false}, removeFile, onFileSystemFail);
+		localDirectoryEntry.getFile(localVoiceoverBase + voiceoverExt, {create: false, exclusive: false}, removeFile, onFileSystemFail);
+    }
+}
+
 function playAudioTheme() {
 	console.log("playAudioTheme()");
 
@@ -120,7 +154,8 @@ function playAudioTheme() {
 			themeAudioPlayer.release();
 		}
 		if (device.platform.toLowerCase().search("android") >= 0) {
-			themeAudioPlayer = new AudioPlayer(localDir + "/" + localAudioThemeBase + audioThemeExt);
+			//themeAudioPlayer = new AudioPlayer(localDir + "/" + localAudioThemeBase + audioThemeExt);
+			themeAudioPlayer = new AudioPlayer(localContentDir + "/" + localAudioThemeBase + audioThemeExt);
 			//themeAudioPlayer = new AudioPlayer("/com.produceconsumerobot.lovid.iparade/iParade/" + "/" + localAudioThemeBase + audioThemeExt);
 			themeAudioPlayer.looping(true);
 			themeAudioPlayer.play();
@@ -177,7 +212,8 @@ function playVoiceover() {
 				voicoverAudioPlayer.release();
 			}
 			if (device.platform.toLowerCase().search("android") >= 0) {
-				voicoverAudioPlayer = new AudioPlayer(localDir + "/" + localVoiceoverBase + voiceoverExt);
+				//voicoverAudioPlayer = new AudioPlayer(localDir + "/" + localVoiceoverBase + voiceoverExt);
+				voicoverAudioPlayer = new AudioPlayer(localContentDir + "/" + localVoiceoverBase + voiceoverExt);
 				voicoverAudioPlayer.play();
 			} else {
 				voicoverAudioPlayer = new AudioPlayer(localContentDir + "/" + localVoiceoverBase + voiceoverExt);

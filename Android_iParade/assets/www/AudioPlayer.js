@@ -6,6 +6,7 @@ function AudioPlayer(src) {
 	var _audioTimer = null;
 	var _positionLoopTime = 500;
 	var _looping = false;
+	var _isPlaying = false;
 	
 	this.looping = function(looping) {
 		console.log("looping(" + looping + ")");// Play audio
@@ -52,7 +53,7 @@ function AudioPlayer(src) {
 			console.log("AudioPlayer is null");
 		} else {
 			_mAudio.play();
-	
+			_isPlaying = true;
 			// Update _mAudio position
 			if (_audioTimer == null) {
 				_audioTimer = setInterval(function() {
@@ -88,6 +89,7 @@ function AudioPlayer(src) {
 		if (_mAudio) {
 			_mAudio.pause();
 		}
+		_isPlaying = false;
 		console.log("pause finished");
 	};
 	// Stop audio
@@ -101,6 +103,7 @@ function AudioPlayer(src) {
 			clearInterval(_audioTimer);
 		}
 		_audioTimer = null;
+		_isPlaying = false;
 		console.log("stop finished");
 	};
 
@@ -119,6 +122,17 @@ function AudioPlayer(src) {
 			return _uri;
 		} else {
 			return null;
+		}
+	};
+	
+	this.isPlaying = function() {
+		console.log("AudioPlayer.isPlaying()");
+		if (_mAudio && _isPlaying && (_mAudio._position > 0) && (_mAudio._position < _mAudio._duration)) {
+			console.log("AudioPlayer.isPlaying()==true");
+			return true;
+		} else {
+			console.log("AudioPlayer.isPlaying()==false");
+			return false;
 		}
 	};
 	

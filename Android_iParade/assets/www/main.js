@@ -31,6 +31,7 @@ var localContentDir = null;
 var vidExt = ".mp4";
 var voiceoverExt = ".mp3";
 var audioThemeExt = ".mp3";
+var localDirectoryEntry = null;
 var voiceover = true;
 
 var hideTabsTimeout = 2000;
@@ -57,8 +58,15 @@ function onDeviceReady() {
 	// Start the menubutton listener
 	document.addEventListener("menubutton", onMenuKeyDown, false);
 	
+	document.addEventListener("pause", onPause, false);
+	document.addEventListener("resume", onResume, false);
+	
 	// Request the root file system for writing audio/video
-	window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
+	if (device.platform.toLowerCase().search("android") >= 0) {
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
+	} else {
+		window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
+	}
 	
 	//window.onscroll = floater;
     $("html").scroll( "floater()" );
@@ -66,12 +74,13 @@ function onDeviceReady() {
 	startGpsTracking();
 
     if (!CRAZYD) {
-	if (themeAudioPlayer) {
-		themeAudioPlayer.release();
-	}
-	themeAudioPlayer = new AudioPlayer(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
-	themeAudioPlayer.looping(true);
-	themeAudioPlayer.play();
+		if (themeAudioPlayer) {
+			themeAudioPlayer.release();
+			themeAudioPlayer = null;
+		}
+		themeAudioPlayer = new AudioPlayer(remoteContentHub + remoteAudioThemeBase + audioThemeExt);
+		themeAudioPlayer.looping(true);
+		themeAudioPlayer.play();
     }
     
 	if (!checkGPS()) {
@@ -87,6 +96,7 @@ function getFileSuccess(fileEntry) {
 
 function getDirSuccess(dir) {
     console.log("getDirSuccess(): " + dir.fullPath);
+    localDirectoryEntry = dir;
     var temp = dir.fullPath;
     localContentDir = temp.replace("file://","");
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
@@ -103,7 +113,11 @@ function onFileSystemSuccess(fileSystem) {
 function onFileSystemFail(evt) {
     console.log("onFileSystemFail()");
     console.log(evt.target.error.code);
-    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
+	if (device.platform.toLowerCase().search("android") >= 0) {
+		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
+	} else {
+		window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
+	}
 }
 
 function checkConnection() {
@@ -157,6 +171,30 @@ function mouseDown() {
     console.log("mouseDown()");
 	document.getElementById("tabs").style.display="inline";
 	startTabsTimer();
+}
+
+function onPause() {
+	console.log("onPause()");
+	if (device.platform.toLowerCase().search("android") >= 0) {
+		if (themeAudioPlayer && themeAudioPlayer.isPlaying()) {
+			themeAudioPlayer.pause();
+		}
+		if (voicoverAudioPlayer && voicoverAudioPlayer.isPlaying()) {
+			voicoverAudioPlayer.pause();
+		}
+	}
+}
+
+function onResume() {
+	console.log("onResume()");
+	if (device.platform.toLowerCase().search("android") >= 0) {
+		if (themeAudioPlayer && !themeAudioPlayer.isPlaying()) {
+			themeAudioPlayer.play();
+		}
+		if (voicoverAudioPlayer && !voicoverAudioPlayer.isPlaying()) {
+			voicoverAudioPlayer.play();
+		}
+	}
 }
 
 function onBackKeyDown() {
@@ -598,6 +636,7 @@ function getHomeContent(pageNum) {
 		document.getElementById('home').innerHTML = html;
 		loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
 		playAudioTheme();
+		deleteLocalMedia();
 	} else if ((pageNum % 2) == 0) {
 		// Between page
 		html = html + "<img class='bodyImage' src='" + remoteContentDir + (targetNum + 1) + "_btwImage" + ".jpg' style='margin-top:" + getMarginTop() + "px' />";
