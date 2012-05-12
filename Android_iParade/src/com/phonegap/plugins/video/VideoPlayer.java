@@ -19,12 +19,14 @@ import org.json.JSONException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.util.Log;
 
 import com.phonegap.api.Plugin;
 import com.phonegap.api.PluginResult;
 
 
 public class VideoPlayer extends Plugin {
+	private final String TAG = "VideoPlayer";
     private static final String YOU_TUBE = "youtube.com";
     private static final String ASSETS = "file:///android_asset/";
 
@@ -81,7 +83,8 @@ public class VideoPlayer extends Plugin {
             intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(uri, "video/*");
         }
-        
+        Log.i(TAG, "video file: " + uri.toString());
+        Log.i(TAG, "context dir: " + this.ctx.getContext().getFilesDir());
         this.ctx.startActivity(intent);
     }
 

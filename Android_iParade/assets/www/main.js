@@ -62,11 +62,7 @@ function onDeviceReady() {
 	document.addEventListener("resume", onResume, false);
 	
 	// Request the root file system for writing audio/video
-	if (device.platform.toLowerCase().search("android") >= 0) {
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
-	} else {
-		window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
-	}
+	window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
 	
 	//window.onscroll = floater;
     $("html").scroll( "floater()" );
@@ -98,6 +94,12 @@ function getDirSuccess(dir) {
     console.log("getDirSuccess(): " + dir.fullPath);
     localDirectoryEntry = dir;
     var temp = dir.fullPath;
+    if (device.platform.toLowerCase().search("android") >= 0) {
+    	// If it's an Android device and there's no SD card, give fair warning
+	    if (temp.toLowerCase().search("sdcard") < 0) {
+	    	noSdCardAlert();
+	    }
+    }
     localContentDir = temp.replace("file://","");
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
 }
@@ -113,11 +115,7 @@ function onFileSystemSuccess(fileSystem) {
 function onFileSystemFail(evt) {
     console.log("onFileSystemFail()");
     console.log(evt.target.error.code);
-	if (device.platform.toLowerCase().search("android") >= 0) {
-		window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, onFileSystemSuccess, onFileSystemFail);
-	} else {
-		window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
-	}
+	window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
 }
 
 function checkConnection() {
@@ -135,6 +133,11 @@ function checkConnection() {
     	return true;
     }
     console.log('checkConnection() finished');
+}
+
+function noSdCardAlert() {
+	console.log("noSdCardAlert()");
+	navigator.notification.alert('Cannot find SD card.\nPlease insert an SD card.');
 }
 
 // Alert to notify user that they are offline
@@ -175,26 +178,26 @@ function mouseDown() {
 
 function onPause() {
 	console.log("onPause()");
-	if (device.platform.toLowerCase().search("android") >= 0) {
-		if (themeAudioPlayer && themeAudioPlayer.isPlaying()) {
-			themeAudioPlayer.pause();
-		}
-		if (voicoverAudioPlayer && voicoverAudioPlayer.isPlaying()) {
-			voicoverAudioPlayer.pause();
-		}
-	}
+//	if (device.platform.toLowerCase().search("android") >= 0) {
+//		if (themeAudioPlayer && themeAudioPlayer.isPlaying()) {
+//			themeAudioPlayer.pause();
+//		}
+//		if (voicoverAudioPlayer && voicoverAudioPlayer.isPlaying()) {
+//			voicoverAudioPlayer.pause();
+//		}
+//	}
 }
 
 function onResume() {
 	console.log("onResume()");
-	if (device.platform.toLowerCase().search("android") >= 0) {
-		if (themeAudioPlayer && !themeAudioPlayer.isPlaying()) {
-			themeAudioPlayer.play();
-		}
-		if (voicoverAudioPlayer && !voicoverAudioPlayer.isPlaying()) {
-			voicoverAudioPlayer.play();
-		}
-	}
+//	if (device.platform.toLowerCase().search("android") >= 0) {
+//		if (themeAudioPlayer && !themeAudioPlayer.isPlaying()) {
+//			themeAudioPlayer.play();
+//		}
+//		if (voicoverAudioPlayer && !voicoverAudioPlayer.isPlaying()) {
+//			voicoverAudioPlayer.play();
+//		}
+//	}
 }
 
 function onBackKeyDown() {
