@@ -1,22 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- config.xml reference: https://build.phonegap.com/docs/config-xml -->
-<widget xmlns     = "http://www.w3.org/ns/widgets"
-        xmlns:gap = "http://phonegap.com/ns/1.0"
-        id        = "org.lovid.iparade"
-        version   = "2.0.0">
-
+<widget id="org.lovid.iparade" version="2.0.0">
     <name>iParade</name>
-
     <description>
         iParade is a series of locative media-works, created by LoVid as smart-phone Apps.
     </description>
-
     <author href="http://lovid.org" email="lovidlovid@gmail.com">
         Lovid, Sean Montgomery, and BJ Warshaw
     </author>
-
-    <feature name="http://api.phonegap.com/1.0/device" />
-
+    <access origin="*" />
+    <preference name="Fullscreen" value="true" />
     <preference name="Orientation" value="landscape" />
 </widget>
+
