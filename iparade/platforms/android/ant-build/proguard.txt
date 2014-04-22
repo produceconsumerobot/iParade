@@ -1,0 +1,3 @@
+# view AndroidManifest.xml #generated:35
+-keep class org.lovid.iparade.iParade { <init>(...); }
+
