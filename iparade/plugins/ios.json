@@ -15,6 +15,10 @@
                         {
                             "xml": "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Media\"><param name=\"ios-package\" value=\"CDVSound\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -52,6 +56,9 @@
             "PACKAGE_NAME": "org.lovid.iparade"
         },
         "org.apache.cordova.file": {
+            "PACKAGE_NAME": "org.lovid.iparade"
+        },
+        "org.apache.cordova.media": {
             "PACKAGE_NAME": "org.lovid.iparade"
         }
     },
