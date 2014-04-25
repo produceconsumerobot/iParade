@@ -1,5 +1,5 @@
 function AudioPlayer(src) {
-    console.log("AudioPlayer(" + src + ")");
+    //console.log("AudioPlayer(" + src + ")");
 
     var _uri = src;
     var _mAudio = null;
@@ -9,7 +9,7 @@ function AudioPlayer(src) {
     var _isPlaying = false;
 
     this.looping = function(looping) {
-        console.log("looping(" + looping + ")");// Play audio
+        //console.log("looping(" + looping + ")");// Play audio
         if (looping) {
             _looping = looping;
         }
@@ -19,7 +19,7 @@ function AudioPlayer(src) {
     _mAudio = new Media(src, onSuccess, onError);
 
     function onSuccess() {
-        console.log("AudioPlayer.onSuccess()");
+        //console.log("AudioPlayer.onSuccess()");
     }
     function onError(error) {
         console.error( 'AudioPlayer.onError:\n' +
@@ -48,9 +48,9 @@ function AudioPlayer(src) {
 
 
     this.play = function() {
-        console.log("AudioPlayer.play(): " + _uri);// Play audio
+        //console.log("AudioPlayer.play(): " + _uri);// Play audio
         if (!_mAudio) {
-            console.log("AudioPlayer is null");
+            //console.log("AudioPlayer is null");
         } else {
             _mAudio.play();
             _isPlaying = true;
@@ -62,40 +62,40 @@ function AudioPlayer(src) {
                         _mAudio.getCurrentPosition(
                                 // success callback
                                 function(position) {
-                                    console.log("getCurrentPosition: success");
+                                    //console.log("getCurrentPosition: success");
                                     if (position > -1) {
                                         if ((position % 5) < 1) { // Write to the console infrequently
-                                            console.log("AudioPosition: " + _mAudio._position + " / " + _mAudio._duration);
+                                            //console.log("AudioPosition: " + _mAudio._position + " / " + _mAudio._duration);
                                         }
                                         checkAudioLoop();
                                     }
                                 },
                                 // error callback
                                 function(e) {
-                                    console.log("Error getting pos=" + e);
+                                    //console.log("Error getting pos=" + e);
                                 }
                         );
                     }
                 }, _positionLoopTime);
             }
         }
-        console.log("AudioPlayer.play() finished");
+        //console.log("AudioPlayer.play() finished");
     };
 
     // Pause audio
     //
     this.pause = function() {
-        console.log("pause()");
+        //console.log("pause()");
         if (_mAudio) {
             _mAudio.pause();
         }
         _isPlaying = false;
-        console.log("pause finished");
+        //console.log("pause finished");
     };
     // Stop audio
     //
     this.stop = function() {
-        console.log("stop()");
+        //console.log("stop()");
         if (_mAudio) {
             _mAudio.stop();
         }
@@ -104,17 +104,17 @@ function AudioPlayer(src) {
         }
         _audioTimer = null;
         _isPlaying = false;
-        console.log("stop finished");
+        //console.log("stop finished");
     };
 
     this.release = function() {
-        console.log("release()");
+        //console.log("release()");
         this.stop();
         if (_mAudio) {
             _mAudio.release();
         }
         _mAudio = null;
-        console.log("release finished");
+        //console.log("release finished");
     };
 
     this.getUri = function() {
@@ -126,15 +126,15 @@ function AudioPlayer(src) {
     };
 
     this.isPlaying = function() {
-        console.log("AudioPlayer.isPlaying()");
+        //console.log("AudioPlayer.isPlaying()");
         if (_mAudio && _isPlaying && (_mAudio._position > 0) && (_mAudio._position < _mAudio._duration)) {
-            console.log("AudioPlayer.isPlaying()==true");
+            //console.log("AudioPlayer.isPlaying()==true");
             return true;
         } else {
-            console.log("AudioPlayer.isPlaying()==false");
+            //console.log("AudioPlayer.isPlaying()==false");
             return false;
         }
     };
 
-    console.log("AudioPlayer finished");
+    //console.log("AudioPlayer finished");
 }
