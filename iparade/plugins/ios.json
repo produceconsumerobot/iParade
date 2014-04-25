@@ -4,34 +4,12 @@
         "uninstalled": []
     },
     "config_munge": {
-        "files": {
-            "config.xml": {
-                "parents": {
-                    "/*": [
-                        {
-                            "xml": "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>",
-                            "count": 1
-                        },
-                        {
-                            "xml": "<feature name=\"Media\"><param name=\"ios-package\" value=\"CDVSound\" /></feature>",
-                            "count": 1
-                        }
-                    ]
-                }
-            },
-            "framework": {
-                "parents": {
-                    "SystemConfiguration.framework": [
-                        {
-                            "xml": "true",
-                            "count": 1
-                        }
-                    ]
-                }
+        "config.xml": {
+            "/*": {
+                "<feature name=\"Device\"><param name=\"ios-package\" value=\"CDVDevice\" /></feature>": 1,
+                "<feature name=\"File\"><param name=\"ios-package\" value=\"CDVFile\" /><param name=\"onload\" value=\"true\" /></feature>": 1,
+                "<feature name=\"Media\"><param name=\"ios-package\" value=\"CDVSound\" /></feature>": 1,
+                "<feature name=\"NetworkStatus\"><param name=\"ios-package\" value=\"CDVConnection\" /></feature>": 1
             }
         },
         "framework": {
@@ -40,11 +18,9 @@
             },
             "MobileCoreServices.framework": {
                 "false": 1
-            }
-        },
-        "config.xml": {
-            "/*": {
-                "<feature name=\"File\"><param name=\"ios-package\" value=\"CDVFile\" /><param name=\"onload\" value=\"true\" /></feature>": 1
+            },
+            "SystemConfiguration.framework": {
+                "true": 1
             }
         }
     },
@@ -52,13 +28,13 @@
         "org.apache.cordova.device": {
             "PACKAGE_NAME": "org.lovid.iparade"
         },
-        "org.apache.cordova.network-information": {
-            "PACKAGE_NAME": "org.lovid.iparade"
-        },
         "org.apache.cordova.file": {
             "PACKAGE_NAME": "org.lovid.iparade"
         },
         "org.apache.cordova.media": {
+            "PACKAGE_NAME": "org.lovid.iparade"
+        },
+        "org.apache.cordova.network-information": {
             "PACKAGE_NAME": "org.lovid.iparade"
         }
     },
