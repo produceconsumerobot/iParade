@@ -29,6 +29,16 @@
                     ]
                 }
             }
+        },
+        "res/xml/config.xml": {
+            "/*": {
+                "<feature name=\"File\"><param name=\"android-package\" value=\"org.apache.cordova.file.FileUtils\" /><param name=\"onload\" value=\"true\" /></feature>": 1
+            }
+        },
+        "AndroidManifest.xml": {
+            "/*": {
+                "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />": 1
+            }
         }
     },
     "installed_plugins": {
@@ -36,6 +46,9 @@
             "PACKAGE_NAME": "org.lovid.iparade"
         },
         "org.apache.cordova.network-information": {
+            "PACKAGE_NAME": "org.lovid.iparade"
+        },
+        "org.apache.cordova.file": {
             "PACKAGE_NAME": "org.lovid.iparade"
         }
     },
