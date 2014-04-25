@@ -1,13 +1,13 @@
 function AudioPlayer(src) {
 	console.log("AudioPlayer(" + src + ")");
-	
+
 	var _uri = src;
 	var _mAudio = null;
 	var _audioTimer = null;
 	var _positionLoopTime = 500;
 	var _looping = false;
 	var _isPlaying = false;
-	
+
 	this.looping = function(looping) {
 		console.log("looping(" + looping + ")");// Play audio
 		if (looping) {
@@ -15,38 +15,38 @@ function AudioPlayer(src) {
 		}
 		return _looping;
 	};
-	
+
 	_mAudio = new Media(src, onSuccess, onError);
-	
+
 	function onSuccess() {
 		console.log("AudioPlayer.onSuccess()");
 	}
 	function onError(error) {
 		console.error( 'AudioPlayer.onError:\n' +
-				'code: '    + error.code    + '\n' + 
+				'code: '    + error.code    + '\n' +
 				'message: ' + error.message + '\n');
 		this.release();
 	}
 
 	function checkAudioLoop() {
-		console.log("_looping=" + _looping);
+		//console.log("_looping=" + _looping);
 		if (_looping) {
-			console.log("checkAudioLoop: looping");
+			//console.log("checkAudioLoop: looping");
 			if (_mAudio){
 				//console.log("checkAudioLoop: my_audio");
 				if ((_mAudio._duration > -1) && (_mAudio._position > -1)) {
 					//console.log("checkAudioLoop: duration/position");
 					if ((_mAudio._duration - _mAudio._position) < 1.5){
-						console.log("checkAudioLoop: seekTo 1");
+						//console.log("checkAudioLoop: seekTo 1");
 						_mAudio.seekTo(1);
 					}
 				}
 			}
 		}
-		console.log("checkAudioLoop finished");
+		//console.log("checkAudioLoop finished");
 	}
 
-	
+
 	this.play = function() {
 		console.log("AudioPlayer.play(): " + _uri);// Play audio
 		if (!_mAudio) {
@@ -81,9 +81,9 @@ function AudioPlayer(src) {
 		}
 	    console.log("AudioPlayer.play() finished");
 	};
-	
+
 	// Pause audio
-	// 
+	//
 	this.pause = function() {
 		console.log("pause()");
 		if (_mAudio) {
@@ -93,7 +93,7 @@ function AudioPlayer(src) {
 		console.log("pause finished");
 	};
 	// Stop audio
-	// 
+	//
 	this.stop = function() {
 		console.log("stop()");
 		if (_mAudio) {
@@ -116,7 +116,7 @@ function AudioPlayer(src) {
 		_mAudio = null;
 		console.log("release finished");
 	};
-	
+
 	this.getUri = function() {
 		if (_mAudio) {
 			return _uri;
@@ -124,7 +124,7 @@ function AudioPlayer(src) {
 			return null;
 		}
 	};
-	
+
 	this.isPlaying = function() {
 		console.log("AudioPlayer.isPlaying()");
 		if (_mAudio && _isPlaying && (_mAudio._position > 0) && (_mAudio._position < _mAudio._duration)) {
@@ -135,6 +135,6 @@ function AudioPlayer(src) {
 			return false;
 		}
 	};
-	
+
 	console.log("AudioPlayer finished");
 }
