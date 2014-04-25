@@ -1,43 +1,35 @@
-var DEBUG = 0;
-var CRAZYD = false;
-
-var tabLinks = null;
-var tabListItems = null;
-var contentDivs = null;
-var contentPage = 0;
-var locCheckTimerId = null; // timer ID
-var startTabsTimerId = null; // timer ID
-var themeAudioPlayer = null;
-var voicoverAudioPlayer = null;
-var iParades = null;
-
-var remoteContentHub  = "http://archive.rhizome.org:8080/lovid/iparade/";
-//var remoteContentHub  = "http://produceconsumerobot.com/temp/lovid/iparade/";
-var remoteContentDir = null;
-//var remoteContentHub  = "http://archive.rhizome.org/lovid/iparade/";
-//var remoteContentDir = "http://produceconsumerobot.com/temp/lovid/iparade2/";
-var remoteVidBase = "_video";
-var remoteVoiceOverBase = "_voiceover";
-var remoteAudioThemeBase = "audioTheme";
-var remoteCssFilename = "stylesheet.css";
-var iParadesFile = "iParades.php";
-
-var localDir = "iParade";
-//var localDir = "com.produceconsumerobot.lovid.iparade/iParade/";
-var localVidBase = "iparadeVideo";
-var localAudioThemeBase = "iparadeTheme";
-var localVoiceoverBase = "iparadeVoiceover";
-var localContentDir = null;
-var vidExt = ".mp4";
-var voiceoverExt = ".mp3";
-var audioThemeExt = ".mp3";
-var localDirectoryEntry = null;
-var voiceover = true;
-
-var hideTabsTimeout = 2000;
-var inTargetVibLen = 200;
-var maxTries = 15;
-var tryDelay = 1000;
+var DEBUG = 0,
+    CRAZYD = false,
+    tabLinks = null,
+    tabListItems = null,
+    contentDivs = null,
+    contentPage = 0,
+    locCheckTimerId = null, // timer ID
+    startTabsTimerId = null, // timer ID
+    themeAudioPlayer = null,
+    voicoverAudioPlayer = null,
+    iParades = null,
+    remoteContentHub  = "http://archive.rhizome.org:8080/lovid/iparade/",
+    remoteContentDir = null,
+    remoteVidBase = "_video",
+    remoteVoiceOverBase = "_voiceover",
+    remoteAudioThemeBase = "audioTheme",
+    remoteCssFilename = "stylesheet.css",
+    iParadesFile = "iParades.php",
+    localDir = "iParade",
+    localVidBase = "iparadeVideo",
+    localAudioThemeBase = "iparadeTheme",
+    localVoiceoverBase = "iparadeVoiceover",
+    localContentDir = null,
+    vidExt = ".mp4",
+    voiceoverExt = ".mp3",
+    audioThemeExt = ".mp3",
+    localDirectoryEntry = null,
+    voiceover = true,
+    hideTabsTimeout = 2000,
+    inTargetVibLen = 200,
+    maxTries = 15,
+    tryDelay = 1000;
 
 //window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && window.attachEvent("onload", init);
 
@@ -284,12 +276,15 @@ function init() {
 			var id = getHash( tabList[i].getAttribute('href') );
 			tabListItems[id] = tabList[i];
 			contentDivs[id] = document.getElementById( id );
+
+			/*
 			var h = getWindowHeight();
 			if (id == 'map') {
 				contentDivs[id].style.height = (h - (h*0.06)) + "px";
 			} else {
 				contentDivs[id].style.height = (h - (h*0.13)) + "px";
 			}
+			*/
 		}
 	}
 
