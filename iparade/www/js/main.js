@@ -29,7 +29,8 @@ var DEBUG = 0,
     hideTabsTimeout = 2000,
     inTargetVibLen = 200,
     maxTries = 15,
-    tryDelay = 1000;
+    tryDelay = 1000,
+    splashImg = 'splash-tmp.gif';
 
 //window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && window.attachEvent("onload", init);
 
@@ -608,7 +609,7 @@ function getHomeContent(pageNum) {
 		// startup screen is special
 		html = html + "<div id='startScreen' style='margin-top:" + getMarginTop() + "px' >";
 		html = html + "<p id='iParadeSearching'>Searching for iParades...</p>";
-		html = html + "<img class='fullSplashImage' src='img/splash.gif'/>";
+		html = html + "<img class='fullSplashImage' src='img/" + splashImg + "'/>";
 		html = html + "</div>";
 		document.getElementById('home').innerHTML = html;
 	} else if (pageNum == 1) {
@@ -824,7 +825,7 @@ function showIparades() {
 	console.log("showIparades()");
 
 	var html = "";
-	html = html + "<img class='fullSplashImage' src='img/splash.gif'/>";
+	html = html + "<img class='fullSplashImage' src='img/" + splashImg + "'/>";
 	html = html + "<div class='iparadeSelectOverlay'>";
 	html = html + "<span>Choose an iParade:</span>";
 	html = html + "<select id=iParadeSelect>";
