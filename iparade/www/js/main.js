@@ -1,5 +1,6 @@
 var DEBUG = 0,
     CRAZYD = false,
+    IS_RIPPLE_EMULATOR = (window.tinyHippos != undefined),
     tabLinks = null,
     tabListItems = null,
     contentDivs = null,
@@ -36,6 +37,12 @@ var DEBUG = 0,
 
 // PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
 function onDeviceReady() {
+
+    // need to stub the backbutton event handler for Ripple
+    if (IS_RIPPLE_EMULATOR) {
+        cordova.addDocumentEventHandler('backbutton');
+    }
+
     console.log('onDeviceReady()');
     console.log("device.platform=" + device.platform);
     console.log("device.uuid=" + device.uuid);
