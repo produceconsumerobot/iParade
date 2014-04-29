@@ -61,8 +61,13 @@ function onDeviceReady() {
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
 
+    navigator.webkitTemporaryStorage.requestQuota (1024*1024, function(grantedBytes) {
+      console.log ('requestQuota: ', arguments);
+      requestFS(grantedBytes);
+    }, onFileSystemFail);
+
     // Request the root file system for writing audio/video
-    window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
+    //window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
 
     //window.onscroll = floater;
     $("html").scroll( "floater()" );
@@ -86,6 +91,18 @@ function onDeviceReady() {
     console.log('onDeviceReady() finished');
 }
 
+function requestFS(grantedBytes) {
+  window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, function(fs) {
+    console.log ('fs: ', arguments);
+    var entry = arguments[0].root;
+    entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
+  }, onFileSystemFail);
+}
+
+function onFileSystemFail(evt) {
+    console.log("onFileSystemFail: ", evt.code);
+}
+
 function getFileSuccess(fileEntry) {
     console.log("getFileSuccess(): " + fileEntry.fullPath);
 }
@@ -102,20 +119,6 @@ function getDirSuccess(dir) {
     }
     localContentDir = temp.replace("file://","");
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
-}
-
-function onFileSystemSuccess(fileSystem) {
-    console.log("onFileSystemSuccess()");
-    console.log(fileSystem.name);
-    console.log(fileSystem.root.name);
-    var entry=fileSystem.root;
-    entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
-}
-
-function onFileSystemFail(evt) {
-    console.log("onFileSystemFail()");
-    console.log(evt.target.error.code);
-    window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
 }
 
 function checkConnection() {
