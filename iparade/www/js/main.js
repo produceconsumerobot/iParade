@@ -38,17 +38,17 @@ var DEBUG = 0,
 // PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
 function onDeviceReady() {
 
-    // need to stub the backbutton event handler for Ripple
-    if (IS_RIPPLE_EMULATOR) {
-        cordova.addDocumentEventHandler('backbutton');
-    }
-
-    //console.log('onDeviceReady()');
+    console.log('onDeviceReady()');
     //console.log("device.platform=" + device.platform);
     //console.log("device.uuid=" + device.uuid);
     //console.log("device.name=" + device.name);
     //console.log("device.version=" + device.version);
     //console.log("device.phonegap=" + device.phonegap);
+
+    // need to stub the backbutton event handler for Ripple
+    if (IS_RIPPLE_EMULATOR) {
+        cordova.addDocumentEventHandler('backbutton');
+    }
 
     checkConnection();
 
@@ -61,13 +61,16 @@ function onDeviceReady() {
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
 
-    navigator.webkitTemporaryStorage.requestQuota (1024*1024, function(grantedBytes) {
-      console.log ('requestQuota: ', arguments);
-      requestFS(grantedBytes);
-    }, onFileSystemFail);
-
-    // Request the root file system for writing audio/video
-    //window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
+    if (navigator.webkitTemporaryStorage) {
+        // Request the file system for Ripple/Chrome
+        navigator.webkitTemporaryStorage.requestQuota(0, function(grantedBytes) {
+          console.log ('requestQuota: ', arguments);
+          requestFS(grantedBytes);
+        }, onFileSystemFail);
+    } else {
+        // Request the file system for devices
+        window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
+    }
 
     //window.onscroll = floater;
     $("html").scroll( "floater()" );
@@ -97,6 +100,13 @@ function requestFS(grantedBytes) {
     var entry = arguments[0].root;
     entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
   }, onFileSystemFail);
+}
+
+function onFileSystemSuccess(fileSystem) {
+    console.log('onFileSystemSuccess()');
+    console.log('fileSystem: ', fileSystem);
+    var entry = fileSystem.root;
+    entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
 }
 
 function onFileSystemFail(evt) {
@@ -255,7 +265,7 @@ function hideTabs() {
 
 // Initializes the page
 function init() {
-    //console.log('init()');
+    console.log('init()');
 
     loadCssFile(remoteContentHub + remoteCssFilename);
 
@@ -274,7 +284,7 @@ function init() {
     hideTabs();
 
     // Start listener for PhoneGap loaded
-    //console.log("Adding deviceready listener");
+    console.log("Adding deviceready listener");
     document.addEventListener("deviceready", onDeviceReady, false);
 
     // Get the home content
@@ -315,7 +325,7 @@ function init() {
         if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
         i++;
     }
-    //console.log('init() finished');
+    console.log('init() finished');
 }
 
 // Show a tab
