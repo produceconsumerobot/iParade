@@ -73,6 +73,9 @@
         },
         "org.apache.cordova.media": {
             "PACKAGE_NAME": "org.lovid.iparade"
+        },
+        "org.apache.cordova.console": {
+            "PACKAGE_NAME": "org.lovid.iparade"
         }
     },
     "dependent_plugins": {}
