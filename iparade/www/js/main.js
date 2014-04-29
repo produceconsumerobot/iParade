@@ -43,12 +43,12 @@ function onDeviceReady() {
         cordova.addDocumentEventHandler('backbutton');
     }
 
-    console.log('onDeviceReady()');
-    console.log("device.platform=" + device.platform);
-    console.log("device.uuid=" + device.uuid);
-    console.log("device.name=" + device.name);
-    console.log("device.version=" + device.version);
-    console.log("device.phonegap=" + device.phonegap);
+    //console.log('onDeviceReady()');
+    //console.log("device.platform=" + device.platform);
+    //console.log("device.uuid=" + device.uuid);
+    //console.log("device.name=" + device.name);
+    //console.log("device.version=" + device.version);
+    //console.log("device.phonegap=" + device.phonegap);
 
     checkConnection();
 
@@ -88,7 +88,7 @@ function onDeviceReady() {
         badGpsAlert();
     }
 
-    console.log('onDeviceReady() finished');
+    //console.log('onDeviceReady() finished');
 }
 
 function requestFS(grantedBytes) {
@@ -122,10 +122,10 @@ function getDirSuccess(dir) {
 }
 
 function checkConnection() {
-    console.log('checkConnection()');
+    //console.log('checkConnection()');
     var networkState = navigator.network.connection.type;
 
-    console.log('Connection type: ' + networkState);
+    //console.log('Connection type: ' + networkState);
 
     //if ((!networkState) || (networkState == Connection.UNKNOWN) ||  (networkState == Connection.NONE)) {
     if ((!networkState)  ||  (networkState == Connection.NONE)) {
@@ -135,52 +135,52 @@ function checkConnection() {
     } else {
         return true;
     }
-    console.log('checkConnection() finished');
+    //console.log('checkConnection() finished');
 }
 
 function noSdCardAlert() {
-    console.log("noSdCardAlert()");
+    //console.log("noSdCardAlert()");
     navigator.notification.alert('Cannot find SD card.\nPlease insert an SD card.');
 }
 
 // Alert to notify user that they are offline
 function offlineAlert() {
-    console.log("offlineAlert()");
+    //console.log("offlineAlert()");
     navigator.notification.alert('You are currently offline.\nPlease connect to the network to continue.');
 }
 
 //Alert to notify user that they are offline
 function localStorageAlert() {
-    console.log("localStorageAlert()");
+    //console.log("localStorageAlert()");
     navigator.notification.alert('Cannot access local file system. Try inserting an SD card.');
 }
 
 function toggleVoiceover() {
-    console.log("toggleVoiceover()");
+    //console.log("toggleVoiceover()");
     voiceover = !voiceover;
     if (!voiceover) {
-        console.log("voiceover off");
+        //console.log("voiceover off");
         if (voicoverAudioPlayer) {
             voicoverAudioPlayer.release();
             voicoverAudioPlayer = null;
         }
         document.getElementById("toggleVoiceoverButton").src = "img/voice_over_off.jpg";
     } else {
-        console.log("voiceover on");
+        //console.log("voiceover on");
         document.getElementById("toggleVoiceoverButton").src = "img/voice_over_on.jpg";
         playVoiceover();
     }
-    console.log("toggleVoiceover finished");
+    //console.log("toggleVoiceover finished");
 }
 
 function mouseDown() {
-    console.log("mouseDown()");
+    //console.log("mouseDown()");
     document.getElementById("tabs").style.display="inline";
     startTabsTimer();
 }
 
 function onPause() {
-    console.log("onPause()");
+    //console.log("onPause()");
 //    if (device.platform.toLowerCase().search("android") >= 0) {
 //        if (themeAudioPlayer && themeAudioPlayer.isPlaying()) {
 //            themeAudioPlayer.pause();
@@ -192,7 +192,7 @@ function onPause() {
 }
 
 function onResume() {
-    console.log("onResume()");
+    //console.log("onResume()");
 //    if (device.platform.toLowerCase().search("android") >= 0) {
 //        if (themeAudioPlayer && !themeAudioPlayer.isPlaying()) {
 //            themeAudioPlayer.play();
@@ -205,10 +205,10 @@ function onResume() {
 
 function onBackKeyDown() {
     // Handle the back button
-    console.log("onBackKeyDown()");
+    //console.log("onBackKeyDown()");
 
     function onConfirm(button) {
-        console.log("onConfirm(" + button + ")");
+        //console.log("onConfirm(" + button + ")");
         if (button==1) {
             if (voicoverAudioPlayer) {
                 voicoverAudioPlayer.release();
@@ -234,28 +234,28 @@ function onBackKeyDown() {
 
 function onMenuKeyDown() {
     // Handle the menu button
-    console.log("onMenuKeyDown()");
+    //console.log("onMenuKeyDown()");
     document.getElementById("tabs").style.display="inline";
     startTabsTimer();
 }
 
 // Shows the tabs for the brief period and then hides them
 function startTabsTimer() {
-    console.log("startTabsTimer()");
+    //console.log("startTabsTimer()");
     if (startTabsTimerId != null) {
         clearTimeout(startTabsTimerId);
     }
     startTabsTimerId = setTimeout("hideTabs()", hideTabsTimeout);
-    console.log("startTabsTimer() finished");
+    //console.log("startTabsTimer() finished");
 }
 function hideTabs() {
-    console.log("hideTabs()");
+    //console.log("hideTabs()");
     document.getElementById("tabs").style.display="none";
 }
 
 // Initializes the page
 function init() {
-    console.log('init()');
+    //console.log('init()');
 
     loadCssFile(remoteContentHub + remoteCssFilename);
 
@@ -274,7 +274,7 @@ function init() {
     hideTabs();
 
     // Start listener for PhoneGap loaded
-    console.log("Adding deviceready listener");
+    //console.log("Adding deviceready listener");
     document.addEventListener("deviceready", onDeviceReady, false);
 
     // Get the home content
@@ -315,12 +315,12 @@ function init() {
         if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
         i++;
     }
-    console.log('init() finished');
+    //console.log('init() finished');
 }
 
 // Show a tab
 function showTab(options) {
-    console.log('showTab()');
+    //console.log('showTab()');
     var selectedId;
 
     if ((typeof options !== "undefined") && (typeof options.id !== "undefined")) {
@@ -351,7 +351,7 @@ function showTab(options) {
     }
 
     // Stop the browser following the link
-    console.log('showTab() finished');
+    //console.log('showTab() finished');
     return false;
 }
 
@@ -400,8 +400,8 @@ function getWindowHeight() {
     if (DEBUG > 1)  {
         alert ("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h=" + w);
     }
-    console.log("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h4=" + w4 + ", ww=" + ww + ", h=" + w);
-    console.log("getWindowHeight()=" + w);
+    //console.log("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h4=" + w4 + ", ww=" + ww + ", h=" + w);
+    //console.log("getWindowHeight()=" + w);
     return w + "";
 }
 
@@ -439,17 +439,17 @@ function getWindowWidth() {
     if (DEBUG > 1)  {
         alert ("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w=" + w);
     }
-    console.log("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w4=" + w4 + ", h=" + h + ", w=" + w);
-    console.log("getWindowWidth()=" + w);
+    //console.log("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w4=" + w4 + ", h=" + h + ", w=" + w);
+    //console.log("getWindowWidth()=" + w);
     return w + "";
 }
 
 
 function restartApp() {
-    console.log("restartApp()");
+    //console.log("restartApp()");
     // process the confirmation dialog result
     function onConfirm(button) {
-        console.log("onConfirm(" + button + ")");
+        //console.log("onConfirm(" + button + ")");
         if (button==1) {
             if (voicoverAudioPlayer) {
                 voicoverAudioPlayer.release();
@@ -479,10 +479,10 @@ function restartApp() {
 }
 
 function reloadHome(pageNum) {
-    console.log("reloadHome()");
+    //console.log("reloadHome()");
     // process the confirmation dialog result
     function onConfirm(button) {
-        console.log("onConfirm(" + button + ")");
+        //console.log("onConfirm(" + button + ")");
         if (button==1) {
             // If the device isn't online, don't move to the next page
             if (!checkConnection()) {
@@ -564,12 +564,12 @@ function reloadHome(pageNum) {
                                    'Reload,Cancel'          // buttonLabels
                                    );
 
-    console.log("reloadHome() finished");
+    //console.log("reloadHome() finished");
 }
 
 // Moves to the next page in the sequence
 function nextPage() {
-    console.log("nextPage()");
+    //console.log("nextPage()");
 
     // If the device isn't online, don't move to the next page
     if (!checkConnection()) {
@@ -607,12 +607,12 @@ function nextPage() {
     showTab({"id" : 'home'});
     setTimeout("hideTabs()", 100);
     //hideTabs();
-    console.log("nextPage finished");
+    //console.log("nextPage finished");
 }
 
 //Returns html for the home tab based on the value of pageNum
 function getHomeContent(pageNum) {
-    console.log("getHomeContent(" + pageNum + ")");
+    //console.log("getHomeContent(" + pageNum + ")");
     var html = "";
 
     if (pageNum == 0) {
@@ -631,7 +631,7 @@ function getHomeContent(pageNum) {
         if (!audioThemeDownloadComplete) {
             html = html + "<img id='downloadingImg' src='img/downloading.gif'/>";
         } else {
-            console.log("audioThemeDownloadComplete == true");
+            //console.log("audioThemeDownloadComplete == true");
         }
         html = html + "</div>";
         html = html + getNextButton(false);
@@ -667,7 +667,7 @@ function getHomeContent(pageNum) {
         if (!vidDownloadComplete) {
             html = html + "<img id='downloadingImg' src='img/downloading.gif'/>";
         } else {
-            console.log("vidDownloadComplete == true");
+            //console.log("vidDownloadComplete == true");
         }
         html = html + "</div>";
         html = html + getNextButton(false);
@@ -679,14 +679,14 @@ function getHomeContent(pageNum) {
         }
         displayVidElement();
     }
-    console.log("finishing getHomeContent");
+    //console.log("finishing getHomeContent");
 }
 
 function loadHtml(element, url, nthTry) {
-    console.log("loadHtml(" + url + ")");
+    //console.log("loadHtml(" + url + ")");
 
     function tryAgain(elem, address, ntry) {
-        console.log("tryAgain(" + ntry + ")");
+        //console.log("tryAgain(" + ntry + ")");
         if (ntry < maxTries) {
             // Wait and try try again...
             setTimeout(function() { loadHtml(elem, address, ntry);}, ntry*tryDelay/2);
@@ -701,67 +701,67 @@ function loadHtml(element, url, nthTry) {
     }
 
     element.load(url, function(response, status, xhr) {
-        console.log("load response");
+        //console.log("load response");
         if (status == "error") {
-            console.log("load error: " + url);
+            //console.log("load error: " + url);
             tryAgain(element, url, nthTry);
         }
     });
 
-    console.log("loadHtml finished");
+    //console.log("loadHtml finished");
 }
 
 function getNextButton(visible) {
-    console.log("getNextButton(" + visible + ")");
+    //console.log("getNextButton(" + visible + ")");
     var nextButton;
     if (visible) {
         nextButton = "<img id='nextButton' src='img/next_arrow.jpg' ontouchstart='nextPage()'/>";
     } else {
         nextButton = "<img id='nextButton' src='img/next_arrow.jpg' ontouchstart='nextPage()' style='visibility:hidden;'/>";
     }
-    console.log("returning nextButton");
+    //console.log("returning nextButton");
     return nextButton;
 }
 
 function showNextButton(delay) {
-    console.log("showNextButton(" + delay + ")");
+    //console.log("showNextButton(" + delay + ")");
     setTimeout(function() {
-               console.log("showing nextButton");
+               //console.log("showing nextButton");
                if ($("#nextButton")) {
                 $("#nextButton").css("visibility", "visible");
                } else {
-                console.log("nextButton not found");
+                //console.log("nextButton not found");
                }
                //document.getElementById("nextButton").style.visibility="visible";
-               console.log("finished showing nextButton");
+               //console.log("finished showing nextButton");
                }, delay);
 }
 
 function hideDownloadingImg(delay) {
-    console.log("hideDownloadingImg(" + delay + ")");
+    //console.log("hideDownloadingImg(" + delay + ")");
     setTimeout(function() {
                if ($("#downloadingImg")) {
-               console.log("hiding downloadingImg");
+               //console.log("hiding downloadingImg");
                $("#downloadingImg").css("display", "none");
                }
                }, delay);
 }
 
 function displayVidElement() {
-    console.log("displayVidElement()");
+    //console.log("displayVidElement()");
     if (vidDownloadComplete && !checkingForTargetLocation) {
-        console.log("displaying Video element");
+        //console.log("displaying Video element");
 
         hideDownloadingImg(0);
 
-        console.log("Creating img element");
+        //console.log("Creating img element");
 
         var html = "";
         html = html + "<img id='playImg' src='img/play.jpg' ontouchstart='playVideo(); showNextButton(2000);'/>";
         $("#playVideoButton").html(html);
 
     }
-    console.log("displayVidElement finished");
+    //console.log("displayVidElement finished");
 }
 
 function loadCssFile(filename) {
@@ -775,10 +775,10 @@ function loadCssFile(filename) {
 }
 
 function getIparades(loc, nthTry) {
-    console.log("getIparades(" + loc.latitude + "," + loc.longitude + ")");
+    //console.log("getIparades(" + loc.latitude + "," + loc.longitude + ")");
 
     function tryAgain(location, ntry) {
-        console.log("tryAgain(" + ntry + ")");
+        //console.log("tryAgain(" + ntry + ")");
         if (ntry < maxTries) {
             // Wait and try try again...
             setTimeout(function() { getIparades(location, ntry);}, ntry*tryDelay/2);
@@ -812,7 +812,7 @@ function getIparades(loc, nthTry) {
                 var targets = new Array();
                 var titles = new Array();
                 for (var i=0; i<data.length; i++) {
-                    console.log(data[i].name + ": " + data[i].location.latitude + ", " + data[i].location.longitude);
+                    //console.log(data[i].name + ": " + data[i].location.latitude + ", " + data[i].location.longitude);
                     targets[i] = data[i].location;
                     titles[i] = data[i].name;
                 }
@@ -828,11 +828,11 @@ function getIparades(loc, nthTry) {
           });
     }
 
-    console.log("getIparades finished");
+    //console.log("getIparades finished");
 }
 
 function showIparades() {
-    console.log("showIparades()");
+    //console.log("showIparades()");
 
     var html = "";
     html = html + "<img class='fullSplashImage' src='img/" + splashImg + "'/>";
@@ -848,12 +848,12 @@ function showIparades() {
     html = html + "</div>";
     document.getElementById('startScreen').innerHTML = html;
 
-    console.log("showIparades finished");
+    //console.log("showIparades finished");
 }
 
 
 function initIparade(listNum) {
-    console.log("initIparade()");
+    //console.log("initIparade()");
 
     if (!checkGPS()) {
         badGpsAlert();
@@ -874,17 +874,17 @@ function initIparade(listNum) {
 
     nextPage();
 
-    console.log("initIparade finished");
+    //console.log("initIparade finished");
 }
 
 function getMarginTop() {
-    console.log("getMarginTop()");
+    //console.log("getMarginTop()");
     w = getWindowWidth();
     h = getWindowHeight();
 
     var mt = (h-(w/480*270))/2 + "";
 
-    console.log("getMarginTop finished: " + mt);
+    //console.log("getMarginTop finished: " + mt);
 
     return mt;
 }
