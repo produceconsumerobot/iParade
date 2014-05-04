@@ -53,6 +53,16 @@
                     ]
                 }
             }
+        },
+        "framework": {
+            "AssetsLibrary.framework": {
+                "false": 1
+            }
+        },
+        "config.xml": {
+            "/*": {
+                "<feature name=\"FileTransfer\"><param name=\"ios-package\" value=\"CDVFileTransfer\" /></feature>": 1
+            }
         }
     },
     "installed_plugins": {
@@ -69,6 +79,9 @@
             "PACKAGE_NAME": "org.lovid.iparade"
         },
         "org.apache.cordova.media": {
+            "PACKAGE_NAME": "org.lovid.iparade"
+        },
+        "org.apache.cordova.file-transfer": {
             "PACKAGE_NAME": "org.lovid.iparade"
         }
     },
