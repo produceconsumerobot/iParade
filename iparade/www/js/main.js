@@ -615,38 +615,39 @@ function getHomeContent(pageNum) {
 
     if (pageNum == 0) {
         // startup screen is special
-        html = html + "<div id='startScreen' style='margin-top:" + getMarginTop() + "px' >";
-        html = html + "<p id='iParadeSearching'>Searching for iParades...</p>";
-        html = html + "<img class='fullSplashImage' src='img/" + splashImg + "'/>";
-        html = html + "</div>";
+        // html += "<div id='startScreen' style='margin-top:" + getMarginTop() + "px' >";
+        html += "<div id='startScreen' style='margin-top:" + getMarginTop() + "px' >";
+        html += "<p id='iParadeSearching'>Searching for iParades...</p>";
+        html += "<img class='fullSplashImage' src='img/" + splashImg + "'/>";
+        html += "</div>";
         document.getElementById('home').innerHTML = html;
     } else if (pageNum == 1) {
         // First page is special
         getAudioTheme();
-        html = html + "<div id='textContent' class='paddedContent'></div>";
-        html = html + "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
-        html = html + "<div id='playVideoButton'>";
+        html += "<div id='textContent' class='paddedContent'></div>";
+        html += "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
+        html += "<div id='playVideoButton'>";
         if (!audioThemeDownloadComplete) {
-            html = html + "<img id='downloadingImg' src='img/downloading.gif'/>";
+            html += "<img id='downloadingImg' src='img/downloading.gif'/>";
         } else {
             //console.log("audioThemeDownloadComplete == true");
         }
-        html = html + "</div>";
-        html = html + getNextButton(false);
+        html += "</div>";
+        html += getNextButton(false);
          document.getElementById('home').innerHTML = html;
         loadHtml($("#textContent"), remoteContentDir + "0_text.html");
     } else if (targetNum == (targetLocations.length)) {
         // Last page is special
-        html = html + "<div id='textContent' class='paddedContent'></div>";
-        html = html + "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
-        html = html + "<img src='img/repeat.jpg' id='nextButton' ontouchstart='restartApp()' />";
+        html += "<div id='textContent' class='paddedContent'></div>";
+        html += "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
+        html += "<img src='img/repeat.jpg' id='nextButton' ontouchstart='restartApp()' />";
         document.getElementById('home').innerHTML = html;
         loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
         playAudioTheme();
         deleteLocalMedia();
     } else if ((pageNum % 2) == 0) {
         // Between page
-        html = html + "<img class='bodyImage' src='" + remoteContentDir + (targetNum + 1) + "_btwImage" + ".jpg' style='margin-top:" + getMarginTop() + "px' />";
+        html += "<img class='bodyImage' src='" + remoteContentDir + (targetNum + 1) + "_btwImage" + ".jpg' style='margin-top:" + getMarginTop() + "px' />";
         document.getElementById('home').innerHTML = html;
         checkingForTargetLocation = true;
         vidDownloadComplete = false;
@@ -657,18 +658,18 @@ function getHomeContent(pageNum) {
         if (fakeGPS) testLocChangeTimer();
     } else {
         // Main content page
-        //html = html + "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
-        html = html + "<div id='textContent' class='paddedContent'></div>";
-        html = html + "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
-        html = html + "<div id='playVideoButton'>";
+        //html += "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
+        html += "<div id='textContent' class='paddedContent'></div>";
+        html += "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
+        html += "<div id='playVideoButton'>";
         // If the video has already downloaded we don't need to show the downloading gif
         if (!vidDownloadComplete) {
-            html = html + "<img id='downloadingImg' src='img/downloading.gif'/>";
+            html += "<img id='downloadingImg' src='img/downloading.gif'/>";
         } else {
             //console.log("vidDownloadComplete == true");
         }
-        html = html + "</div>";
-        html = html + getNextButton(false);
+        html += "</div>";
+        html += getNextButton(false);
         document.getElementById('home').innerHTML = html;
         loadHtml($("#textContent"), remoteContentDir + (targetNum + 1) + "_text.html");
         navigator.notification.vibrate(inTargetVibLen);
@@ -755,7 +756,7 @@ function displayVidElement() {
         //console.log("Creating img element");
 
         var html = "";
-        html = html + "<img id='playImg' src='img/play.jpg' ontouchstart='playVideo(); showNextButton(2000);'/>";
+        html += "<img id='playImg' src='img/play.jpg' ontouchstart='playVideo(); showNextButton(2000);'/>";
         $("#playVideoButton").html(html);
 
     }
@@ -833,17 +834,17 @@ function showIparades() {
     //console.log("showIparades()");
 
     var html = "";
-    html = html + "<img class='fullSplashImage' src='img/" + splashImg + "'/>";
-    html = html + "<div class='iparadeSelectOverlay'>";
-    html = html + "<span>Choose an iParade:</span>";
-    html = html + "<select id=iParadeSelect>";
+    html += "<img class='fullSplashImage' src='img/" + splashImg + "'/>";
+    html += "<div class='iparadeSelectOverlay'>";
+    html += "<span>Choose an iParade:</span>";
+    html += "<select id=iParadeSelect>";
     for (var i=0; i<iParades.length; i++) {
-        html = html + "<option value='" + i + "' id='select" + i + "' >" + iParades[i].name + "</option>";
+        html += "<option value='" + i + "' id='select" + i + "' >" + iParades[i].name + "</option>";
     }
-    html = html + "</select>";
-    html = html + "<img id='splashNextButton' src='img/next_arrow.jpg' ontouchstart='initIparade()'/>";
-    html = html + "<span class='splashNextText'>Press NEXT<br/>to begin:</span>";
-    html = html + "</div>";
+    html += "</select>";
+    html += "<img id='splashNextButton' src='img/next_arrow.jpg' ontouchstart='initIparade()'/>";
+    html += "<span class='splashNextText'>Press NEXT<br/>to begin:</span>";
+    html += "</div>";
     document.getElementById('startScreen').innerHTML = html;
 
     //console.log("showIparades finished");
