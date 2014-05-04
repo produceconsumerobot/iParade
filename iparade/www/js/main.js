@@ -1,3 +1,9 @@
+$(document).ready(function() {
+    document.addEventListener("deviceready", function () {
+        init();
+    }, false);
+});
+
 var DEBUG = 0,
     CRAZYD = false,
     IS_RIPPLE_EMULATOR = (window.tinyHippos != undefined),
@@ -33,12 +39,64 @@ var DEBUG = 0,
     tryDelay = 1000,
     splashImg = 'splash-tmp.gif';
 
-//window.addEventListener ? window.addEventListener("load", init, false) : window.attachEvent && window.attachEvent("onload", init);
+function init() {
+    console.log('init()');
 
-// PhoneGap is loaded and it is now safe to make calls to PhoneGap methods
-function onDeviceReady() {
+    loadCssFile(remoteContentHub + remoteCssFilename);
 
-    console.log('onDeviceReady()');
+    tabLinks = new Array();
+    tabListItems = new Array();
+    contentDivs = new Array();
+
+    contentPage = 0;
+    locCheckTimerId = null; // timer ID
+    startTabsTimerId = null; // timer ID
+    my_audio = null;
+    audioTimer = null;
+
+    initLocation();
+
+    hideTabs();
+
+    // Get the home content
+    getHomeContent(contentPage);
+
+    // Grab the tab links and content divs from the page
+    var tabList = document.getElementById('tabs').childNodes;
+    for ( var i = 0; i < tabList.length; i++ ) {
+        if ( tabList[i].nodeName == "LI" ) {
+            var id = getHash( tabList[i].getAttribute('href') );
+            tabListItems[id] = tabList[i];
+            contentDivs[id] = document.getElementById( id );
+
+            /*
+            var h = getWindowHeight();
+            if (id == 'map') {
+                contentDivs[id].style.height = (h - (h*0.06)) + "px";
+            } else {
+                contentDivs[id].style.height = (h - (h*0.13)) + "px";
+            }
+            */
+        }
+    }
+
+    // Assign onclick events to the tab links, and
+    // highlight the first tab
+    var i = 0;
+    for ( var id in tabListItems ) {
+        tabListItems[id].ontouchstart = showTab;
+        //tabListItems[id].onclick = showTab;
+        if ( i == 0 ) tabListItems[id].className = 'selected';
+        i++;
+    }
+
+    // Hide all content divs except the first
+    var i = 0;
+    for ( var id in contentDivs ) {
+        if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
+        i++;
+    }
+
     //console.log("device.platform=" + device.platform);
     //console.log("device.uuid=" + device.uuid);
     //console.log("device.name=" + device.name);
@@ -49,7 +107,6 @@ function onDeviceReady() {
     if (IS_RIPPLE_EMULATOR) {
         cordova.addDocumentEventHandler('backbutton');
     }
-
     checkConnection();
 
     // override the back button on android/blackberry
@@ -60,7 +117,6 @@ function onDeviceReady() {
 
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
-
     if (navigator.webkitTemporaryStorage) {
         // Request the file system for Ripple/Chrome
         navigator.webkitTemporaryStorage.requestQuota(0, function(grantedBytes) {
@@ -76,7 +132,6 @@ function onDeviceReady() {
     $("html").scroll( "floater()" );
 
     startGpsTracking();
-
     if (!CRAZYD) {
         if (themeAudioPlayer) {
             themeAudioPlayer.release();
@@ -90,8 +145,6 @@ function onDeviceReady() {
     if (!checkGPS()) {
         badGpsAlert();
     }
-
-    //console.log('onDeviceReady() finished');
 }
 
 function requestFS(grantedBytes) {
@@ -261,71 +314,6 @@ function startTabsTimer() {
 function hideTabs() {
     //console.log("hideTabs()");
     document.getElementById("tabs").style.display="none";
-}
-
-// Initializes the page
-function init() {
-    console.log('init()');
-
-    loadCssFile(remoteContentHub + remoteCssFilename);
-
-    tabLinks = new Array();
-    tabListItems = new Array();
-    contentDivs = new Array();
-
-    contentPage = 0;
-    locCheckTimerId = null; // timer ID
-    startTabsTimerId = null; // timer ID
-    my_audio = null;
-    audioTimer = null;
-
-    initLocation();
-
-    hideTabs();
-
-    // Start listener for PhoneGap loaded
-    console.log("Adding deviceready listener");
-    document.addEventListener("deviceready", onDeviceReady, false);
-
-    // Get the home content
-    getHomeContent(contentPage);
-
-    // Grab the tab links and content divs from the page
-    var tabList = document.getElementById('tabs').childNodes;
-    for ( var i = 0; i < tabList.length; i++ ) {
-        if ( tabList[i].nodeName == "LI" ) {
-            var id = getHash( tabList[i].getAttribute('href') );
-            tabListItems[id] = tabList[i];
-            contentDivs[id] = document.getElementById( id );
-
-            /*
-            var h = getWindowHeight();
-            if (id == 'map') {
-                contentDivs[id].style.height = (h - (h*0.06)) + "px";
-            } else {
-                contentDivs[id].style.height = (h - (h*0.13)) + "px";
-            }
-            */
-        }
-    }
-
-    // Assign onclick events to the tab links, and
-    // highlight the first tab
-    var i = 0;
-    for ( var id in tabListItems ) {
-        tabListItems[id].ontouchstart = showTab;
-        //tabListItems[id].onclick = showTab;
-        if ( i == 0 ) tabListItems[id].className = 'selected';
-        i++;
-    }
-
-    // Hide all content divs except the first
-    var i = 0;
-    for ( var id in contentDivs ) {
-        if ( i != 0 ) contentDivs[id].className = 'tabContent hide';
-        i++;
-    }
-    console.log('init() finished');
 }
 
 // Show a tab
