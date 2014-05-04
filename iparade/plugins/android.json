@@ -71,10 +71,10 @@
         "org.apache.cordova.file": {
             "PACKAGE_NAME": "org.lovid.iparade"
         },
-        "org.apache.cordova.media": {
+        "org.apache.cordova.console": {
             "PACKAGE_NAME": "org.lovid.iparade"
         },
-        "org.apache.cordova.console": {
+        "org.apache.cordova.media": {
             "PACKAGE_NAME": "org.lovid.iparade"
         }
     },

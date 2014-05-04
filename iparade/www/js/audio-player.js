@@ -1,12 +1,12 @@
 function AudioPlayer(src) {
     //console.log("AudioPlayer(" + src + ")");
 
-    var _uri = src;
-    var _mAudio = null;
-    var _audioTimer = null;
-    var _positionLoopTime = 500;
-    var _looping = false;
-    var _isPlaying = false;
+    var _uri = src,
+        _mAudio = null,
+        _audioTimer = null,
+        _positionLoopTime = 500,
+        _looping = false,
+        _isPlaying = false;
 
     this.looping = function(looping) {
         //console.log("looping(" + looping + ")");// Play audio
@@ -21,6 +21,7 @@ function AudioPlayer(src) {
     function onSuccess() {
         //console.log("AudioPlayer.onSuccess()");
     }
+
     function onError(error) {
         console.error( 'AudioPlayer.onError:\n' +
                 'code: '    + error.code    + '\n' +
