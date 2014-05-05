@@ -69,14 +69,13 @@ function init() {
             tabListItems[id] = tabList[i];
             contentDivs[id] = document.getElementById( id );
 
-            /*
             var h = getWindowHeight();
+
             if (id == 'map') {
                 contentDivs[id].style.height = (h - (h*0.06)) + "px";
             } else {
                 contentDivs[id].style.height = (h - (h*0.13)) + "px";
             }
-            */
         }
     }
 
@@ -616,7 +615,7 @@ function getHomeContent(pageNum) {
     if (pageNum == 0) {
         // startup screen is special
         // html += "<div id='startScreen' style='margin-top:" + getMarginTop() + "px' >";
-        html += "<div id='startScreen' style='margin-top:" + getMarginTop() + "px' >";
+        html += "<div id='startScreen'>";
         html += "<p id='iParadeSearching'>Searching for iParades...</p>";
         html += "<img class='fullSplashImage' src='img/" + splashImg + "'/>";
         html += "</div>";
