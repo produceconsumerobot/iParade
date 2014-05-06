@@ -225,7 +225,7 @@ function updateLocation(loc) {
     if (checkingForTargetLocation) {
         if (targetLocations[targetNum]) {
             if (inTargetLocation(currentLoc, targetLocations[targetNum])) {
-                //console.log("Target Location reached");
+                console.log("Target Location reached");
 
                 nextPage();
             }
@@ -235,7 +235,7 @@ function updateLocation(loc) {
 }
 
 function startGpsTracking() {
-    //console.log("startGpsTracking()");
+    console.log("startGpsTracking()");
     //var options = { frequency: 1000, "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
     var options = { frequency: 3000, maximumAge: 5000, timeout: 10000, enableHighAccuracy: true };
     gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
@@ -244,17 +244,17 @@ function startGpsTracking() {
 
     // geolocation callbacks
     function geolocationCallbackSuccess(position) {
-        //console.log("geolocationCallbackSuccess(): " + position.coords.latitude + ", " + position.coords.longitude + ", " + position.coords.accuracy + ", ");
+        console.log("geolocationCallbackSuccess(): " + position.coords.latitude + ", " + position.coords.longitude + ", " + position.coords.accuracy + ", ");
         gpsGood = true;
         updateLocation({"latitude":position.coords.latitude, "longitude":position.coords.longitude, "accuracy":position.coords.accuracy});
     }
     function geolocationCallbackError(error) {
-        //console.log("geolocationCallbackError()");
+        console.log("geolocationCallbackError()");
         for (e in error) {
-            //console.log(e + ": " + error[e]);
+            console.log(e + ": " + error[e]);
         }
-        //gpsGood = false;
-        //badGpsAlert();
+        gpsGood = false;
+        badGpsAlert();
     }
 }
 
@@ -344,28 +344,28 @@ function inTargetLocation(currentLocation, targetLocation) {
     var targetlatlng = new google.maps.LatLng(targetLocation.latitude, targetLocation.longitude);
     var distance = google.maps.geometry.spherical.computeDistanceBetween(currlatlng, targetlatlng);
 
-    //console.log("inTargetLocation: distance = " + distance);
-    //console.log("inTargetLocation: currentLocation.accuracy = " + currentLocation.accuracy);
-    //console.log("inTargetLocation: targetLocation.accuracy = " + targetLocation.accuracy);
+    console.log("inTargetLocation: distance = " + distance);
+    console.log("inTargetLocation: currentLocation.accuracy = " + currentLocation.accuracy);
+    console.log("inTargetLocation: targetLocation.accuracy = " + targetLocation.accuracy);
 
     if ((distance!=null) && ((distance - targetLocation.accuracy) <= 0)) {
-        //console.log("inTargetLocation finished");
+        console.log("inTargetLocation finished: true");
         return true;
     } else {
-        //console.log("inTargetLocation finished");
+        console.log("inTargetLocation finished: true");
         return false;
     }
 }
 
 //increment to the next TargetLocation
 function incrementTarget() {
-    //console.log("incrementTarget()");
+    console.log("incrementTarget()");
     if ((targetNum) < targetLocations.length) {
-        //console.log("targetNum++");
+        console.log("targetNum++");
         targetNum++;
         setTargetMarkerIcons();
     } else {
-        //console.log("targetNum=" + targetNum + ", targetLocations.length=" + targetLocations.length);
+        console.log("targetNum=" + targetNum + ", targetLocations.length=" + targetLocations.length);
     }
 }
 
