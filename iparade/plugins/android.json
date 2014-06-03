@@ -19,6 +19,14 @@
                         {
                             "xml": "<feature name=\"Media\"><param name=\"android-package\" value=\"org.apache.cordova.media.AudioHandler\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Vibration\"><param name=\"android-package\" value=\"org.apache.cordova.vibration.Vibration\" /></feature>",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"Notification\"><param name=\"android-package\" value=\"org.apache.cordova.dialogs.Notification\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -44,6 +52,12 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
+                            "count": 1
+                        }
+                    ],
+                    "/manifest": [
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.VIBRATE\" />",
                             "count": 1
                         }
                     ]
@@ -79,6 +93,12 @@
             "PACKAGE_NAME": "org.lovid.iparade"
         },
         "org.apache.cordova.file-transfer": {
+            "PACKAGE_NAME": "org.lovid.iparade"
+        },
+        "org.apache.cordova.vibration": {
+            "PACKAGE_NAME": "org.lovid.iparade"
+        },
+        "org.apache.cordova.dialogs": {
             "PACKAGE_NAME": "org.lovid.iparade"
         }
     },
