@@ -58,6 +58,8 @@ function init() {
 
     hideTabs();
 
+    initExternalLinks();
+
     // Get the home content
     getHomeContent(contentPage);
 
@@ -870,6 +872,15 @@ function initIparade(listNum) {
     nextPage();
 
     //console.log("initIparade finished");
+}
+
+function initExternalLinks() {
+    $(document).on('click', 'a', function(e) {
+        e.preventDefault();
+        if ($(e.target).attr("target") == "_blank") {
+            window.open(e.target, '_system');
+        }
+    });
 }
 
 function getMarginTop() {
