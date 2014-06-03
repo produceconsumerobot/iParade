@@ -1,4 +1,4 @@
-var fakeGPS = true; // for debugging
+var fakeGPS = false; // for debugging
 var fakeGPSdelay = 7000; // delay to achieve location
 
 var currentLoc; // where the device is currently
@@ -224,9 +224,10 @@ function updateLocation(loc) {
     //console.log("updateLocation: checkingForTargetLocation = " + checkingForTargetLocation);
     if (checkingForTargetLocation) {
         if (targetLocations[targetNum]) {
+            console.log(currentLoc);
+            console.log(targetLocations[targetNum]);
             if (inTargetLocation(currentLoc, targetLocations[targetNum])) {
                 console.log("Target Location reached");
-
                 nextPage();
             }
         }
@@ -239,8 +240,8 @@ function startGpsTracking() {
     //var options = { frequency: 1000, "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
     var options = { frequency: 3000, maximumAge: 5000, timeout: 10000, enableHighAccuracy: true };
     gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
-    gpsWatch2 = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError, options);}, 7500);
 
+    //gpsWatch2 = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError, options);}, 7500);
 
     // geolocation callbacks
     function geolocationCallbackSuccess(position) {
@@ -352,7 +353,7 @@ function inTargetLocation(currentLocation, targetLocation) {
         console.log("inTargetLocation finished: true");
         return true;
     } else {
-        console.log("inTargetLocation finished: true");
+        console.log("inTargetLocation finished: false");
         return false;
     }
 }
