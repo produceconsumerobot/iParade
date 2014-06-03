@@ -127,9 +127,6 @@ function init() {
         window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
     }
 
-    //window.onscroll = floater;
-    $("html").scroll( "floater()" );
-
     startGpsTracking();
     if (!CRAZYD) {
         if (themeAudioPlayer) {
