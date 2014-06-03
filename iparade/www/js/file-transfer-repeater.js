@@ -1,9 +1,9 @@
 
 function FileTransferRepeater(remoteFile, localFile, successCallback, failCallback) {
-    console.log("FileTransferRepeater()");
-    console.log("FileTransferRepeater remoteFile = " + remoteFile);
-    console.log("FileTransferRepeater localFile = " + localFile);
-    
+    //console.log("FileTransferRepeater()");
+    //console.log("FileTransferRepeater remoteFile = " + remoteFile);
+    //console.log("FileTransferRepeater localFile = " + localFile);
+
     var _cancel = false;
     var maxTries = 20;
     var tryDelay = 500;
@@ -13,9 +13,9 @@ function FileTransferRepeater(remoteFile, localFile, successCallback, failCallba
         _cancel = true;
         fileTransfer = null;
     };
-    
+
     function download(nthTry) {
-        console.log("FileTransferRepeater.download()");
+        //console.log("FileTransferRepeater.download()");
 
         // function to try to get audio theme again
         function tryAgain(ntry) {
@@ -32,33 +32,33 @@ function FileTransferRepeater(remoteFile, localFile, successCallback, failCallba
             nthTry++;
         }
 
-        
+
         fileTransfer.download(
                 remoteFile,
                 localFile,
                 function(entry) {
-                    console.log("download complete: " + entry.fullPath);
+                    //console.log("download complete: " + entry.fullPath);
                     if (!_cancel){
                         successCallback(entry);
                     }
                 },
                 function(error) {
-                    console.log("download error source " + error.source);
-                    console.log("download error target " + error.target);
-                    console.log("transfer error code" + error.code);
+                    //console.log("download error source " + error.source);
+                    //console.log("download error target " + error.target);
+                    //console.log("transfer error code" + error.code);
                     // Try try again...
                     if (!_cancel){
-                        tryAgain(nthTry);    
+                        tryAgain(nthTry);
                     }
                 }
         );
-        console.log("FileTransferRepeater.download() finished");
+        //console.log("FileTransferRepeater.download() finished");
     }
-    
+
     this.download = function(nthTry) {
         download(nthTry);
     };
-    
-    console.log("FileTransferRepeater() finished");
+
+    //console.log("FileTransferRepeater() finished");
 }
 
