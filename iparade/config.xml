@@ -11,5 +11,7 @@
     <access origin="*" />
     <preference name="Fullscreen" value="true" />
     <preference name="Orientation" value="landscape" />
+
+    <icon src="icon.png" />
 </widget>
 
