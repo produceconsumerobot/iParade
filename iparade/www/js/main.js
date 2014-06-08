@@ -42,6 +42,10 @@ var DEBUG = 0,
 function init() {
     //console.log('init()');
 
+    if (DEBUG > 0) {
+        showDebugger();
+    }
+
     loadCssFile(remoteContentHub + remoteCssFilename);
 
     tabLinks = new Array();
@@ -393,9 +397,11 @@ function getWindowHeight() {
     if ((w == null) || (w == 0)) {
         w = "auto";
     }
+    /*
     if (DEBUG > 1)  {
         alert ("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h=" + w);
     }
+    */
     //console.log("h1=" + w1 + ", h2=" + w2 + ", h3=" + w3 + ", h4=" + w4 + ", ww=" + ww + ", h=" + w);
     //console.log("getWindowHeight()=" + w);
     return w + "";
@@ -432,9 +438,11 @@ function getWindowWidth() {
     if ((w == null) || (w == 0)) {
         w = "auto";
     }
+    /*
     if (DEBUG > 1)  {
         alert ("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w=" + w);
     }
+    */
     //console.log("w1=" + w1 + ", w2=" + w2 + ", w3=" + w3 + ", w4=" + w4 + ", h=" + h + ", w=" + w);
     //console.log("getWindowWidth()=" + w);
     return w + "";
@@ -893,4 +901,13 @@ function getMarginTop() {
     //console.log("getMarginTop finished: " + mt);
 
     return mt;
+}
+
+function showDebugger() {
+    var $debug = $("#debug");
+    $debug.show();
+
+    $("#toggle-next-location").on("click", function() {
+        nextPage();
+    });
 }

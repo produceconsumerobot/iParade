@@ -2,18 +2,23 @@ body {
     font-size: 150%;
     font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
     background-color: #000000;
-    -webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
+    -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
 }
 
 button {
-    -webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
+    -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
+}
+
+#debug {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999999;
+    padding: 10px;
+    background: #fff;
 }
 
 a:link { color: #4444ff;}
-
-#map {
-    
-}
 
 #restartAppButton
 {
@@ -221,7 +226,7 @@ ul#tabs li {
     border-radius: 5px;
     padding: 1%;
     height: 18%;
-    -webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
+    -webkit-tap-highlight-color:  rgba(255, 255, 255, 0);
 }
 
 ul#tabs li a {
