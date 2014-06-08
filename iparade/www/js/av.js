@@ -20,28 +20,17 @@ function playVideo() {
             themeAudioPlayer = null;
         }
         if (device.platform.toLowerCase().search("android") >= 0) {
-            //var filepath = "file://" + localContentDir + "/" + localVidBase + vidExt;
-            var filepath = localContentDir + "/" + localVidBase + vidExt;
-            //console.log("showVideo2(" + filepath + ")");
+            var filepath = localContentDir + localVidBase + vidExt;
             showVideo2(filepath); // play the locally stored video
-            //showVideo2(localContentDir + "/" + localVidBase + vidExt); // play the locally stored video
         } else {
             // Video supported!!
-            //console.log("Creating video element: " + localContentDir + "/" + localVidBase + vidExt);
+            //console.log("Creating video element: " + localContentDir + localVidBase + vidExt);
 
             var html = "";
             html = html + "<video id='playVid' controls='controls' autoplay='autoplay' >";
-            html = html + "<source src='" + localContentDir + "/" + localVidBase + vidExt + "' type='video/mp4' /></video>";
-
-            //var html = "";
-            //html = html + "<video id='playVid' controls='controls' src='" + localContentDir + "/" + localVidBase + vidExt + "'>";
-            //html = html + "</video>";
-            //html = html + "<source src='" + localContentDir + "/" + localVidBase + vidExt + "' type='video/mp4' /></video>";
-
+            html = html + "<source src='" + localContentDir + localVidBase + vidExt + "' type='video/mp4' /></video>";
 
             $("#playVideoButton").html(html);
-
-            //setTimeout(function() {vidPrepFullScreen();}, 750);
         }
     }
     //console.log("playVideo finished");
@@ -92,20 +81,20 @@ function getVideo(targetNumber) {
     vidDownloadComplete = false;
 
     var remoteFile = remoteContentDir + targetNumber + "_video" + vidExt;
-    var localFile = localContentDir + "/" + localVidBase + vidExt;
+    var localFile = localContentDir + localVidBase + vidExt;
 
     if (videoFileTransfer) {
         videoFileTransfer.cancel();
     }
     videoFileTransfer = new FileTransferRepeater(remoteFile, localFile,
-            function (entry) {
-        //console.log("getVideo download complete: " + entry.fullPath);
+        function (entry) {
+            //console.log("getVideo download complete: " + entry.fullPath);
 
-        videoFileTransfer.cancel();
-        videoFileTransfer = null;
-        vidDownloadComplete = true;
-        displayVidElement();
-    }
+            videoFileTransfer.cancel();
+            videoFileTransfer = null;
+            vidDownloadComplete = true;
+            displayVidElement();
+        }
     );
     videoFileTransfer.download();
     //console.log("getVideo() finished");
@@ -128,16 +117,11 @@ function deleteLocalMedia() {
         fileEntry.remove(removeSuccess, onFileSystemFail);
     }
     if (localDirectoryEntry) {
-//        if (themeAudioPlayer) {
-//            themeAudioPlayer.release();
-//            themeAudioPlayer = null;
-//        }
         if (voicoverAudioPlayer) {
             voicoverAudioPlayer.release();
             voicoverAudioPlayer = null;
         }
         localDirectoryEntry.getFile(localVidBase + vidExt, {create: false, exclusive: false}, removeFile, onFileSystemFail);
-        //dir.getFile(localAudioThemeBase + audioThemeExt, {create: false, exclusive: false}, removeFile, onFileSystemFail);
         localDirectoryEntry.getFile(localVoiceoverBase + voiceoverExt, {create: false, exclusive: false}, removeFile, onFileSystemFail);
     }
 }
@@ -154,13 +138,17 @@ function playAudioTheme() {
             themeAudioPlayer.release();
         }
         if (device.platform.toLowerCase().search("android") >= 0) {
-            //themeAudioPlayer = new AudioPlayer(localDir + "/" + localAudioThemeBase + audioThemeExt);
-            themeAudioPlayer = new AudioPlayer(localContentDir + "/" + localAudioThemeBase + audioThemeExt);
-            //themeAudioPlayer = new AudioPlayer("/com.produceconsumerobot.lovid.iparade/iParade/" + "/" + localAudioThemeBase + audioThemeExt);
+            // when Media plugin is upgraded to use the new File plugin version 1.1.0
+            // this path may need to change to use the full the file location via
+            // localContentDir
+            themeAudioPlayer = new AudioPlayer("/iParade/" + localAudioThemeBase + audioThemeExt);
             themeAudioPlayer.looping(true);
             themeAudioPlayer.play();
         } else {
-            themeAudioPlayer = new AudioPlayer(localContentDir + "/" + localAudioThemeBase + audioThemeExt);
+            // when Media plugin is upgraded to use the new File plugin version 1.1.0
+            // this path may need to change to use the full the file location via
+            // localContentDir
+            themeAudioPlayer = new AudioPlayer("/iParade/" + localAudioThemeBase + audioThemeExt);
             themeAudioPlayer.looping(true);
             themeAudioPlayer.play();
         }
@@ -181,23 +169,22 @@ function getAudioTheme() {
     audioThemeDownloadComplete = false;
 
     var remoteFile = remoteContentDir + remoteAudioThemeBase + audioThemeExt;
-    var localFile = localContentDir + "/" + localAudioThemeBase + audioThemeExt;
-    //var localFile = "/mnt/sdcard/iParade" + "/" + localAudioThemeBase + audioThemeExt;
+    var localFile = localContentDir + localAudioThemeBase + audioThemeExt;
 
     if (audioThemeFileTransfer) {
         audioThemeFileTransfer.cancel();
     }
     audioThemeFileTransfer = new FileTransferRepeater(remoteFile, localFile,
-            function (entry) {
-        //console.log("getAudioTheme download complete: " + entry.fullPath);
+        function (entry) {
+            //console.log("getAudioTheme download complete: " + entry.fullPath);
 
-        audioThemeFileTransfer.cancel();
-        audioThemeFileTransfer = null;
-        audioThemeDownloadComplete = true;
-        playAudioTheme();
-        hideDownloadingImg(0);
-        showNextButton(500);
-    }
+            audioThemeFileTransfer.cancel();
+            audioThemeFileTransfer = null;
+            audioThemeDownloadComplete = true;
+            playAudioTheme();
+            hideDownloadingImg(0);
+            showNextButton(500);
+        }
     );
     audioThemeFileTransfer.download();
     //console.log("getAudioTheme() finished");
@@ -212,11 +199,16 @@ function playVoiceover() {
                 voicoverAudioPlayer.release();
             }
             if (device.platform.toLowerCase().search("android") >= 0) {
-                //voicoverAudioPlayer = new AudioPlayer(localDir + "/" + localVoiceoverBase + voiceoverExt);
-                voicoverAudioPlayer = new AudioPlayer(localContentDir + "/" + localVoiceoverBase + voiceoverExt);
+                // when Media plugin is upgraded to use the new File plugin version 1.1.0
+                // this path may need to change to use the full the file location via
+                // localContentDir
+                voicoverAudioPlayer = new AudioPlayer("/iParade/" + localVoiceoverBase + voiceoverExt);
                 voicoverAudioPlayer.play();
             } else {
-                voicoverAudioPlayer = new AudioPlayer(localContentDir + "/" + localVoiceoverBase + voiceoverExt);
+                // when Media plugin is upgraded to use the new File plugin version 1.1.0
+                // this path may need to change to use the full the file location via
+                // localContentDir
+                voicoverAudioPlayer = new AudioPlayer("/iParade/" + localVoiceoverBase + voiceoverExt);
                 voicoverAudioPlayer.play();
             }
         }
@@ -231,20 +223,19 @@ function getVoiceover(targetNumber) {
     voiceoverDownloadComplete = false;
 
     var remoteFile = remoteContentDir + targetNumber + remoteVoiceOverBase + voiceoverExt;
-    var localFile = localContentDir + "/" + localVoiceoverBase + voiceoverExt;
+    var localFile = localContentDir + localVoiceoverBase + voiceoverExt;
 
     if (voiceoverFileTransfer) {
         voiceoverFileTransfer.cancel();
     }
     voiceoverFileTransfer = new FileTransferRepeater(remoteFile, localFile,
-            function (entry) {
-        //console.log("getVoiceover download complete: " + entry.fullPath);
-
-        voiceoverFileTransfer.cancel();
-        voiceoverFileTransfer = null;
-        voiceoverDownloadComplete = true;
-        playVoiceover();
-    }
+        function (entry) {
+            //console.log("getVoiceover download complete: " + entry.fullPath);
+            voiceoverFileTransfer.cancel();
+            voiceoverFileTransfer = null;
+            voiceoverDownloadComplete = true;
+            playVoiceover();
+        }
     );
     voiceoverFileTransfer.download();
     //console.log("getVoiceover() finished");

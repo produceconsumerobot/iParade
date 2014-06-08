@@ -40,7 +40,7 @@ var DEBUG = 0,
     splashImg = 'splash-tmp.gif';
 
 function init() {
-    console.log('init()');
+    //console.log('init()');
 
     loadCssFile(remoteContentHub + remoteCssFilename);
 
@@ -121,7 +121,7 @@ function init() {
     if (navigator.webkitTemporaryStorage) {
         // Request the file system for Ripple/Chrome
         navigator.webkitTemporaryStorage.requestQuota(0, function(grantedBytes) {
-          console.log ('requestQuota: ', arguments);
+          //console.log ('requestQuota: ', arguments);
           requestFS(grantedBytes);
         }, onFileSystemFail);
     } else {
@@ -147,38 +147,38 @@ function init() {
 
 function requestFS(grantedBytes) {
   window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, function(fs) {
-    console.log ('fs: ', arguments);
+    //console.log ('fs: ', arguments);
     var entry = arguments[0].root;
     entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
   }, onFileSystemFail);
 }
 
 function onFileSystemSuccess(fileSystem) {
-    console.log('onFileSystemSuccess()');
-    console.log('fileSystem: ', fileSystem);
+    //console.log('onFileSystemSuccess()');
+    //console.log('fileSystem: ', fileSystem);
     var entry = fileSystem.root;
     entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
 }
 
 function onFileSystemFail(evt) {
-    console.log("onFileSystemFail: ", evt.code);
+    //console.log("onFileSystemFail: ", evt.code);
 }
 
 function getFileSuccess(fileEntry) {
-    console.log("getFileSuccess(): " + fileEntry.fullPath);
+    //console.log("getFileSuccess(): " + fileEntry.fullPath);
 }
 
 function getDirSuccess(dir) {
-    console.log("getDirSuccess(): " + dir.fullPath);
+    //console.log("getDirSuccess(): " + dir.toURL());
     localDirectoryEntry = dir;
-    var temp = dir.fullPath;
+    var temp = dir.toURL();
     if (device.platform.toLowerCase().search("android") >= 0) {
         // If it's an Android device and there's no SD card, give fair warning
         if (temp.toLowerCase().search("sdcard") < 0) {
             noSdCardAlert();
         }
     }
-    localContentDir = temp.replace("file://","");
+    localContentDir = dir.toURL();
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
 }
 
