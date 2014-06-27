@@ -20,7 +20,7 @@
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
            id="org.apache.cordova.inappbrowser"
-      version="0.4.0">
+      version="0.5.0">
 
     <name>InAppBrowser</name>
     <description>Cordova InAppBrowser Plugin</description>
@@ -124,6 +124,10 @@
             </feature>
         </config-file>
 
+        <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+            <Capability Name="ID_CAP_NETWORKING" />
+        </config-file>
+
         <source-file src="src/wp/InAppBrowser.cs" />
     </platform>
 
@@ -142,6 +146,10 @@
             </feature>
         </config-file>
 
+        <config-file target="Properties/WMAppManifest.xml" parent="/Deployment/App/Capabilities">
+            <Capability Name="ID_CAP_NETWORKING" />
+        </config-file>
+
         <source-file src="src/wp/InAppBrowser.cs" />
     </platform>
 
@@ -155,5 +163,17 @@
         </js-module>
     </platform>
         
+    <!-- firefoxos -->
+    <platform name="firefoxos">
+        <config-file target="config.xml" parent="/*">
+            <permission name="browser" description="Enables the app to implement a browser in an iframe." />
+        </config-file>
+        <js-module src="www/inappbrowser.js" name="inappbrowser">
+            <clobbers target="window.open" />
+        </js-module>
+        <js-module src="src/firefoxos/InAppBrowserProxy.js" name="InAppBrowserProxy">
+            <merges target="" />
+        </js-module>
+    </platform>    
 
 </plugin>

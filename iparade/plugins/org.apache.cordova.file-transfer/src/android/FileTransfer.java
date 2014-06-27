@@ -28,10 +28,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URLConnection;
-import java.net.URLDecoder;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
@@ -83,8 +81,7 @@ public class FileTransfer extends CordovaPlugin {
         String target;
         File targetFile;
         CallbackContext callbackContext;
-        InputStream currentInputStream;
-        OutputStream currentOutputStream;
+        HttpURLConnection connection;
         boolean aborted;
         RequestContext(String source, String target, CallbackContext callbackContext) {
             this.source = source;
@@ -177,12 +174,7 @@ public class FileTransfer extends CordovaPlugin {
             String target = args.getString(1);
 
             if (action.equals("upload")) {
-                try {
-                    source = URLDecoder.decode(source, "UTF-8");
-                    upload(source, target, args, callbackContext);
-                } catch (UnsupportedEncodingException e) {
-                    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.MALFORMED_URL_EXCEPTION, "UTF-8 error."));
-                }
+                upload(source, target, args, callbackContext);
             } else {
                 download(source, target, args, callbackContext);
             }
@@ -391,7 +383,7 @@ public class FileTransfer extends CordovaPlugin {
                             if (context.aborted) {
                                 return;
                             }
-                            context.currentOutputStream = sendStream;
+                            context.connection = conn;
                         }
                         //We don't want to change encoding, we just want this to write for all Unicode.
                         sendStream.write(beforeDataBytes);
@@ -433,7 +425,9 @@ public class FileTransfer extends CordovaPlugin {
                         safeClose(readResult.inputStream);
                         safeClose(sendStream);
                     }
-                    context.currentOutputStream = null;
+                    synchronized (context) {
+                        context.connection = null;
+                    }
                     Log.d(LOG_TAG, "Sent " + totalBytes + " of " + fixedLength);
 
                     //------------------ read the SERVER RESPONSE
@@ -448,7 +442,7 @@ public class FileTransfer extends CordovaPlugin {
                             if (context.aborted) {
                                 return;
                             }
-                            context.currentInputStream = inStream;
+                            context.connection = conn;
                         }
                         
                         ByteArrayOutputStream out = new ByteArrayOutputStream(Math.max(1024, conn.getContentLength()));
@@ -460,7 +454,9 @@ public class FileTransfer extends CordovaPlugin {
                         }
                         responseString = out.toString("UTF-8");
                     } finally {
-                        context.currentInputStream = null;
+                        synchronized (context) {
+                            context.connection = null;
+                        }
                         safeClose(inStream);
                     }
                     
@@ -774,7 +770,7 @@ public class FileTransfer extends CordovaPlugin {
                             if (context.aborted) {
                                 return;
                             }
-                            context.currentInputStream = inputStream;
+                            context.connection = connection;
                         }
                         
                         // write bytes to file
@@ -789,7 +785,9 @@ public class FileTransfer extends CordovaPlugin {
                             context.sendPluginResult(progressResult);
                         }
                     } finally {
-                        context.currentInputStream = null;
+                        synchronized (context) {
+                            context.connection = null;
+                        }
                         safeClose(inputStream);
                         safeClose(outputStream);
                     }
@@ -864,22 +862,21 @@ public class FileTransfer extends CordovaPlugin {
             context = activeRequests.remove(objectId);
         }
         if (context != null) {
-            File file = context.targetFile;
-            if (file != null) {
-                file.delete();
-            }
-            // Trigger the abort callback immediately to minimize latency between it and abort() being called.
-            JSONObject error = createFileTransferError(ABORTED_ERR, context.source, context.target, null, -1);
-            synchronized (context) {
-                context.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, error));
-                context.aborted = true;
-            }
             // Closing the streams can block, so execute on a background thread.
             cordova.getThreadPool().execute(new Runnable() {
                 public void run() {
                     synchronized (context) {
-                        safeClose(context.currentInputStream);
-                        safeClose(context.currentOutputStream);
+                        File file = context.targetFile;
+                        if (file != null) {
+                            file.delete();
+                        }
+                        // Trigger the abort callback immediately to minimize latency between it and abort() being called.
+                        JSONObject error = createFileTransferError(ABORTED_ERR, context.source, context.target, null, -1);
+                        context.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, error));
+                        context.aborted = true;
+                        if (context.connection != null) {
+                            context.connection.disconnect();
+                        }
                     }
                 }
             });
