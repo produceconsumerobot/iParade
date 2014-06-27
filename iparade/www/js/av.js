@@ -31,6 +31,7 @@ function playVideo() {
             html = html + "<source src='" + localContentDir + localVidBase + vidExt + "' type='video/mp4' /></video>";
 
             $("#playVideoButton").html(html);
+            document.getElementById("playVid").play()
         }
     }
     //console.log("playVideo finished");
