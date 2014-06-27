@@ -4,7 +4,7 @@ $(document).ready(function() {
     }, false);
 });
 
-var DEBUG = 0,
+var DEBUG = 1,
     CRAZYD = false,
     IS_RIPPLE_EMULATOR = (window.tinyHippos != undefined),
     tabLinks = null,
