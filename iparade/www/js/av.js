@@ -80,22 +80,22 @@ function getVideo(targetNumber) {
 
     vidDownloadComplete = false;
 
-    var remoteFile = remoteContentDir + targetNumber + "_video" + vidExt;
-    var localFile = localContentDir + localVidBase + vidExt;
-
-    if (videoFileTransfer) {
-        videoFileTransfer.cancel();
-    }
-    videoFileTransfer = new FileTransferRepeater(remoteFile, localFile,
-        function (entry) {
+    var remoteFile = remoteContentDir + targetNumber + "_video" + vidExt,
+        localFile = localContentDir + localVidBase + vidExt,
+        successCallback = function (entry) {
             //console.log("getVideo download complete: " + entry.fullPath);
 
             videoFileTransfer.cancel();
             videoFileTransfer = null;
             vidDownloadComplete = true;
             displayVidElement();
-        }
-    );
+        };
+
+    if (videoFileTransfer) {
+        videoFileTransfer.cancel();
+    }
+
+    videoFileTransfer = new FileTransferRepeater(remoteFile, localFile, successCallback, true);
     videoFileTransfer.download();
     //console.log("getVideo() finished");
 }

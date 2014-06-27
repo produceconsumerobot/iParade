@@ -631,6 +631,7 @@ function getHomeContent(pageNum) {
         // First page is special
         getAudioTheme();
         html += "<div id='textContent' class='paddedContent'></div>";
+        html += "<div id='progress-" + targetNum + "' class='progress'></div>";
         html += "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
         html += "<div id='playVideoButton'>";
         if (!audioThemeDownloadComplete) {
@@ -666,6 +667,7 @@ function getHomeContent(pageNum) {
         // Main content page
         //html += "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
         html += "<div id='textContent' class='paddedContent'></div>";
+        html += "<div id='progress-" + targetNum + "' class='progress'></div>";
         html += "<img src='img/reload_page.jpg' id='reloadButton' ontouchstart='reloadHome(contentPage)' />";
         html += "<div id='playVideoButton'>";
         // If the video has already downloaded we don't need to show the downloading gif

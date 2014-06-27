@@ -1,5 +1,5 @@
 
-function FileTransferRepeater(remoteFile, localFile, successCallback, failCallback) {
+function FileTransferRepeater(remoteFile, localFile, successCallback, showProgress) {
     //console.log("FileTransferRepeater()");
     //console.log("FileTransferRepeater remoteFile = " + remoteFile);
     //console.log("FileTransferRepeater localFile = " + localFile);
@@ -32,6 +32,18 @@ function FileTransferRepeater(remoteFile, localFile, successCallback, failCallba
             nthTry++;
         }
 
+        if (showProgress) {
+            fileTransfer.onprogress = function(progressEvent) {
+                if (progressEvent.lengthComputable) {
+                    var perc = Math.floor(progressEvent.loaded / progressEvent.total * 100);
+                    $("#progress-" + targetNum).html("loading video: " + perc + "%");
+                } else {
+                    if(statusDom.innerHTML == "") {
+                        $("#progress-" + targetNum).html("loading video: 0%");
+                    }
+                }
+            };
+        }
 
         fileTransfer.download(
                 remoteFile,

@@ -17,6 +17,7 @@ button {
     z-index: 9999999;
     padding: 10px;
     background: #fff;
+    font-size: 10px;
 }
 
 a:link { color: #4444ff;}
@@ -251,4 +252,9 @@ div.tabContent {
 
 div.tabContent.hide {
     display: none;
+}
+
+.progress {
+    padding: 0 0 15px 140px;
+    font-size: 20px;
 }
