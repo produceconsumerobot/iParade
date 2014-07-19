@@ -245,7 +245,7 @@ function startGpsTracking() {
 
     // geolocation callbacks
     function geolocationCallbackSuccess(position) {
-        //console.log("geolocationCallbackSuccess(): " + position.coords.latitude + ", " + position.coords.longitude + ", " + position.coords.accuracy + ", ");
+        console.log("geolocationCallbackSuccess(): " + position.coords.latitude + ", " + position.coords.longitude + ", " + position.coords.accuracy + ", ");
         gpsGood = true;
         updateLocation({"latitude":position.coords.latitude, "longitude":position.coords.longitude, "accuracy":position.coords.accuracy});
     }
