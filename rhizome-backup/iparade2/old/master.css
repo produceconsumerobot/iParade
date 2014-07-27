@@ -1,0 +1,215 @@
+body {
+	font-size: 150%;
+	font-family: 'Lucida Grande', Verdana, Arial, Sans-Serif;
+	background-color: #000000;
+	-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
+}
+
+button {
+	-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
+}
+
+#map {
+	
+}
+
+#nextButton
+{
+	height:auto;
+	width:12%;
+}
+
+#restartAppButton
+{
+	float:left;
+	height:auto;
+	width:12%;
+	margin:5%;
+}
+
+#toggleVoiceoverButton
+{
+	float:left;
+	height:auto;
+	width:12%;
+	margin:5%;
+}
+
+select {
+	padding: 5px;
+}
+
+.iparadeSelectOverlay {
+	position: absolute;
+	background-color: black;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
+	-o-border-radius: 8px;
+	-ms-border-radius: 8px;
+	-khtml-border-radius: 8px;
+	border-radius: 8px;
+	top: 25%;
+	left: 26%;
+	width: 40%;
+	padding: 2% 4%;
+}
+
+#startScreen {
+    position: relative;
+}
+
+#iParadeSearching {
+	position: absolute;
+	width: 100%;
+	text-align:center;
+}
+
+#iParadeSelectDiv {
+/* 	margin-top: 10%; */
+}
+
+#iParadeSelect {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10px;
+	width: 100%;
+}
+
+.splashImage {
+	width: 50%;
+	float: left;
+	margin-left: 3%;
+	margin-right: 3%;
+}
+.fullSplashImage {
+	width: 100%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#splashNextButton {
+	float: right;
+	margin-right: 0%;
+	width: 25%;
+}
+
+.mapInfo {
+	color: black;
+}
+
+.bodyImage {
+	width: 100%;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.block {
+		display: block;
+}
+
+.pageTitle {
+	text-align:center;
+}
+
+.tabImage {
+	height: 90%;
+	width: auto;
+	max-width: 100%;
+}
+
+#home{
+}
+
+#nextButton {
+	float: right;
+	margin-right: 20%;
+	margin-top: 20px;
+	width: 10%;
+	height: auto;
+}
+
+#playVideoButton {
+	float: left;
+	margin-left: 15%;
+	padding-bottom: 20px;
+	width: 55%;
+	height: auto;
+}
+
+img#downloadingImg {
+	display: block;
+	width:60%;
+	height: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+img#playImg {
+	display: block;
+	width: 25%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+video#playVid {
+	display: block;
+	width: 50%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+div.paddedContent {
+	padding: 0% 2%;
+}
+
+ul#tabs {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	right: 0px;
+	background-color: #000000;
+	padding-left: 1%;
+	padding-top: 1%;
+	padding-right: 1%;
+	padding-botton: 1%;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+ul#tabs li {
+	text-align: center;
+	list-style: none;
+	border-width: 1%;
+	border-color: #000;
+	border-style: solid;
+	border-radius: 5px;
+	padding: 1%;
+	height: 18%;
+	-webkit-tap-highlight-color:  rgba(255, 255, 255, 0); 
+}
+
+ul#tabs li a {
+	width: 100%;
+	height: 100%;
+}
+
+ul#tabs li a:hover {
+	border-color: #AAA;
+}
+
+ul#tabs li.selected {
+border-color: #333;
+}
+
+div.tabContent {
+	position: static;
+	background-color: #000000;
+	color: #dddddd;
+}
+
+div.tabContent.hide {
+	display: none;
+}
