@@ -15,7 +15,8 @@ var pluginlist = [
     "org.apache.cordova.inappbrowser",
     "org.apache.cordova.media",
     "org.apache.cordova.network-information",
-    "org.apache.cordova.vibration"
+    "org.apache.cordova.vibration",
+    "https://github.com/apache/cordova-plugin-geolocation.git"
 ];
 
 // no need to configure below
