@@ -250,12 +250,12 @@ function startGpsTracking() {
         updateLocation({"latitude":position.coords.latitude, "longitude":position.coords.longitude, "accuracy":position.coords.accuracy});
     }
     function geolocationCallbackError(error) {
-        //console.log("geolocationCallbackError()");
+        console.log("geolocationCallbackError()");
         for (e in error) {
-            //console.log(e + ": " + error[e]);
+            console.log(e + ": " + error[e]);
         }
         gpsGood = false;
-        badGpsAlert();
+        //badGpsAlert();
     }
 }
 
