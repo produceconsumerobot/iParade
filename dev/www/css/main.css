@@ -195,7 +195,7 @@ img#playImg {
 
 video#playVid {
     display: block;
-    width: 50%;
+    width: 200px;
     margin-left: auto;
     margin-right: auto;
 }
