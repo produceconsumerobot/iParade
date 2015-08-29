@@ -6,17 +6,16 @@
 // the identifier, the filesystem location
 // or the URL
 var pluginlist = [
-    "org.apache.cordova.device",
-    "org.apache.cordova.console",
-    "org.apache.cordova.device",
-    "org.apache.cordova.dialogs",
-    "org.apache.cordova.file",
-    "org.apache.cordova.file-transfer",
-    "org.apache.cordova.inappbrowser",
-    "org.apache.cordova.media",
-    "org.apache.cordova.network-information",
-    "org.apache.cordova.vibration",
-    "https://github.com/apache/cordova-plugin-geolocation.git"
+    "cordova-plugin-device",
+    "cordova-plugin-console",
+    "cordova-plugin-dialogs",
+    "cordova-plugin-file",
+    "cordova-plugin-file-transfer",
+    "cordova-plugin-inappbrowser",
+    "cordova-plugin-media",
+    "cordova-plugin-network-information",
+    "cordova-plugin-vibration",
+    "cordova-plugin-geolocation"
 ];
 
 // no need to configure below

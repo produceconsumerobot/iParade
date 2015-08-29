@@ -1,3 +1,4 @@
 .DS_Store
 dev/platforms/*
+dev/plugins/*
 images
