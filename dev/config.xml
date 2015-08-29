@@ -1,17 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<widget xmlns:gap = "http://phonegap.com/ns/1.0" id="org.lovid.iparade2" version="2.1.1">
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="org.lovid.iparade2" version="2.1.1" xmlns:gap="http://phonegap.com/ns/1.0">
     <name>iParade</name>
     <description>
         iParade is a series of locative media-works, created by LoVid as smart-phone Apps.
     </description>
-    <author href="http://lovid.org" email="lovidlovid@gmail.com">
+    <author email="lovidlovid@gmail.com" href="http://lovid.org">
         Lovid, Sean Montgomery, and BJ Warshaw
     </author>
     <access origin="*" />
     <preference name="Fullscreen" value="true" />
     <preference name="Orientation" value="landscape" />
-
     <icon src="icon.png" />
+    <engine name="ios" spec="~3.9.1" />
 </widget>
-
