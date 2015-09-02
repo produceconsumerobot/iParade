@@ -12,4 +12,6 @@
     <preference name="Orientation" value="landscape" />
     <icon src="icon.png" />
     <engine name="ios" spec="~3.9.1" />
+    <allow-navigation href="http://maps.googleapis.com/*" />
+    <allow-navigation href="http://archive.rhizome.org:8080/*" />
 </widget>

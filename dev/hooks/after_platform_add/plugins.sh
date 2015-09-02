@@ -15,7 +15,8 @@ var pluginlist = [
     "cordova-plugin-media",
     "cordova-plugin-network-information",
     "cordova-plugin-vibration",
-    "cordova-plugin-geolocation"
+    "cordova-plugin-geolocation",
+    "cordova-plugin-whitelist"
 ];
 
 // no need to configure below
