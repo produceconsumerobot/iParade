@@ -143,23 +143,24 @@ function init() {
 }
 
 function onFileSystemSuccess(fileSystem) {
-    //console.log('onFileSystemSuccess()');
-    //console.log('fileSystem: ', fileSystem);
+    console.log('onFileSystemSuccess()');
+    console.log('fileSystem: ', fileSystem);
     var entry = fileSystem.root;
     entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
 }
 
 function onFileSystemFail(evt) {
-    //console.log("onFileSystemFail: ", evt.code);
+    console.log("onFileSystemFail: ", evt.code);
 }
 
 function getFileSuccess(fileEntry) {
-    //console.log("getFileSuccess(): " + fileEntry.fullPath);
+    console.log("getFileSuccess(): " + fileEntry.fullPath);
 }
 
 function getDirSuccess(dir) {
-    //console.log("getDirSuccess(): " + dir.toURL());
+    console.log("getDirSuccess(): " + dir.toURL());
     localDirectoryEntry = dir;
+    /*
     var temp = dir.toURL();
     if (device.platform.toLowerCase().search("android") >= 0) {
         // If it's an Android device and there's no SD card, give fair warning
@@ -167,6 +168,7 @@ function getDirSuccess(dir) {
             noSdCardAlert();
         }
     }
+    */
     localContentDir = dir.toURL();
     dir.getFile(localVidBase + vidExt, {create: true, exclusive: false}, getFileSuccess, onFileSystemFail);
 }
@@ -189,19 +191,19 @@ function checkConnection() {
 }
 
 function noSdCardAlert() {
-    //console.log("noSdCardAlert()");
+    console.log("noSdCardAlert()");
     navigator.notification.alert('Cannot find SD card.\nPlease insert an SD card.');
 }
 
 // Alert to notify user that they are offline
 function offlineAlert() {
-    //console.log("offlineAlert()");
+    console.log("offlineAlert()");
     navigator.notification.alert('You are currently offline.\nPlease connect to the network to continue.');
 }
 
 //Alert to notify user that they are offline
 function localStorageAlert() {
-    //console.log("localStorageAlert()");
+    console.log("localStorageAlert()");
     navigator.notification.alert('Cannot access local file system. Try inserting an SD card.');
 }
 
