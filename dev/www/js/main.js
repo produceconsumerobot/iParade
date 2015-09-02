@@ -137,9 +137,11 @@ function init() {
         themeAudioPlayer.play();
     }
 
+    /*
     if (!checkGPS()) {
         badGpsAlert();
     }
+    */
 }
 
 function onFileSystemSuccess(fileSystem) {
@@ -849,10 +851,12 @@ function showIparades() {
 function initIparade(listNum) {
     //console.log("initIparade()");
 
+    /*
     if (!checkGPS()) {
         badGpsAlert();
         return;
     }
+    */
 
     if (!listNum) {
         listNum = $("#iParadeSelect option:selected").attr("value");

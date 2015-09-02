@@ -236,12 +236,9 @@ function updateLocation(loc) {
 }
 
 function startGpsTracking() {
-    //console.log("startGpsTracking()");
-    //var options = { frequency: 1000, "maximumAge": 3000, "timeout": 5000, "enableHighAccuracy": true };
-    var options = { frequency: 3000, maximumAge: 5000, timeout: 10000, enableHighAccuracy: true };
+    console.log("startGpsTracking()");
+    var options = { frequency: 3000, maximumAge: 5000, timeout: 100000, enableHighAccuracy: true };
     gpsWatch = navigator.geolocation.watchPosition(geolocationCallbackSuccess, geolocationCallbackError, options);
-
-    //gpsWatch2 = setInterval( function() {navigator.geolocation.getCurrentPosition(geolocationCallbackSuccess, geolocationCallbackError, options);}, 7500);
 
     // geolocation callbacks
     function geolocationCallbackSuccess(position) {
@@ -273,7 +270,7 @@ function stopGpsTracking() {
 
 
 function badGpsAlert() {
-    //console.log("badGpsAlert()");
+    console.log("badGpsAlert()");
     navigator.notification.alert('Location not found or innacurate.\nPlease enable GPS location services and obtain a GPS fix to continue.');
 }
 
