@@ -122,16 +122,9 @@ function init() {
 
     document.addEventListener("pause", onPause, false);
     document.addEventListener("resume", onResume, false);
-    if (navigator.webkitTemporaryStorage) {
-        // Request the file system for Ripple/Chrome
-        navigator.webkitTemporaryStorage.requestQuota(0, function(grantedBytes) {
-          //console.log ('requestQuota: ', arguments);
-          requestFS(grantedBytes);
-        }, onFileSystemFail);
-    } else {
-        // Request the file system for devices
-        window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
-    }
+
+    // Request the file system for devices
+    window.requestFileSystem(LocalFileSystem.TEMPORARY, 0, onFileSystemSuccess, onFileSystemFail);
 
     startGpsTracking();
     if (!CRAZYD) {
@@ -147,14 +140,6 @@ function init() {
     if (!checkGPS()) {
         badGpsAlert();
     }
-}
-
-function requestFS(grantedBytes) {
-  window.webkitRequestFileSystem(window.TEMPORARY, grantedBytes, function(fs) {
-    //console.log ('fs: ', arguments);
-    var entry = arguments[0].root;
-    entry.getDirectory(localDir, {create: true, exclusive: false}, getDirSuccess, onFileSystemFail);
-  }, onFileSystemFail);
 }
 
 function onFileSystemSuccess(fileSystem) {
@@ -782,7 +767,7 @@ function loadCssFile(filename) {
 }
 
 function getIparades(loc, nthTry) {
-    //console.log("getIparades(" + loc.latitude + "," + loc.longitude + ")");
+    console.log("getIparades(" + loc.latitude + "," + loc.longitude + ")");
 
     function tryAgain(location, ntry) {
         //console.log("tryAgain(" + ntry + ")");
