@@ -6,18 +6,18 @@
 // the identifier, the filesystem location
 // or the URL
 var pluginlist = [
-    "cordova-plugin-device",
+    "com.moust.cordova.videoplayer",
     "cordova-plugin-console",
+    "cordova-plugin-device",
     "cordova-plugin-dialogs",
     "cordova-plugin-file",
     "cordova-plugin-file-transfer",
+    "cordova-plugin-geolocation",
     "cordova-plugin-inappbrowser",
     "cordova-plugin-media",
     "cordova-plugin-network-information",
     "cordova-plugin-vibration",
-    "cordova-plugin-geolocation",
-    "cordova-plugin-whitelist",
-    "com.moust.cordova.videoplayer"
+    "cordova-plugin-whitelist"
 ];
 
 // no need to configure below
