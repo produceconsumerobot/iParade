@@ -80,7 +80,14 @@ iOS Simulator.
 
 Chrome provides a similar inspector for the Android Emulator. Once the
 virtual device is running, open Chrome and proceed to [chrome://inspect/#devices](chrome://inspect/#devices).
-Click the link for the emulated to device to access the Chrome inspector.
+Click the ```inspect``` link for the emulated to device to access the Chrome
+inspector.
+
+A full Android system log can be tailed via the command line with:
+
+```
+adb logcat
+```
 
 # Quirks
 
