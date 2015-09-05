@@ -10,7 +10,6 @@ var currentMarker;
 var currentCircle;
 var targetMarkers;
 var gpsWatch = null;
-var gpsWatch2 = null;
 var gpsGood;
 var minAccuracy = 50;
 var checkingForTargetLocation;
@@ -37,7 +36,6 @@ function initLocation() {
     currentCircle = null;
     targetMarkers = new Array();
     gpsWatch = null;
-    gpsWatch2 = null;
     gpsGood = false;
     checkingForTargetLocation = false;
     updateLocationTimerId = null;
@@ -261,10 +259,6 @@ function stopGpsTracking() {
     if (gpsWatch) {
         navigator.geolocation.clearWatch(gpsWatch);
         gpsWatch = null;
-    }
-    if (gpsWatch2) {
-        window.clearInterval(gpsWatch2);
-        gpsWatch2 = null;
     }
 }
 
