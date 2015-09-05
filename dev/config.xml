@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.lovid.iparade2" version="2.1.1" xmlns:gap="http://phonegap.com/ns/1.0">
+<widget id="org.lovid.iparade2" version="3.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>iParade</name>
     <description>
         iParade is a series of locative media-works, created by LoVid as smart-phone Apps.
@@ -7,11 +7,22 @@
     <author email="lovidlovid@gmail.com" href="http://lovid.org">
         Lovid, Sean Montgomery, and BJ Warshaw
     </author>
+    <content src="index.html" />
+    <plugin name="cordova-plugin-whitelist" version="1" />
     <access origin="*" />
+    <allow-intent href="http://*/*" />
+    <allow-intent href="https://*/*" />
+    <allow-intent href="tel:*" />
+    <allow-intent href="sms:*" />
+    <allow-intent href="mailto:*" />
+    <allow-intent href="geo:*" />
+    <platform name="android">
+        <allow-intent href="market:*" />
+    </platform>
+    <platform name="ios">
+        <allow-intent href="itms:*" />
+        <allow-intent href="itms-apps:*" />
+    </platform>
     <preference name="Fullscreen" value="true" />
     <preference name="Orientation" value="landscape" />
-    <icon src="icon.png" />
-    <engine name="ios" spec="~3.9.1" />
-    <allow-navigation href="http://maps.googleapis.com/*" />
-    <allow-navigation href="http://archive.rhizome.org:8080/*" />
 </widget>
