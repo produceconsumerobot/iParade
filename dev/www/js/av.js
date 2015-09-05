@@ -200,15 +200,9 @@ function playVoiceover() {
                 voicoverAudioPlayer.release();
             }
             if (device.platform.toLowerCase().search("android") >= 0) {
-                // when Media plugin is upgraded to use the new File plugin version 1.1.0
-                // this path may need to change to use the full the file location via
-                // localContentDir
-                voicoverAudioPlayer = new AudioPlayer("/iParade/" + localVoiceoverBase + voiceoverExt);
+                voicoverAudioPlayer = new AudioPlayer(localContentDir + localVoiceoverBase + voiceoverExt);
                 voicoverAudioPlayer.play();
             } else {
-                // when Media plugin is upgraded to use the new File plugin version 1.1.0
-                // this path may need to change to use the full the file location via
-                // localContentDir
                 voicoverAudioPlayer = new AudioPlayer("/iParade/" + localVoiceoverBase + voiceoverExt);
                 voicoverAudioPlayer.play();
             }
@@ -219,7 +213,7 @@ function playVoiceover() {
 }
 
 function getVoiceover(targetNumber) {
-    //console.log("getVoiceover(" + targetNumber + ")");
+    console.log("getVoiceover(" + targetNumber + ")");
 
     voiceoverDownloadComplete = false;
 
@@ -231,7 +225,7 @@ function getVoiceover(targetNumber) {
     }
     voiceoverFileTransfer = new FileTransferRepeater(remoteFile, localFile,
         function (entry) {
-            //console.log("getVoiceover download complete: " + entry.fullPath);
+            console.log("getVoiceover download complete: " + entry.fullPath);
             voiceoverFileTransfer.cancel();
             voiceoverFileTransfer = null;
             voiceoverDownloadComplete = true;
@@ -239,5 +233,5 @@ function getVoiceover(targetNumber) {
         }
     );
     voiceoverFileTransfer.download();
-    //console.log("getVoiceover() finished");
+    console.log("getVoiceover() finished");
 }
