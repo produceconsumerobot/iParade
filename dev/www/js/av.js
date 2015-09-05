@@ -139,20 +139,12 @@ function playAudioTheme() {
             themeAudioPlayer.release();
         }
         if (device.platform.toLowerCase().search("android") >= 0) {
-            // when Media plugin is upgraded to use the new File plugin version 1.1.0
-            // this path may need to change to use the full the file location via
-            // localContentDir
-            themeAudioPlayer = new AudioPlayer("/iParade/" + localAudioThemeBase + audioThemeExt);
-            themeAudioPlayer.looping(true);
-            themeAudioPlayer.play();
+            themeAudioPlayer = new AudioPlayer(localContentDir + localAudioThemeBase + audioThemeExt);
         } else {
-            // when Media plugin is upgraded to use the new File plugin version 1.1.0
-            // this path may need to change to use the full the file location via
-            // localContentDir
             themeAudioPlayer = new AudioPlayer("/iParade/" + localAudioThemeBase + audioThemeExt);
-            themeAudioPlayer.looping(true);
-            themeAudioPlayer.play();
         }
+        themeAudioPlayer.looping(true);
+        themeAudioPlayer.play();
     }
 
     //console.log("playAudioTheme finished");
@@ -201,11 +193,10 @@ function playVoiceover() {
             }
             if (device.platform.toLowerCase().search("android") >= 0) {
                 voicoverAudioPlayer = new AudioPlayer(localContentDir + localVoiceoverBase + voiceoverExt);
-                voicoverAudioPlayer.play();
             } else {
                 voicoverAudioPlayer = new AudioPlayer("/iParade/" + localVoiceoverBase + voiceoverExt);
-                voicoverAudioPlayer.play();
             }
+            voicoverAudioPlayer.play();
         }
     }
 
