@@ -16,7 +16,8 @@ var pluginlist = [
     "cordova-plugin-network-information",
     "cordova-plugin-vibration",
     "cordova-plugin-geolocation",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-whitelist",
+    "com.moust.cordova.videoplayer"
 ];
 
 // no need to configure below

@@ -21,7 +21,7 @@ function playVideo() {
         }
         if (device.platform.toLowerCase().search("android") >= 0) {
             var filepath = localContentDir + localVidBase + vidExt;
-            showVideo2(filepath); // play the locally stored video
+            VideoPlayer.play(filepath, { scalingMode: VideoPlayer.SCALING_MODE.SCALE_TO_FIT } );
         } else {
             // Video supported!!
             //console.log("Creating video element: " + localContentDir + localVidBase + vidExt);
