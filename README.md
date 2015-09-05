@@ -10,7 +10,7 @@ cordova platform add android
 
 This will build the applications in the ```/platforms``` directory.
 
-Plugins are managed via shell script [/dev/hooks/after_platforms_add/plugins.sh](dev/hooks/after_platforms_add/plugins.sh)
+Plugins are managed via shell script [dev/hooks/after_platform_add/plugins.sh](dev/hooks/after_platform_add/plugins.sh)
 which is run after each platform is added. You can also manually add or remove
 plugins via the CLI:
 
