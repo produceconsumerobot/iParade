@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.0" creator="GPSBabel - http://www.gpsbabel.org" xmlns="http://www.topografix.com/GPX/1/0">
+  <time>2014-05-06T17:07:01.482Z</time>
+  <bounds minlat="42.727417000" minlon="-73.680361000" maxlat="42.727417000" maxlon="-73.680361000"/>
+  <wpt lat="42.727417000" lon="-73.680361000">
+    <ele>0.000000</ele>
+    <name>42.727417, -73.680361</name>
+    <cmt>42.727417, -73.680361</cmt>
+    <desc>42.727417, -73.680361</desc>
+  </wpt>
+</gpx>
