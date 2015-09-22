@@ -103,3 +103,7 @@ config.xml.
 controller-based status bar appearance* and set the Value to "NO".  Add another
 row for *Status bar is initially hidden* and set the Value to "YES". This hides
 the status bar in iOS 7.
+- Also in ```iParade > Resources > iParade-Info.plist```, add a row for
+*UIRequiresFullScreen* and set to *YES*. This gets around a new issue in iOS 9,
+where submission to the app store fails with ERROR ITMS-90474 and ITME-90475.
+
