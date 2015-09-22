@@ -17,7 +17,8 @@ var pluginlist = [
     "cordova-plugin-media",
     "cordova-plugin-network-information",
     "cordova-plugin-vibration",
-    "cordova-plugin-whitelist"
+    "cordova-plugin-whitelist",
+    "https://github.com/robertklein/cordova-ios-security.git"
 ];
 
 // no need to configure below
